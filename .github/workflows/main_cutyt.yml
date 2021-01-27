@@ -22,7 +22,7 @@ jobs:
         dotnet-version: '5.0.x'
 
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build ..\..\CutytSln\Cutyt\cutyt.csproj --configuration Release
 
     - name: dotnet publish
       run: dotnet publish  ..\..\CutytSln\Cutyt\cutyt.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
