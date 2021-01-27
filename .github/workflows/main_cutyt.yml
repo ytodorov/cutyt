@@ -21,6 +21,9 @@ jobs:
       with:
         dotnet-version: '5.0.x'
 
+    - name: List directories
+      run: dir
+      
     - name: Build with dotnet
       run: dotnet build ..\..\CutytSln\Cutyt\cutyt.csproj --configuration Release
 
