@@ -1,835 +1,871 @@
 ﻿@{
     Layout = null;
+    string title = "Cut YouTube videos | cutyt.com";
+    string description = "Cut YouTube videos.";
+    string sitename = "cutyt.com";
+    string author = "cutyt.com";
+    string canonicalUrl = "https://www.cutyt.com";
 }
 <!DOCTYPE html>
 <html amp lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta title="amptemplates.io" />
-		<meta property="og:image" content="https://www.amptemplates.io/img/cover_pic.jpg" />
-		<meta property="og:title" content="Lead Collection AMP Form Template | amptemplates.io" />
-		<meta property="og:description" content="A blazing fast AMP template for your next marketing campaign" />
-		<meta property="og:url" content="https://www.amptemplates.io/templates/lead-collection" />
-		<meta property="og:site_name" content="amptemplates.io" />
-		<meta property="og:author" content="Yomesh Gupta" />
-		<title>Lead Collection AMP Form Template | amptemplates.io</title>
-		<script async src="https://cdn.ampproject.org/v0.js"></script>
-		<script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
-		<link rel="canonical" href="https://www.amptemplates.io/templates/lead-collection" />
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
-		<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
-		<link rel="shortcut icon" href="img/logo.png" type="image/png" />
-		<style amp-boilerplate>
-			body {
-				-webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
-				-moz-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
-				-ms-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
-				animation: -amp-start 8s steps(1, end) 0s 1 normal both;
-			}
-
-			@@-webkit-keyframes -amp-start {
-				from {
-					visibility: hidden;
-				}
-
-				to {
-					visibility: visible;
-				}
-			}
-
-			@@-moz-keyframes -amp-start {
-				from {
-					visibility: hidden;
-				}
-
-				to {
-					visibility: visible;
-				}
-			}
-
-			@@-ms-keyframes -amp-start {
-				from {
-					visibility: hidden;
-				}
-
-				to {
-					visibility: visible;
-				}
-			}
-
-			@@-o-keyframes -amp-start {
-				from {
-					visibility: hidden;
-				}
-
-				to {
-					visibility: visible;
-				}
-			}
-
-			@@keyframes -amp-start {
-				from {
-					visibility: hidden;
-				}
-
-				to {
-					visibility: visible;
-				}
-			}
-		</style>
-		<noscript>
-			<style amp-boilerplate>
-				body {
-					-webkit-animation: none;
-					-moz-animation: none;
-					-ms-animation: none;
-					animation: none;
-				}
-			</style>
-		</noscript>
-		<style amp-custom="">
-			* {
-				box-sizing: border-box;
-				font-family: 'Roboto';
-				transition: all 0.2s linear;
-				font-size: 16px;
-				margin: 0px;
-				padding: 0px;
-			}
-
-			html,
-			body {
-				margin: 0px;
-				padding: 0px;
-				background-color: #f5f6fa;
-			}
-
-			.gradient-bg {
-				background-image: linear-gradient(45deg, #874da2 0%, #c43a30 100%);
-			}
-
-			.content-width {
-				width: 80%;
-			}
-
-			.content {
-				margin: 0 auto;
-				padding: 4em 0px;
-				line-height: 160%;
-			}
-
-			h1 {
-				font-size: 2em;
-				line-height: 120%;
-				margin-bottom: 1em;
-				text-decoration: underline;
-				text-decoration-color: #20bf6b;
-			}
-
-			h2 {
-				font-size: 2em;
-				word-spacing: 2px;
-				text-align: center;
-				margin-bottom: 2em;
-				letter-spacing: 1px;
-			}
-
-			h2:after {
-				display: block;
-				height: 2px;
-				background-color: #487eb0;
-				content: ' ';
-				width: 100px;
-				margin: 0 auto;
-				margin-top: 30px;
-			}
-
-			h3 {
-				font-size: 1.5em;
-				margin-bottom: 1em;
-			}
-
-			.clearfix {
-				clear: both;
-			}
-
-			.green-text {
-				color: #3ebf43;
-				font-weight: bold;
-			}
-
-			.flex {
-				display: flex;
-			}
-
-			.flex-wrap {
-				flex-wrap: wrap;
-			}
-
-			.flex-center {
-				justify-content: center;
-				align-items: center;
-			}
-
-			.flex-space-around {
-				justify-content: space-around;
-			}
-
-			.flex-space-between {
-				justify-content: space-between;
-			}
-
-			.flex-column {
-				flex-direction: column;
-			}
-
-			.flex-half {
-				width: 48%;
-			}
-
-			.text-center {
-				text-align: center;
-			}
-
-			.text-capitalize {
-				text-transform: capitalize;
-			}
-
-			.text-bold {
-				font-weight: bold;
-			}
-
-			.text-secondary {
-				color: #515151;
-			}
-
-			.btn {
-				padding: 1em 1.5em;
-				color: #fff;
-				font-weight: bold;
-			}
-
-			.btn-primary {
-				background-color: #20bf6b;
-				border: 1px solid transparent;
-				color: #fff;
-				cursor: pointer;
-			}
-
-			.btn-secondary {
-				background: transparent;
-				border: 1px solid #20bf6b;
-			}
-
-			.btn-secondary:hover,
-			.btn-primary:hover {
-				background-color: #487eb0;
-				border-color: #487eb0;
-			}
-
-			a {
-				color: #487eb0;
-			}
-
-			a:hover {
-				color: #e67e22;
-			}
-
-			.border-round {
-				border-radius: 5px;
-			}
-
-			.box-shadow {
-				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-			}
-
-			.animate {
-				transition: all 0.2s ease-in-out;
-			}
-
-			header {
-				width: 100%;
-				height: 80px;
-			}
-
-			#logo {
-				width: 25%;
-				height: 100%;
-			}
-
-			#logo a {
-				width: 60%;
-			}
-
-			#logo amp-img {
-				max-width: 80%;
-			}
-
-			#hero {
-				background-color: #fff;
-			}
-
-			#hero-wrapper {
-				position: relative;
-			}
-
-			#hero-content {
-				width: 56%;
-				color: #000;
-			}
-
-			#hero-divider {
-				height: 500px;
-				background-image: url('img/hero-divider-1-web.jpg');
-			}
-
-			.divider {
-				width: 100%;
-				background-size: cover;
-				background-position: top;
-				background-attachment: fixed;
-				background-repeat: no-repeat;
-			}
-
-			/* LEAD COLLECTION FORM */
-			#lead-collection-form {
-				width: 40%;
-				padding: 2em 1.5em;
-				background: #fff;
-				position: absolute;
-				top: 0;
-				right: 0;
-			}
-			input {
-				width: 100%;
-				outline: none;
-				border: 1px solid #b1b1b1;
-				padding: 1em;
-				margin-bottom: 1em;
-			}
-			input:focus {
-				border: 2px solid #487eb0;
-			}
-			#lead-collection-form input[type='submit'] {
-				text-transform: uppercase;
-			}
-
-			/** PRODUCTS **/
-			.product-item {
-				width: 48%;
-				margin-bottom: 4em;
-			}
-			.product-image {
-				width: 20%;
-			}
-			.product-image amp-img {
-				max-width: 90%;
-			}
-			.product-content {
-				width: 78%;
-			}
-
-			/** CLIENTS **/
-			#clients {
-				background-color: #fff;
-			}
-			blockquote q,
-			blockquote cite,
-			blockquote p {
-				margin-bottom: 1em;
-				font-size: 1.3em;
-				align-self: flex-start;
-			}
-			blockquote cite {
-				margin-bottom: 0em;
-			}
-			blockquote p {
-				font-size: 1em;
-			}
-
-			/** PLANS **/
-			.plan-item {
-				width: 31%;
-				padding: 1.5em;
-				background: #fff;
-			}
-
-			.plan-item h3 {
-				margin-bottom: 0;
-			}
-
-			.plan-price-wrapper {
-				margin: 2em 0;
-			}
-
-			.plan-item .plan-price {
-				font-size: 3em;
-			}
-
-			.plan-item .plan-timeline {
-				font-size: 1.5em;
-				margin-left: 0.5em;
-			}
-
-			#plan-primary h3 {
-				color: #20bf6b;
-			}
-
-			#plan-secondary h3 {
-				color: #487eb0;
-			}
-
-			.plan-item ul {
-				margin-bottom: 1em;
-			}
-
-			.plan-item ul li {
-				list-style: none;
-			}
-
-			/** SUPPORT **/
-			#support {
-				color: #fff;
-				background: #2c3e50;
-			}
-			#support a {
-				color: #e67e22;
-			}
-			a#support-btn {
-				max-width: 150px;
-				margin: 1.5em auto;
-				padding: 0.5em 1.5em;
-				text-decoration: none;
-				color: #fff;
-			}
-
-			#last-divider {
-				height: 300px;
-				background-position: center;
-				background-image: url('img/last-divider-web-1.jpg');
-			}
-
-			#last-divider a {
-				text-decoration: none;
-			}
-
-			#last-divider a:hover {
-				color: #fff;
-			}
-
-			@@media only screen and (max-width: 1030px) {
-				header {
-					margin-bottom: 1em;
-				}
-				#logo a {
-					width: 70%;
-				}
-				#hero-content {
-					width: 50%;
-					color: #000;
-				}
-				#logo amp-img {
-					max-width: 90%;
-				}
-				#lead-collection-form {
-					width: 45%;
-				}
-				#hero-divider {
-					height: 400px;
-				}
-				blockquote q,
-				blockquote cite,
-				blockquote p {
-					font-size: 1em;
-				}
-				blockquote p {
-					font-size: 0.8em;
-				}
-				.plan-item .plan-price {
-					font-size: 2em;
-				}
-			}
-
-			@@media only screen and (max-width: 768px) {
-				header {
-					margin-bottom: 0;
-				}
-				#logo a {
-					width: 90%;
-				}
-				#hero-wrapper {
-					flex-direction: column;
-					text-align: center;
-					padding: 2em 0;
-				}
-				#lead-collection-form,
-				#hero-content {
-					width: 100%;
-				}
-				#lead-collection-form {
-					margin-top: 2em;
-					position: relative;
-				}
-				#hero-divider {
-					height: 300px;
-				}
-				.content-width {
-					width: 90%;
-				}
-				.product-item {
-					width: 100%;
-				}
-				h2 {
-					line-height: 130%;
-				}
-				.plan-item {
-					width: 48%;
-					margin-bottom: 2em;
-				}
-			}
-
-			@@media only screen and (max-width: 600px) {
-				#logo {
-					width: 50%;
-				}
-				#hero-wrapper {
-					padding: 0;
-				}
-				h1 {
-					font-size: 1.7em;
-					margin-top: 1em;
-				}
-
-				h2 {
-					font-size: 1.6em;
-					margin-bottom: 1em;
-				}
-
-				h3 {
-					font-size: 1.4em;
-				}
-
-				#lead-collection-form {
-					margin-bottom: 2em;
-				}
-
-				.product-item {
-					flex-direction: column;
-					margin-bottom: 3em;
-				}
-
-				.product-item .product-image {
-					width: 100%;
-					margin-bottom: 2em;
-				}
-
-				.product-item .product-image amp-img {
-					max-width: 45%;
-					margin: 0 auto;
-				}
-
-				.product-item .product-content {
-					width: 100%;
-				}
-
-				.flex-half {
-					width: 100%;
-				}
-
-				blockquote {
-					margin-top: 2em;
-				}
-
-				.plan-item {
-					width: 100%;
-				}
-
-				#footer-content {
-					width: 90%;
-					text-align: center;
-				}
-
-				#footer-content p {
-					margin-bottom: 0.5em;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<section id="hero">
-			<header class="flex flex-center">
-				<div class="flex flex-space-around flex-center" id="logo">
-					<a class="flex flex-center" href="https://code.devtools.tech/?ref=lead-collection-template">
-						<amp-img
-							alt="Company Logo"
-							src="img/logo.png"
-							width="300"
-							height="82"
-							layout="intrinsic"
-						></amp-img>
-					</a>
-				</div>
-			</header>
-			<div class="flex content content-width" id="hero-wrapper">
-				<div id="hero-content" class="flex flex-column flex-center">
-					<h1 class="text-capitalize">
-						Lead Capturing AMP template for your next marketing campaign
-					</h1>
-					<p class="text-secondary">
-						Capture way more leads with high-converting landing page that you can optimize on the fly, all
-						without minimal changes. Using this template, you can avoid bottlenecks and launch campaigns
-						fast with simple changes to fully customize to match your SaaS brand.
-					</p>
-				</div>
-				<form
-					method="post"
-					id="lead-collection-form"
-					action-xhr="/"
-					target="_top"
-					class="flex flex-column flex-center border-round box-shadow"
-				>
-					<input type="text" name="name" placeholder="Name" class="animate border-round" required />
-					<input type="email" name="email" placeholder="Work Email" class="animate border-round" required />
-					<input type="phone" name="phone" placeholder="Phone Number" class="animate border-round" required />
-					<input type="text" name="company" placeholder="Company" class="animate border-round" required />
-					<input type="submit" value="Request Demo" class="btn-primary text-bold border-round animate" />
-					<p class="text-secondary">
-						By filling this form, you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a>
-					</p>
-				</form>
-			</div>
-		</section>
-		<section class="divider" id="hero-divider">&nbsp;</section>
-		<section id="features">
-			<div class="content content-width">
-				<h2 class="text-center text-capitalize">
-					Explore our Services in their full Glory
-				</h2>
-				<div class="flex flex-space-between flex-wrap">
-					<div class="flex flex-space-between product-item">
-						<div class="product-image">
-							<amp-img
-								alt="Clients"
-								src="img/feature-1.svg"
-								width="512"
-								height="512"
-								layout="responsive"
-							></amp-img>
-						</div>
-						<div class="product-content">
-							<h3>Service 1</h3>
-							<p class="text-secondary">
-								Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit praesentium
-								ipsam perferendis quod corrupti ratione, eligendi tempora voluptatibus dicta repudiandae
-								dolore incidunt magnam error vero inventore illo a iste quo?
-							</p>
-						</div>
-					</div>
-					<div class="flex flex-space-between product-item">
-						<div class="product-image">
-							<amp-img
-								alt="Clients"
-								src="img/feature-3.svg"
-								width="512"
-								height="512"
-								layout="responsive"
-							></amp-img>
-						</div>
-						<div class="product-content">
-							<h3>Service 2</h3>
-							<p class="text-secondary">
-								Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit praesentium
-								ipsam perferendis quod corrupti ratione, eligendi tempora voluptatibus dicta repudiandae
-								dolore incidunt magnam error vero inventore illo a iste quo?
-							</p>
-						</div>
-					</div>
-					<div class="flex flex-space-between product-item">
-						<div class="product-image">
-							<amp-img
-								alt="Clients"
-								src="img/feature-3.svg"
-								width="512"
-								height="512"
-								layout="responsive"
-							></amp-img>
-						</div>
-						<div class="product-content">
-							<h3>Service 3</h3>
-							<p class="text-secondary">
-								Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit praesentium
-								ipsam perferendis quod corrupti ratione, eligendi tempora voluptatibus dicta repudiandae
-								dolore incidunt magnam error vero inventore illo a iste quo?
-							</p>
-						</div>
-					</div>
-					<div class="flex flex-space-between product-item">
-						<div class="product-image">
-							<amp-img
-								alt="Clients"
-								src="img/feature-2.svg"
-								width="512"
-								height="512"
-								layout="responsive"
-							></amp-img>
-						</div>
-						<div class="product-content">
-							<h3>Service 4</h3>
-							<p class="text-secondary">
-								Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit praesentium
-								ipsam perferendis quod corrupti ratione, eligendi tempora voluptatibus dicta repudiandae
-								dolore incidunt magnam error vero inventore illo a iste quo?
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-		<section id="clients">
-			<div class="content content-width">
-				<h2 class="text-center text-capitalize">
-					Trusted By Thousands of Brands Across World
-				</h2>
-				<div class="flex flex-space-between flex-wrap">
-					<div class="flex-half">
-						<amp-img
-							alt="Clients"
-							src="img/clients-web.jpg"
-							width="1600"
-							height="910"
-							layout="responsive"
-						></amp-img>
-					</div>
-					<blockquote class="flex-half flex-column flex flex-center">
-						<q>
-							The Platform helps me quickly and easily find conversion optimization wins that I can
-							standardize across our whole enterprise. I don’t like to use the phrase “best practice”
-							unless I can prove it, and my proof is in the data provided by this platform.
-						</q>
-						<cite>Naman Handa</cite>
-						<p class="text-secondary">Director, Marketing, Dessiner Store</p>
-					</blockquote>
-				</div>
-			</div>
-		</section>
-		<section id="plans">
-			<div class="content content-width">
-				<h2 class="text-center text-capitalize">
-					Our plans for you
-				</h2>
-				<div class="flex flex-space-between flex-wrap">
-					<div class="plan-item box-shadow" id="plan-primary">
-						<h3>
-							Premium
-						</h3>
-						<p class="text-secondary">Advanced features for brands</p>
-						<div class="flex plan-price-wrapper">
-							<p class="plan-price">50 USD</p>
-							<p class="text-secondary plan-timeline">/ mo.</p>
-						</div>
-						<ul>
-							<li>
-								Unlimited Projects
-							</li>
-							<li>
-								Unlimited Users
-							</li>
-							<li>
-								Analytics & Reports
-							</li>
-							<li>
-								24x7 Priority Support
-							</li>
-						</ul>
-						<a href="#">Learn More --></a>
-					</div>
-					<div class="plan-item box-shadow" id="plan-secondary">
-						<h3>
-							Professional
-						</h3>
-						<p class="text-secondary">More Powerful, More Interactive</p>
-						<div class="flex plan-price-wrapper">
-							<p class="plan-price">35 USD</p>
-							<p class="text-secondary plan-timeline">/ mo.</p>
-						</div>
-						<ul>
-							<li>
-								300 Projects
-							</li>
-							<li>
-								100 Users
-							</li>
-							<li>
-								Advanced Analytics & Reports
-							</li>
-							<li>
-								24x7 Advanced Support
-							</li>
-						</ul>
-						<a href="#">Learn More --></a>
-					</div>
-					<div class="plan-item box-shadow">
-						<h3>Essential</h3>
-						<p class="text-secondary">Platform with a personal touch</p>
-						<div class="flex plan-price-wrapper">
-							<p class="plan-price">30 USD</p>
-							<p class="text-secondary plan-timeline">/ mo.</p>
-						</div>
-						<ul>
-							<li>
-								100 Projects
-							</li>
-							<li>
-								30 Users
-							</li>
-							<li>
-								Basic Analytics & Reports
-							</li>
-							<li>
-								Basic Support
-							</li>
-						</ul>
-						<a href="#">Learn More --></a>
-					</div>
-				</div>
-			</div>
-		</section>
-		<section class="divider flex flex-center" id="last-divider">
-			<a href="#" class="btn btn-primary border-round text-uppercase" id="divider-cta">Request Demo</a>
-		</section>
-		<section class="gradient-bg" id="support">
-			<div class="content content-width">
-				<h2 class="text-center text-capitalize">
-					Need your support
-				</h2>
-				<div class="flex flex-column flex-space-between">
-					<p>
-						Templates part of <a href="https://www.amptemplates.io">amptemplates.io</a> are completely free
-						to use. It takes time and effort to create such minimal yet beautiful AMP templates. Hence, if
-						my work helps you in any way then do consider supporting me so that I can continue this in the
-						future.
-					</p>
-					<a
-						href="https://www.paypal.me/yomeshgupta"
-						class="btn-primary border-round text-center text-bold text-capitalize"
-						id="support-btn"
-						>Support now</a
-					>
-				</div>
-			</div>
-		</section>
-		<footer class="flex flex-column flex-center content">
-			<div class="flex flex-center flex-column" id="footer-content">
-				<p>&#169; 2020 <a href="https://www.amptemplates.io">amptemplates.io</a>. All Rights Reserved.</p>
-				<p>
-					Designed & Developed by <a href="https://twitter.com/yomeshgupta">Yomesh Gupta</a>. Powered by
-					<a
-						href="https://code.devtools.tech?utm_source=amptemplates.io&utm_medium=lead-generation-template&utm_term=footer-meta-content"
-						>DevTools</a
-					>.
-				</p>
-				<p>Images from <a href="https://www.unsplash.com">Unsplash.com</a>.</p>
-			</div>
-		</footer>
-	</body>
+<head>
+    <meta charset="utf-8" />
+    <meta title="@title" />
+    <meta property="og:image" content="https://www.amptemplates.io/img/cover_pic.jpg" />
+    <meta property="og:title" content="@title" />
+    <meta property="og:description" content="@description" />
+    <meta property="og:url" content="https://www.amptemplates.io/templates/lead-collection" />
+    <meta property="og:site_name" content="@sitename" />
+    <meta property="og:author" content="@author" />
+    <title>@title</title>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+    <link rel="canonical" href="@canonicalUrl" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    <link rel="shortcut icon" href="img/logo.png" type="image/png" />
+    <style amp-boilerplate>
+        body {
+            -webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+            -moz-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+            -ms-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+            animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        }
+
+        @@-webkit-keyframes -amp-start {
+            from {
+                visibility: hidden;
+            }
+
+            to {
+                visibility: visible;
+            }
+        }
+
+        @@-moz-keyframes -amp-start {
+            from {
+                visibility: hidden;
+            }
+
+            to {
+                visibility: visible;
+            }
+        }
+
+        @@-ms-keyframes -amp-start {
+            from {
+                visibility: hidden;
+            }
+
+            to {
+                visibility: visible;
+            }
+        }
+
+        @@-o-keyframes -amp-start {
+            from {
+                visibility: hidden;
+            }
+
+            to {
+                visibility: visible;
+            }
+        }
+
+        @@keyframes -amp-start {
+            from {
+                visibility: hidden;
+            }
+
+            to {
+                visibility: visible;
+            }
+        }
+    </style>
+    <noscript>
+        <style amp-boilerplate>
+            body {
+                -webkit-animation: none;
+                -moz-animation: none;
+                -ms-animation: none;
+                animation: none;
+            }
+        </style>
+    </noscript>
+    <style amp-custom="">
+        * {
+            box-sizing: border-box;
+            font-family: 'Roboto';
+            transition: all 0.2s linear;
+            font-size: 16px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        html,
+        body {
+            margin: 0px;
+            padding: 0px;
+            background-color: #f5f6fa;
+        }
+
+        .gradient-bg {
+            background-image: linear-gradient(45deg, #874da2 0%, #c43a30 100%);
+        }
+
+        .content-width {
+            width: 80%;
+        }
+
+        .content {
+            margin: 0 auto;
+            padding: 4em 0px;
+            line-height: 160%;
+        }
+
+        h1 {
+            font-size: 2em;
+            line-height: 120%;
+            margin-bottom: 1em;
+            text-decoration: underline;
+            text-decoration-color: #20bf6b;
+        }
+
+        h2 {
+            font-size: 2em;
+            word-spacing: 2px;
+            text-align: center;
+            margin-bottom: 2em;
+            letter-spacing: 1px;
+        }
+
+            h2:after {
+                display: block;
+                height: 2px;
+                background-color: #487eb0;
+                content: ' ';
+                width: 100px;
+                margin: 0 auto;
+                margin-top: 30px;
+            }
+
+        h3 {
+            font-size: 1.5em;
+            margin-bottom: 1em;
+        }
+
+        .clearfix {
+            clear: both;
+        }
+
+        .green-text {
+            color: #3ebf43;
+            font-weight: bold;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+
+        .flex-center {
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flex-space-around {
+            justify-content: space-around;
+        }
+
+        .flex-space-between {
+            justify-content: space-between;
+        }
+
+        .flex-column {
+            flex-direction: column;
+        }
+
+        .flex-half {
+            width: 48%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-capitalize {
+            text-transform: capitalize;
+        }
+
+        .text-bold {
+            font-weight: bold;
+        }
+
+        .text-secondary {
+            color: #515151;
+        }
+
+        .btn {
+            padding: 1em 1.5em;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #20bf6b;
+            border: 1px solid transparent;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #20bf6b;
+        }
+
+            .btn-secondary:hover,
+            .btn-primary:hover {
+                background-color: #487eb0;
+                border-color: #487eb0;
+            }
+
+        a {
+            color: #487eb0;
+        }
+
+            a:hover {
+                color: #e67e22;
+            }
+
+        .border-round {
+            border-radius: 5px;
+        }
+
+        .box-shadow {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+        }
+
+        .animate {
+            transition: all 0.2s ease-in-out;
+        }
+
+        header {
+            width: 100%;
+            height: 80px;
+        }
+
+        #logo {
+            width: 25%;
+            height: 100%;
+        }
+
+            #logo a {
+                width: 60%;
+            }
+
+            #logo amp-img {
+                max-width: 80%;
+            }
+
+        #hero {
+            background-color: #fff;
+        }
+
+        #hero-wrapper {
+            position: relative;
+        }
+
+        #hero-content {
+            width: 56%;
+            color: #000;
+        }
+
+        #hero-divider {
+            height: 500px;
+            background-image: url('img/hero-divider-1-web.jpg');
+        }
+
+        .divider {
+            width: 100%;
+            background-size: cover;
+            background-position: top;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* LEAD COLLECTION FORM */
+        #lead-collection-form {
+            width: 40%;
+            padding: 2em 1.5em;
+            background: #fff;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        input {
+            width: 100%;
+            outline: none;
+            border: 1px solid #b1b1b1;
+            padding: 1em;
+            margin-bottom: 1em;
+        }
+
+            input:focus {
+                border: 2px solid #487eb0;
+            }
+
+        #lead-collection-form input[type='submit'] {
+            text-transform: uppercase;
+        }
+
+        /** PRODUCTS **/
+        .product-item {
+            width: 48%;
+            margin-bottom: 4em;
+        }
+
+        .product-image {
+            width: 20%;
+        }
+
+            .product-image amp-img {
+                max-width: 90%;
+            }
+
+        .product-content {
+            width: 78%;
+        }
+
+        /** CLIENTS **/
+        #clients {
+            background-color: #fff;
+        }
+
+        blockquote q,
+        blockquote cite,
+        blockquote p {
+            margin-bottom: 1em;
+            font-size: 1.3em;
+            align-self: flex-start;
+        }
+
+        blockquote cite {
+            margin-bottom: 0em;
+        }
+
+        blockquote p {
+            font-size: 1em;
+        }
+
+        /** PLANS **/
+        .plan-item {
+            width: 31%;
+            padding: 1.5em;
+            background: #fff;
+        }
+
+            .plan-item h3 {
+                margin-bottom: 0;
+            }
+
+        .plan-price-wrapper {
+            margin: 2em 0;
+        }
+
+        .plan-item .plan-price {
+            font-size: 3em;
+        }
+
+        .plan-item .plan-timeline {
+            font-size: 1.5em;
+            margin-left: 0.5em;
+        }
+
+        #plan-primary h3 {
+            color: #20bf6b;
+        }
+
+        #plan-secondary h3 {
+            color: #487eb0;
+        }
+
+        .plan-item ul {
+            margin-bottom: 1em;
+        }
+
+            .plan-item ul li {
+                list-style: none;
+            }
+
+        /** SUPPORT **/
+        #support {
+            color: #fff;
+            background: #2c3e50;
+        }
+
+            #support a {
+                color: #e67e22;
+            }
+
+        a#support-btn {
+            max-width: 150px;
+            margin: 1.5em auto;
+            padding: 0.5em 1.5em;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        #last-divider {
+            height: 300px;
+            background-position: center;
+            background-image: url('img/last-divider-web-1.jpg');
+        }
+
+            #last-divider a {
+                text-decoration: none;
+            }
+
+                #last-divider a:hover {
+                    color: #fff;
+                }
+
+        @@media only screen and (max-width: 1030px) {
+            header {
+                margin-bottom: 1em;
+            }
+
+            #logo a {
+                width: 70%;
+            }
+
+            #hero-content {
+                width: 50%;
+                color: #000;
+            }
+
+            #logo amp-img {
+                max-width: 90%;
+            }
+
+            #lead-collection-form {
+                width: 45%;
+            }
+
+            #hero-divider {
+                height: 400px;
+            }
+
+            blockquote q,
+            blockquote cite,
+            blockquote p {
+                font-size: 1em;
+            }
+
+            blockquote p {
+                font-size: 0.8em;
+            }
+
+            .plan-item .plan-price {
+                font-size: 2em;
+            }
+        }
+
+        @@media only screen and (max-width: 768px) {
+            header {
+                margin-bottom: 0;
+            }
+
+            #logo a {
+                width: 90%;
+            }
+
+            #hero-wrapper {
+                flex-direction: column;
+                text-align: center;
+                padding: 2em 0;
+            }
+
+            #lead-collection-form,
+            #hero-content {
+                width: 100%;
+            }
+
+            #lead-collection-form {
+                margin-top: 2em;
+                position: relative;
+            }
+
+            #hero-divider {
+                height: 300px;
+            }
+
+            .content-width {
+                width: 90%;
+            }
+
+            .product-item {
+                width: 100%;
+            }
+
+            h2 {
+                line-height: 130%;
+            }
+
+            .plan-item {
+                width: 48%;
+                margin-bottom: 2em;
+            }
+        }
+
+        @@media only screen and (max-width: 600px) {
+            #logo {
+                width: 50%;
+            }
+
+            #hero-wrapper {
+                padding: 0;
+            }
+
+            h1 {
+                font-size: 1.7em;
+                margin-top: 1em;
+            }
+
+            h2 {
+                font-size: 1.6em;
+                margin-bottom: 1em;
+            }
+
+            h3 {
+                font-size: 1.4em;
+            }
+
+            #lead-collection-form {
+                margin-bottom: 2em;
+            }
+
+            .product-item {
+                flex-direction: column;
+                margin-bottom: 3em;
+            }
+
+                .product-item .product-image {
+                    width: 100%;
+                    margin-bottom: 2em;
+                }
+
+                    .product-item .product-image amp-img {
+                        max-width: 45%;
+                        margin: 0 auto;
+                    }
+
+                .product-item .product-content {
+                    width: 100%;
+                }
+
+            .flex-half {
+                width: 100%;
+            }
+
+            blockquote {
+                margin-top: 2em;
+            }
+
+            .plan-item {
+                width: 100%;
+            }
+
+            #footer-content {
+                width: 90%;
+                text-align: center;
+            }
+
+                #footer-content p {
+                    margin-bottom: 0.5em;
+                }
+        }
+    </style>
+</head>
+<body>
+    <section id="hero">
+        <header class="flex flex-center">
+            <div class="flex flex-space-around flex-center" id="logo">
+                <h1 class="text-capitalize">
+                    Lead Capturing AMP template for your next marketing campaign
+                </h1>
+                @*<a class="flex flex-center" href="https://code.devtools.tech/?ref=lead-collection-template">
+                        <amp-img
+                            alt="Company Logo"
+                            src="img/logo.png"
+                            width="300"
+                            height="82"
+                            layout="intrinsic"
+                        ></amp-img>
+                    </a>*@
+            </div>
+        </header>
+        <div class="flex content content-width" id="hero-wrapper">
+            <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" />
+            @*<div id="hero-content" class="flex flex-column flex-center">
+                    <h1 class="text-capitalize">
+                        Lead Capturing AMP template for your next marketing campaign
+                    </h1>
+                    <p class="text-secondary">
+                        Capture way more leads with high-converting landing page that you can optimize on the fly, all
+                        without minimal changes. Using this template, you can avoid bottlenecks and launch campaigns
+                        fast with simple changes to fully customize to match your SaaS brand.
+                    </p>
+                </div>
+                <form
+                    method="post"
+                    id="lead-collection-form"
+                    action-xhr="/"
+                    target="_top"
+                    class="flex flex-column flex-center border-round box-shadow"
+                >
+                    <input type="text" name="name" placeholder="Name" class="animate border-round" required />
+                    <input type="email" name="email" placeholder="Work Email" class="animate border-round" required />
+                    <input type="phone" name="phone" placeholder="Phone Number" class="animate border-round" required />
+                    <input type="text" name="company" placeholder="Company" class="animate border-round" required />
+                    <input type="submit" value="Request Demo" class="btn-primary text-bold border-round animate" />
+                    <p class="text-secondary">
+                        By filling this form, you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a>
+                    </p>
+                </form>*@
+        </div>
+    </section>
+    @*<section class="divider" id="hero-divider">&nbsp;</section>
+        <section id="features">
+            <div class="content content-width">
+                <h2 class="text-center text-capitalize">
+                    Explore our Services in their full Glory
+                </h2>
+                <div class="flex flex-space-between flex-wrap">
+                    <div class="flex flex-space-between product-item">
+                        <div class="product-image">
+                            <amp-img
+                                alt="Clients"
+                                src="img/feature-1.svg"
+                                width="512"
+                                height="512"
+                                layout="responsive"
+                            ></amp-img>
+                        </div>
+                        <div class="product-content">
+                            <h3>Service 1</h3>
+                            <p class="text-secondary">
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit praesentium
+                                ipsam perferendis quod corrupti ratione, eligendi tempora voluptatibus dicta repudiandae
+                                dolore incidunt magnam error vero inventore illo a iste quo?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex flex-space-between product-item">
+                        <div class="product-image">
+                            <amp-img
+                                alt="Clients"
+                                src="img/feature-3.svg"
+                                width="512"
+                                height="512"
+                                layout="responsive"
+                            ></amp-img>
+                        </div>
+                        <div class="product-content">
+                            <h3>Service 2</h3>
+                            <p class="text-secondary">
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit praesentium
+                                ipsam perferendis quod corrupti ratione, eligendi tempora voluptatibus dicta repudiandae
+                                dolore incidunt magnam error vero inventore illo a iste quo?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex flex-space-between product-item">
+                        <div class="product-image">
+                            <amp-img
+                                alt="Clients"
+                                src="img/feature-3.svg"
+                                width="512"
+                                height="512"
+                                layout="responsive"
+                            ></amp-img>
+                        </div>
+                        <div class="product-content">
+                            <h3>Service 3</h3>
+                            <p class="text-secondary">
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit praesentium
+                                ipsam perferendis quod corrupti ratione, eligendi tempora voluptatibus dicta repudiandae
+                                dolore incidunt magnam error vero inventore illo a iste quo?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex flex-space-between product-item">
+                        <div class="product-image">
+                            <amp-img
+                                alt="Clients"
+                                src="img/feature-2.svg"
+                                width="512"
+                                height="512"
+                                layout="responsive"
+                            ></amp-img>
+                        </div>
+                        <div class="product-content">
+                            <h3>Service 4</h3>
+                            <p class="text-secondary">
+                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit praesentium
+                                ipsam perferendis quod corrupti ratione, eligendi tempora voluptatibus dicta repudiandae
+                                dolore incidunt magnam error vero inventore illo a iste quo?
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="clients">
+            <div class="content content-width">
+                <h2 class="text-center text-capitalize">
+                    Trusted By Thousands of Brands Across World
+                </h2>
+                <div class="flex flex-space-between flex-wrap">
+                    <div class="flex-half">
+                        <amp-img
+                            alt="Clients"
+                            src="img/clients-web.jpg"
+                            width="1600"
+                            height="910"
+                            layout="responsive"
+                        ></amp-img>
+                    </div>
+                    <blockquote class="flex-half flex-column flex flex-center">
+                        <q>
+                            The Platform helps me quickly and easily find conversion optimization wins that I can
+                            standardize across our whole enterprise. I don’t like to use the phrase “best practice”
+                            unless I can prove it, and my proof is in the data provided by this platform.
+                        </q>
+                        <cite>Naman Handa</cite>
+                        <p class="text-secondary">Director, Marketing, Dessiner Store</p>
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+        <section id="plans">
+            <div class="content content-width">
+                <h2 class="text-center text-capitalize">
+                    Our plans for you
+                </h2>
+                <div class="flex flex-space-between flex-wrap">
+                    <div class="plan-item box-shadow" id="plan-primary">
+                        <h3>
+                            Premium
+                        </h3>
+                        <p class="text-secondary">Advanced features for brands</p>
+                        <div class="flex plan-price-wrapper">
+                            <p class="plan-price">50 USD</p>
+                            <p class="text-secondary plan-timeline">/ mo.</p>
+                        </div>
+                        <ul>
+                            <li>
+                                Unlimited Projects
+                            </li>
+                            <li>
+                                Unlimited Users
+                            </li>
+                            <li>
+                                Analytics & Reports
+                            </li>
+                            <li>
+                                24x7 Priority Support
+                            </li>
+                        </ul>
+                        <a href="#">Learn More --></a>
+                    </div>
+                    <div class="plan-item box-shadow" id="plan-secondary">
+                        <h3>
+                            Professional
+                        </h3>
+                        <p class="text-secondary">More Powerful, More Interactive</p>
+                        <div class="flex plan-price-wrapper">
+                            <p class="plan-price">35 USD</p>
+                            <p class="text-secondary plan-timeline">/ mo.</p>
+                        </div>
+                        <ul>
+                            <li>
+                                300 Projects
+                            </li>
+                            <li>
+                                100 Users
+                            </li>
+                            <li>
+                                Advanced Analytics & Reports
+                            </li>
+                            <li>
+                                24x7 Advanced Support
+                            </li>
+                        </ul>
+                        <a href="#">Learn More --></a>
+                    </div>
+                    <div class="plan-item box-shadow">
+                        <h3>Essential</h3>
+                        <p class="text-secondary">Platform with a personal touch</p>
+                        <div class="flex plan-price-wrapper">
+                            <p class="plan-price">30 USD</p>
+                            <p class="text-secondary plan-timeline">/ mo.</p>
+                        </div>
+                        <ul>
+                            <li>
+                                100 Projects
+                            </li>
+                            <li>
+                                30 Users
+                            </li>
+                            <li>
+                                Basic Analytics & Reports
+                            </li>
+                            <li>
+                                Basic Support
+                            </li>
+                        </ul>
+                        <a href="#">Learn More --></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="divider flex flex-center" id="last-divider">
+            <a href="#" class="btn btn-primary border-round text-uppercase" id="divider-cta">Request Demo</a>
+        </section>
+        <section class="gradient-bg" id="support">
+            <div class="content content-width">
+                <h2 class="text-center text-capitalize">
+                    Need your support
+                </h2>
+                <div class="flex flex-column flex-space-between">
+                    <p>
+                        Templates part of <a href="https://www.amptemplates.io">amptemplates.io</a> are completely free
+                        to use. It takes time and effort to create such minimal yet beautiful AMP templates. Hence, if
+                        my work helps you in any way then do consider supporting me so that I can continue this in the
+                        future.
+                    </p>
+                    <a
+                        href="https://www.paypal.me/yomeshgupta"
+                        class="btn-primary border-round text-center text-bold text-capitalize"
+                        id="support-btn"
+                        >Support now</a
+                    >
+                </div>
+            </div>
+        </section>*@
+    <footer class="flex flex-column flex-center content">
+        <div class="flex flex-center flex-column" id="footer-content">
+            <p>&#169; 2020 <a href="https://www.amptemplates.io">amptemplates.io</a>. All Rights Reserved.</p>
+            <p>
+                Designed & Developed by <a href="https://twitter.com/yomeshgupta">Yomesh Gupta</a>. Powered by
+                <a href="https://code.devtools.tech?utm_source=amptemplates.io&utm_medium=lead-generation-template&utm_term=footer-meta-content">DevTools</a>.
+            </p>
+            <p>Images from <a href="https://www.unsplash.com">Unsplash.com</a>.</p>
+        </div>
+    </footer>
+</body>
 </html>
