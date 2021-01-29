@@ -20,6 +20,8 @@
     <title>@title</title>
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
+    <script custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js" async></script>
+    <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
     <link rel="canonical" href="@canonicalUrl" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
@@ -592,7 +594,7 @@
 <body>
     <section id="hero">
         <header class="flex flex-center">
-            <div class="flex flex-space-around flex-center" id="logo">
+            <div class="flex flex-space-around flex-center">
                 <h1 class="text-capitalize">
                     Cut YouTube
                 </h1>
@@ -607,35 +609,71 @@
                     </a>*@
             </div>
         </header>
-        <div class="flex content content-width" id="hero-wrapper">
-            <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" />
-            @*<div id="hero-content" class="flex flex-column flex-center">
-                    <h1 class="text-capitalize">
-                        Lead Capturing AMP template for your next marketing campaign
-                    </h1>
-                    <p class="text-secondary">
-                        Capture way more leads with high-converting landing page that you can optimize on the fly, all
-                        without minimal changes. Using this template, you can avoid bottlenecks and launch campaigns
-                        fast with simple changes to fully customize to match your SaaS brand.
-                    </p>
+        <div>
+            <form method="post" id="myForm" action-xhr="/home/getyoutubev">
+                <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" />
+                <p class="text-secondary">
+                    <input type="submit" value="Start" class="btn-primary text-bold border-round animate" />
+                </p>
+                <div submit-success>
+                    <template type="amp-mustache">
+                        <amp-youtube data-videoid="{{v}}"
+                                     layout="fixed"
+                                     width="480"
+                                     height="270"></amp-youtube>
+                    </template>
                 </div>
-                <form
-                    method="post"
-                    id="lead-collection-form"
-                    action-xhr="/"
-                    target="_top"
-                    class="flex flex-column flex-center border-round box-shadow"
-                >
-                    <input type="text" name="name" placeholder="Name" class="animate border-round" required />
-                    <input type="email" name="email" placeholder="Work Email" class="animate border-round" required />
-                    <input type="phone" name="phone" placeholder="Phone Number" class="animate border-round" required />
-                    <input type="text" name="company" placeholder="Company" class="animate border-round" required />
-                    <input type="submit" value="Request Demo" class="btn-primary text-bold border-round animate" />
-                    <p class="text-secondary">
-                        By filling this form, you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a>
-                    </p>
-                </form>*@
+            </form>
         </div>
+        <div>
+            <form method="post" id="myForm" action-xhr="/home/generate" class="flex flex-column flex-center border-round box-shadow">
+                <input type="text" name="from" id="from" placeholder="From" class="animate border-round" required />
+                <input type="text" name="to" id="to" placeholder="To" class="animate border-round" required />
+                <input type="submit" value="Generate" class="btn-primary text-bold border-round animate" />
+                <div submitting>
+                    <template type="amp-mustache">
+                        Form submitting... Thank you for waiting {{name}}.
+                    </template>
+                </div>
+                <div submit-success>
+                    <template type="amp-mustache">
+                        Success! Thanks {{name}}
+                    </template>
+                </div>
+                <div submit-error>
+                    <template type="amp-mustache">
+                        Oops! {{name}}, {{message}}.
+                    </template>
+                </div>
+            </form>
+        </div>
+        @*<div id="hero-content" class="flex flex-column flex-center">
+                <h1 class="text-capitalize">
+                    Lead Capturing AMP template for your next marketing campaign
+                </h1>
+                <p class="text-secondary">
+                    Capture way more leads with high-converting landing page that you can optimize on the fly, all
+                    without minimal changes. Using this template, you can avoid bottlenecks and launch campaigns
+                    fast with simple changes to fully customize to match your SaaS brand.
+                </p>
+            </div>
+            <form
+                method="post"
+                id="lead-collection-form"
+                action-xhr="/"
+                target="_top"
+                class="flex flex-column flex-center border-round box-shadow"
+            >
+                <input type="text" name="name" placeholder="Name" class="animate border-round" required />
+                <input type="email" name="email" placeholder="Work Email" class="animate border-round" required />
+                <input type="phone" name="phone" placeholder="Phone Number" class="animate border-round" required />
+                <input type="text" name="company" placeholder="Company" class="animate border-round" required />
+                <input type="submit" value="Request Demo" class="btn-primary text-bold border-round animate" />
+                <p class="text-secondary">
+                    By filling this form, you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a>
+                </p>
+            </form>*@
+
     </section>
     @*<section class="divider" id="hero-divider">&nbsp;</section>
         <section id="features">

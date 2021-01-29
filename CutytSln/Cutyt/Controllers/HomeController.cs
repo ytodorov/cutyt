@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Cutyt.Controllers
 {
@@ -22,6 +24,36 @@ namespace Cutyt.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult Generate(string from, string to)
+        {
+            var result = new { name = "Name (from server)" };
+            if (int.TryParse(to, out int toInt))
+            {
+                if (toInt > 1000)
+                {
+                    Thread.Sleep(toInt);
+                }
+            }
+            return Json(result);
+        }
+
+        [HttpPost]
+        public IActionResult GetYouTubeV(string ytUrl)
+        {
+            var parts = ytUrl?.Split(new string[] { "/watch?" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (parts.Count == 2)
+            {
+                var qs = parts[1];
+                var parsedQS = HttpUtility.ParseQueryString(qs);
+                var v = parsedQS["v"];
+                var result = new { v };
+                return Json(result);
+            }
+            return Json(string.Empty);
+        }
+        //getyoutubev
 
         public IActionResult Privacy()
         {
