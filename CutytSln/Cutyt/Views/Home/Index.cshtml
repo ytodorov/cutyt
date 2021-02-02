@@ -632,17 +632,17 @@
                 <input type="submit" value="Generate" class="btn-primary text-bold border-round animate" />
                 <div submitting>
                     <template type="amp-mustache">
-                        Form submitting... Thank you for waiting {{name}}.
+                        Form submitting... Thank you for waiting!
                     </template>
                 </div>
                 <div submit-success>
                     <template type="amp-mustache">
-                        Success! Thanks {{name}}
+                        <a href="{{resultLink}}">{{name}}</a>
                     </template>
                 </div>
                 <div submit-error>
                     <template type="amp-mustache">
-                        Oops! {{name}}, {{message}}.
+                        Oops! Error!
                     </template>
                 </div>
             </form>

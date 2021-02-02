@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -15,9 +16,13 @@ namespace Cutyt.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IHttpClientFactory httpClientFactory;
+
+
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
+            this.httpClientFactory = httpClientFactory;
         }
 
         public IActionResult Index()
@@ -26,16 +31,17 @@ namespace Cutyt.Controllers
         }
 
         [HttpPost]
-        public IActionResult Generate(string from, string to)
+        public async Task<JsonResult> Generate(string from, string to)
         {
-            var result = new { name = "Name (from server)" };
-            if (int.TryParse(to, out int toInt))
-            {
-                if (toInt > 1000)
-                {
-                    Thread.Sleep(toInt);
-                }
-            }
+            var httpClient = httpClientFactory.CreateClient();
+
+            var youTubeV = "https://www.youtube.com/watch?v=oK_rLUl2_8w";
+
+            var link = await httpClient.GetStringAsync($"http://cutyt.westeurope.cloudapp.azure.com/home/exec?args={youTubeV}");
+
+            var resultLink = link.Replace(@"C:\inetpub\wwwroot\wwwroot\", "http://cutyt.westeurope.cloudapp.azure.com/").Replace("\\", "/");
+            var name = resultLink.Substring(resultLink.LastIndexOf("/") + 1);
+            var result = new { resultLink, name };
             return Json(result);
         }
 
