@@ -22,6 +22,9 @@
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
     <script custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js" async></script>
     <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
+    <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+    <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+
     <link rel="canonical" href="@canonicalUrl" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
@@ -592,6 +595,18 @@
     </style>
 </head>
 <body>
+    <amp-analytics type="gtag" data-credentials="include">
+        <script type="application/json">
+            {
+              "vars" : {
+                "gtag_id": "UA-43988280-11",
+                "config" : {
+                  "UA-43988280-11": { "groups": "default" }
+                }
+              }
+            }
+        </script>
+    </amp-analytics>
     <section id="hero">
         <header class="flex flex-center">
             <div class="flex flex-space-around flex-center">
@@ -610,7 +625,7 @@
             </div>
         </header>
         <div>
-            <form method="post" id="myForm" action-xhr="/home/getyoutubev">
+            <form method="post" id="myForm" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({'v': event.response.v})">
                 <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" />
                 <p class="text-secondary">
                     <input type="submit" value="Start" class="btn-primary text-bold border-round animate" />
@@ -629,6 +644,7 @@
             <form method="post" id="myForm" action-xhr="/home/generate" class="flex flex-column flex-center border-round box-shadow">
                 <input type="text" name="from" id="from" placeholder="From" class="animate border-round" required />
                 <input type="text" name="to" id="to" placeholder="To" class="animate border-round" required />
+                <input type="hidden" name="v" id="v" [value]="v" />
                 <input type="submit" value="Generate" class="btn-primary text-bold border-round animate" />
                 <div submitting>
                     <template type="amp-mustache">

@@ -31,11 +31,11 @@ namespace Cutyt.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Generate(string from, string to)
+        public async Task<JsonResult> Generate(string from, string to, string v)
         {
             var httpClient = httpClientFactory.CreateClient();
 
-            var youTubeV = "https://www.youtube.com/watch?v=oK_rLUl2_8w";
+            var youTubeV = "https://www.youtube.com/watch?v={v}";
 
             var link = await httpClient.GetStringAsync($"http://cutyt.westeurope.cloudapp.azure.com/home/exec?args={youTubeV}");
 
@@ -48,6 +48,7 @@ namespace Cutyt.Controllers
         [HttpPost]
         public IActionResult GetYouTubeV(string ytUrl)
         {
+            ytUrl = GetFullUrlFromYouTube(ytUrl);
             var parts = ytUrl?.Split(new string[] { "/watch?" }, StringSplitOptions.RemoveEmptyEntries).ToList();
             if (parts.Count == 2)
             {
@@ -70,6 +71,23 @@ namespace Cutyt.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private string GetFullUrlFromYouTube(string url)
+        {
+            if (url.ToLowerInvariant().Contains("youtu.be"))
+            {
+                var client = httpClientFactory.CreateClient();
+                var response = client.GetAsync(url).Result;
+                var fullUrl = response?.RequestMessage?.RequestUri?.ToString();
+                return fullUrl;
+
+
+            }
+            else
+            {
+                return url;
+            }
         }
     }
 }
