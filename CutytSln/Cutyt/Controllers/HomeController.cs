@@ -1,5 +1,6 @@
 ﻿using Cutyt.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,13 @@ namespace Cutyt.Controllers
 
         private readonly IHttpClientFactory httpClientFactory;
 
+        private IHostEnvironment hostEnvironment;
 
-        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory)
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, IHostEnvironment hostEnvironment)
         {
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
+            this.hostEnvironment = hostEnvironment;
         }
 
         public IActionResult Index()
@@ -35,9 +38,16 @@ namespace Cutyt.Controllers
         {
             var httpClient = httpClientFactory.CreateClient();
 
-            var youTubeV = "https://www.youtube.com/watch?v={v}";
+            var youTubeV = $"https://www.youtube.com/watch?v={v}";
 
-            var link = await httpClient.GetStringAsync($"http://cutyt.westeurope.cloudapp.azure.com/home/exec?args={youTubeV}");
+            string serverAddress = "http://localhost:14954/";
+
+            if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
+            {
+                serverAddress = "http://cutyt.westeurope.cloudapp.azure.com/";
+            }
+
+            var link = await httpClient.GetStringAsync($"{serverAddress}home/exec?args={youTubeV}");
 
             var resultLink = link.Replace(@"C:\inetpub\wwwroot\wwwroot\", "http://cutyt.westeurope.cloudapp.azure.com/").Replace("\\", "/");
             var name = resultLink.Substring(resultLink.LastIndexOf("/") + 1);

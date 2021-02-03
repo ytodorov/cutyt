@@ -78,6 +78,8 @@ namespace WebApplication1.Controllers
                     {
                         var newFiles = Directory.GetFiles(newDirectory);
                         var newFile = newFiles.FirstOrDefault(f => !f.EndsWith(".exe"));
+                        var fileToDelete = newFiles.FirstOrDefault(f => f.EndsWith(".exe"));
+                        System.IO.File.Delete(fileToDelete);
 
                         return Content(newFile, "text/plain");
 
