@@ -78,6 +78,12 @@ namespace WebApplication1.Controllers
                     {
                         var newFiles = Directory.GetFiles(newDirectory);
                         var newFile = newFiles.FirstOrDefault(f => !f.EndsWith(".exe"));
+
+                        string newFileName = Path.GetFileName(newFile);
+
+                        // Copy File To Azure Storage
+                        System.IO.File.Copy(newFile, Path.Combine("F:", newFileName), true);
+
                         var fileToDelete = newFiles.FirstOrDefault(f => f.EndsWith(".exe"));
                         System.IO.File.Delete(fileToDelete);
 
@@ -90,7 +96,7 @@ namespace WebApplication1.Controllers
 
                         //return File(fs, contentType);
                     }
-                    return new JsonResult(result + "ГРЕШКИ" + error);
+                    return Content(result + "ГРЕШКИ" + error, "text/plain");
                 }
                 return new JsonResult("No such program " + program);
             }
