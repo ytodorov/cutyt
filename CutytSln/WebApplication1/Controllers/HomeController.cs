@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cutyt.Core.Classes;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WebApplication1.Models;
 
@@ -79,22 +81,22 @@ namespace WebApplication1.Controllers
                         var newFiles = Directory.GetFiles(newDirectory);
                         var newFile = newFiles.FirstOrDefault(f => !f.EndsWith(".exe"));
 
-                        string newFileName = Path.GetFileName(newFile);
+                        string name = Path.GetFileName(newFile);
 
                         // Copy File To Azure Storage
-                        System.IO.File.Copy(newFile, Path.Combine("F:", newFileName), true);
+                        System.IO.File.Copy(newFile, Path.Combine("F:", name), true);
 
                         var fileToDelete = newFiles.FirstOrDefault(f => f.EndsWith(".exe"));
                         System.IO.File.Delete(fileToDelete);
 
-                        return Content(newFile, "text/plain");
-
-                        //var fs = System.IO.File.Open(newFile, FileMode.Open);
-                        //new FileExtensionContentTypeProvider().TryGetContentType(newFile, out string contentType);
-
-
-
-                        //return File(fs, contentType);
+                        string sas = "?sv=2019-12-12&ss=f&srt=sco&sp=rl&se=2051-02-09T05:56:05Z&st=2020-02-08T21:56:05Z&spr=https&sig=c5Z%2FrDJsaABP5NzNR56OI7RlVPCdfbJgBsCTxX3PiGw%3D";
+                        string url = $"https://stcutyt.file.core.windows.net/cutyt/{name}{sas}";
+                        LinkViewModel linkViewModel = new LinkViewModel()
+                        {
+                            Name = name,
+                            Url = url
+                        };                        
+                        return Json(linkViewModel);
                     }
                     return Content(result + "ГРЕШКИ" + error, "text/plain");
                 }

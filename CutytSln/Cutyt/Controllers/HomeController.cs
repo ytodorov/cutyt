@@ -1,4 +1,5 @@
-﻿using Cutyt.Models;
+﻿using Cutyt.Core.Classes;
+using Cutyt.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
@@ -47,11 +49,19 @@ namespace Cutyt.Controllers
                 serverAddress = "http://cutyt.westeurope.cloudapp.azure.com/";
             }
 
-            var link = await httpClient.GetStringAsync($"{serverAddress}home/exec?args={youTubeV}");
+            var json = await httpClient.GetStringAsync($"{serverAddress}home/exec?args={youTubeV}");
 
-            var resultLink = link.Replace(@"C:\inetpub\wwwroot\wwwroot\", "http://cutyt.westeurope.cloudapp.azure.com/").Replace("\\", "/");
-            var name = resultLink.Substring(resultLink.LastIndexOf("/") + 1);
-            var result = new { resultLink, name };
+
+            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+                      
+            var linkviewModel = JsonSerializer.Deserialize<LinkViewModel>(json, jsonSerializerOptions);
+
+            //var resultLink = link.Replace(@"C:\inetpub\wwwroot\wwwroot\", "http://cutyt.westeurope.cloudapp.azure.com/").Replace("\\", "/");
+            //var name = resultLink.Substring(resultLink.LastIndexOf("/") + 1);
+            var result = new { linkviewModel.Url, linkviewModel.Name };
             return Json(result);
         }
 
