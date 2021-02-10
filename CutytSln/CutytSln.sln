@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cutyt", "Cutyt\Cutyt.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{53FC2C02-7BEA-4297-8D58-05FFFA36A35C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cutyt.Core", "Cutyt.Core\Cutyt.Core.csproj", "{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cutyt.Core", "Cutyt.Core\Cutyt.Core.csproj", "{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{4E731865-9748-4D90-ADAA-6A78167345C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E731865-9748-4D90-ADAA-6A78167345C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E731865-9748-4D90-ADAA-6A78167345C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E731865-9748-4D90-ADAA-6A78167345C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E731865-9748-4D90-ADAA-6A78167345C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

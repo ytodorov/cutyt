@@ -1,4 +1,5 @@
 ﻿using Cutyt.Core.Classes;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting;
@@ -18,9 +19,12 @@ namespace WebApplication1.Controllers
     {
         private readonly IHostEnvironment hostEnvironment;
 
-        public HomeController(IHostEnvironment hostEnvironment)
+        private TelemetryClient telemetryClient;
+
+        public HomeController(IHostEnvironment hostEnvironment, TelemetryClient telemetryClient)
         {
             this.hostEnvironment = hostEnvironment;
+            this.telemetryClient = telemetryClient;
         }
 
         public IActionResult Index()
@@ -84,7 +88,9 @@ namespace WebApplication1.Controllers
                         string name = Path.GetFileName(newFile);
 
                         // Copy File To Azure Storage
-                        System.IO.File.Copy(newFile, Path.Combine("F:", name), true);
+                        // System.IO.File.Copy(newFile, Path.Combine(@"\\stcutyt.file.core.windows.net", name), true);
+
+                        Helpers.UploadFileInAzureFileShare(newFile, hostEnvironment);
 
                         var fileToDelete = newFiles.FirstOrDefault(f => f.EndsWith(".exe"));
                         System.IO.File.Delete(fileToDelete);
@@ -104,6 +110,7 @@ namespace WebApplication1.Controllers
             }
             catch (Exception ex)
             {
+                telemetryClient.TrackException(ex);
                 var json = new JsonResult(ex.Message + ex.StackTrace);
                 return json;
             }
