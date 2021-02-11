@@ -307,12 +307,12 @@
 
         /* LEAD COLLECTION FORM */
         #lead-collection-form {
-            width: 40%;
+            /*width: 80%;*/
             padding: 2em 1.5em;
             background: #fff;
-            position: absolute;
+         /*   position: absolute;
             top: 0;
-            right: 0;
+            right: 0;*/
         }
 
         input {
@@ -630,12 +630,12 @@
             </div>
         </header>
         <div>
-            <form method="post" id="myForm" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({'v': event.response.v})">
+            <form method="post" id="lead-collection-form" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({'v': event.response.v})" class="flex-center">
                 <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" />
                 <p class="text-secondary">
                     <input type="submit" value="Start" class="btn-primary text-bold border-round animate" />
                 </p>
-                <div submit-success>
+                <div submit-success class="flex-center">
                     <template type="amp-mustache">
                         <amp-youtube data-videoid="{{v}}"
                                      layout="fixed"
@@ -646,7 +646,7 @@
             </form>
         </div>
         <div>
-            <form method="post" id="myForm" action-xhr="/home/generate" class="flex flex-column flex-center border-round box-shadow">
+            <form method="post" id="lead-collection-form" action-xhr="/home/generate" class="flex-center">
                 <input type="text" name="from" id="from" placeholder="From" class="animate border-round" required />
                 <input type="text" name="to" id="to" placeholder="To" class="animate border-round" required />
                 <input type="hidden" name="v" id="v" [value]="v" />

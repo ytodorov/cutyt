@@ -26,7 +26,7 @@ namespace WebApplication1
 
             if (!hostingEnvironment.IsDevelopment())
             {
-                connectionString = "BlobEndpoint=https://stcutyt.blob.core.windows.net/;QueueEndpoint=https://stcutyt.queue.core.windows.net/;FileEndpoint=https://stcutyt.file.core.windows.net/;TableEndpoint=https://stcutyt.table.core.windows.net/;SharedAccessSignature=sv=2019-12-12&ss=f&srt=sco&sp=rwlc&se=5021-02-10T17:09:05Z&st=2020-02-10T09:09:05Z&sip=51.136.25.67&spr=https,http&sig=C9WDKKQR685I7XGD9Poj0yu0%2FdXH4ELCm9pZSP3GVkQ%3D";
+                connectionString = "BlobEndpoint=https://stcutyt.blob.core.windows.net/;QueueEndpoint=https://stcutyt.queue.core.windows.net/;FileEndpoint=https://stcutyt.file.core.windows.net/;TableEndpoint=https://stcutyt.table.core.windows.net/;SharedAccessSignature=sv=2019-12-12&ss=ft&srt=sco&sp=wlacu&se=3021-02-10T17:46:16Z&st=2020-02-10T09:46:16Z&spr=https,http&sig=j56e05I4um%2Fkft67QmgrWuKMoudnGqDTCzi4VXxRuFg%3D";
             }
 
             // Name of the share, directory, and file we'll create
@@ -51,9 +51,10 @@ namespace WebApplication1
             using (FileStream stream = File.OpenRead(localFilePath))
             {
                 file.Create(stream.Length);
-                file.UploadRange(
-                    new HttpRange(0, stream.Length),
-                    stream);
+                file.UploadAsync(stream);
+                //file.UploadRange(
+                //    new HttpRange(0, stream.Length),
+                //    stream);
             }
         }
     }
