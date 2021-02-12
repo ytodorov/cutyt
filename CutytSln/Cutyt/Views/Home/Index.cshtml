@@ -629,45 +629,7 @@
                     </a>*@
             </div>
         </header>
-        <div>
-            <form method="post" id="lead-collection-form" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({'v': event.response.v})" class="flex-center">
-                <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" />
-                <p class="text-secondary">
-                    <input type="submit" value="Start" class="btn-primary text-bold border-round animate" />
-                </p>
-                <div submit-success class="flex-center">
-                    <template type="amp-mustache">
-                        <amp-youtube data-videoid="{{v}}"
-                                     layout="fixed"
-                                     width="480"
-                                     height="270"></amp-youtube>
-                    </template>
-                </div>
-            </form>
-        </div>
-        <div>
-            <form method="post" id="lead-collection-form" action-xhr="/home/generate" class="flex-center">
-                <input type="text" name="from" id="from" placeholder="From" class="animate border-round" required />
-                <input type="text" name="to" id="to" placeholder="To" class="animate border-round" required />
-                <input type="hidden" name="v" id="v" [value]="v" />
-                <input type="submit" value="Generate" class="btn-primary text-bold border-round animate" />
-                <div submitting>
-                    <template type="amp-mustache">
-                        Form submitting... Thank you for waiting!
-                    </template>
-                </div>
-                <div submit-success>
-                    <template type="amp-mustache">
-                        <a href="{{url}}">{{name}}</a>
-                    </template>
-                </div>
-                <div submit-error>
-                    <template type="amp-mustache">
-                        Oops! Error!
-                    </template>
-                </div>
-            </form>
-        </div>
+        
         @*<div id="hero-content" class="flex flex-column flex-center">
                 <h1 class="text-capitalize">
                     Lead Capturing AMP template for your next marketing campaign
@@ -695,6 +657,53 @@
                 </p>
             </form>*@
 
+    </section>
+    <section id="cutYtBody">
+        <div>
+            <form method="post" id="lead-collection-form2" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({'v': event.response.v})" class="flex-center">
+                <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" />
+                <p class="text-secondary">
+                    <input type="submit" value="Preview" class="btn-primary text-bold border-round animate" />
+                </p>
+                <div submit-success class="flex-center">
+                    <p>
+                        <template type="amp-mustache">
+                            <amp-youtube data-videoid="{{v}}"
+                                         layout="fixed-height"
+                                         width="auto"
+                                         height="270"></amp-youtube>
+                        </template>
+                    </p>
+                </div>
+            </form>
+        </div> 
+    </section>
+    <section id="generate">
+        <div>
+            <form method="post" id="lead-collection-form3" action-xhr="/home/generate" class="flex-center">
+                @*<input type="text" name="from" id="from" placeholder="From" class="animate border-round" required />
+                <input type="text" name="to" id="to" placeholder="To" class="animate border-round" required />*@
+                <input type="hidden" name="v" id="v" [value]="v" />
+                <p>
+                    <input type="submit" value="Generate Links" class="btn-primary text-bold border-round animate" />
+                </p>
+                <div submitting>
+                    <template type="amp-mustache">
+                        Form submitting... Thank you for waiting!
+                    </template>
+                </div>
+                <div submit-success>
+                    <template type="amp-mustache">
+                        <a href="{{url}}">{{name}}</a>
+                    </template>
+                </div>
+                <div submit-error>
+                    <template type="amp-mustache">
+                        Oops! Error!
+                    </template>
+                </div>
+            </form>
+        </div>
     </section>
     @*<section class="divider" id="hero-divider">&nbsp;</section>
         <section id="features">

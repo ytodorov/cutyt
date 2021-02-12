@@ -95,14 +95,12 @@ namespace Cutyt.Controllers
 
         private string GetFullUrlFromYouTube(string url)
         {
-            if (url.ToLowerInvariant().Contains("youtu.be"))
+            if (url?.ToLowerInvariant()?.Contains("youtu.be", StringComparison.InvariantCultureIgnoreCase) == true)
             {
                 var client = httpClientFactory.CreateClient();
                 var response = client.GetAsync(url).Result;
                 var fullUrl = response?.RequestMessage?.RequestUri?.ToString();
                 return fullUrl;
-
-
             }
             else
             {
