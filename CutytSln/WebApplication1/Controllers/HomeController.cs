@@ -90,13 +90,22 @@ namespace WebApplication1.Controllers
                         // Copy File To Azure Storage
                         // System.IO.File.Copy(newFile, Path.Combine(@"\\stcutyt.file.core.windows.net", name), true);
 
-                        Helpers.UploadFileInAzureFileShare(newFile, hostEnvironment);
+                        //Helpers.UploadFileInAzureFileShare(newFile, hostEnvironment);
 
-                        var fileToDelete = newFiles.FirstOrDefault(f => f.EndsWith(".exe"));
-                        System.IO.File.Delete(fileToDelete);
+                        //var fileToDelete = newFiles.FirstOrDefault(f => f.EndsWith(".exe"));
+                        //System.IO.File.Delete(fileToDelete);
 
-                        string sas = "?sv=2019-12-12&ss=f&srt=sco&sp=rl&se=2051-02-09T05:56:05Z&st=2020-02-08T21:56:05Z&spr=https&sig=c5Z%2FrDJsaABP5NzNR56OI7RlVPCdfbJgBsCTxX3PiGw%3D";
-                        string url = $"https://stcutyt.file.core.windows.net/cutyt/{name}{sas}";
+                        //string sas = "?sv=2019-12-12&ss=f&srt=sco&sp=rl&se=2051-02-09T05:56:05Z&st=2020-02-08T21:56:05Z&spr=https&sig=c5Z%2FrDJsaABP5NzNR56OI7RlVPCdfbJgBsCTxX3PiGw%3D";
+                        //string url = $"https://stcutyt.file.core.windows.net/cutyt/{name}{sas}";
+
+                        string serverUrl = "http://localhost:14954";
+
+                        if (!hostEnvironment.IsDevelopment())
+                        {
+                            serverUrl = "http://cutyt.westeurope.cloudapp.azure.com";
+                        }
+
+                        string url = newFile.Replace(hostEnvironment.ContentRootPath, serverUrl).Replace("\\", "/").Replace("wwwroot/", string.Empty);
                         LinkViewModel linkViewModel = new LinkViewModel()
                         {
                             Name = name,

@@ -6,7 +6,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -42,26 +44,47 @@ namespace Cutyt.Controllers
 
             var youTubeV = $"https://www.youtube.com/watch?v={v}";
 
-            string serverAddress = "http://localhost:14954/";
+            string serverAddressOfServices = "http://localhost:14954/";
+            string ytServerAddress = "https://localhost:44309/";
 
             if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
             {
-                serverAddress = "http://cutyt.westeurope.cloudapp.azure.com/";
+                serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
+                ytServerAddress = "https://www.cutyt.com/";
+
             }
 
-            var json = await httpClient.GetStringAsync($"{serverAddress}home/exec?args={youTubeV}");
+            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args={youTubeV}");
 
 
             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true
             };
-                      
+
             var linkviewModel = JsonSerializer.Deserialize<LinkViewModel>(json, jsonSerializerOptions);
 
             //var resultLink = link.Replace(@"C:\inetpub\wwwroot\wwwroot\", "http://cutyt.westeurope.cloudapp.azure.com/").Replace("\\", "/");
             //var name = resultLink.Substring(resultLink.LastIndexOf("/") + 1);
-            var result = new { linkviewModel.Url, linkviewModel.Name };
+
+            var fileNameFromUrl = linkviewModel.Url.Substring(linkviewModel.Url.LastIndexOf("/") + 1);
+
+            using (var client = new WebClient())
+            {
+
+                var localFile = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "files", fileNameFromUrl);
+
+                client.DownloadFile(linkviewModel.Url, localFile);
+
+            }
+
+            LinkViewModel result = new LinkViewModel()
+            {
+                Name = fileNameFromUrl,
+                Url = $"{ytServerAddress}files/{fileNameFromUrl}"
+            };
+
+
             return Json(result);
         }
 
@@ -70,7 +93,7 @@ namespace Cutyt.Controllers
         {
             ytUrl = GetFullUrlFromYouTube(ytUrl);
             var parts = ytUrl?.Split(new string[] { "/watch?" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            if (parts.Count == 2)
+            if (parts?.Count == 2)
             {
                 var qs = parts[1];
                 var parsedQS = HttpUtility.ParseQueryString(qs);
