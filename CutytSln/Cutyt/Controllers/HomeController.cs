@@ -1,4 +1,5 @@
 ﻿using Cutyt.Core.Classes;
+using Cutyt.Core.Enums;
 using Cutyt.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -38,7 +39,7 @@ namespace Cutyt.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Generate(string from, string to, string v)
+        public async Task<JsonResult> Generate(string v, DownloadOptions downloadOptions)
         {
             var httpClient = httpClientFactory.CreateClient();
 
@@ -54,7 +55,14 @@ namespace Cutyt.Controllers
 
             }
 
-            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args={youTubeV}");
+            var additionalOptions = string.Empty;
+
+            if (downloadOptions != DownloadOptions.VideoAndAudio)
+            {
+                additionalOptions = $" -x --audio-format {downloadOptions.ToString().ToLowerInvariant()} ";
+            }
+
+            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args={additionalOptions}{youTubeV}");
 
 
             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()

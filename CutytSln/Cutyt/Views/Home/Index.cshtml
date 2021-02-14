@@ -1,20 +1,21 @@
 ﻿@{
     Layout = null;
-    string title = "Cut YouTube videos | cutyt.com";
-    string description = "Cut YouTube videos.";
-    string sitename = "cutyt.com";
-    string author = "cutyt.com";
+    string title = "Download YouTube";
+    string description = "Convert files to mp3, aac, vorbis, m4a, opus or wav";
+    string sitename = "https://www.cutyt.com";
+    string author = "https://www.cutyt.com";
     string canonicalUrl = "https://www.cutyt.com";
+    string imageUrl = "https://www.cutyt.com/android-chrome-512x512.png";
 }
 <!DOCTYPE html>
 <html amp lang="en">
 <head>
     <meta charset="utf-8" />
     <meta title="@title" />
-    <meta property="og:image" content="https://www.amptemplates.io/img/cover_pic.jpg" />
+    <meta property="og:image" content="@imageUrl" />
     <meta property="og:title" content="@title" />
     <meta property="og:description" content="@description" />
-    <meta property="og:url" content="https://www.amptemplates.io/templates/lead-collection" />
+    <meta property="og:url" content="@canonicalUrl" />
     <meta property="og:site_name" content="@sitename" />
     <meta property="og:author" content="@author" />
     <title>@title</title>
@@ -148,7 +149,7 @@
             letter-spacing: 1px;
         }
 
-            h2:after {
+           /* h2:after {
                 display: block;
                 height: 2px;
                 background-color: #487eb0;
@@ -156,7 +157,7 @@
                 width: 100px;
                 margin: 0 auto;
                 margin-top: 30px;
-            }
+            }*/
 
         h3 {
             font-size: 1.5em;
@@ -308,14 +309,14 @@
         #yordanForm {
             width: 80%;
         }
-        
+
 
         /* LEAD COLLECTION FORM */
         #lead-collection-form {
             width: 80%;
             padding: 2em 1.5em;
             background: #fff;
-         /*   position: absolute;
+            /*   position: absolute;
             top: 0;
             right: 0;*/
         }
@@ -617,51 +618,23 @@
             }
         </script>
     </amp-analytics>
-    <section id="hero">
+    <section id="hero2">
         <header class="flex flex-center">
             <div class="flex flex-space-around flex-center">
                 <h1 class="text-capitalize">
-                    Cut YouTube
+                    @title
                 </h1>
-                @*<a class="flex flex-center" href="https://code.devtools.tech/?ref=lead-collection-template">
-                        <amp-img
-                            alt="Company Logo"
-                            src="img/logo.png"
-                            width="300"
-                            height="82"
-                            layout="intrinsic"
-                        ></amp-img>
-                    </a>*@
             </div>
         </header>
-        
-        @*<div id="hero-content" class="flex flex-column flex-center">
-                <h1 class="text-capitalize">
-                    Lead Capturing AMP template for your next marketing campaign
-                </h1>
-                <p class="text-secondary">
-                    Capture way more leads with high-converting landing page that you can optimize on the fly, all
-                    without minimal changes. Using this template, you can avoid bottlenecks and launch campaigns
-                    fast with simple changes to fully customize to match your SaaS brand.
-                </p>
+    </section>
+    <section id="hero3">
+        <header class="flex flex-center">
+            <div class="flex flex-space-around flex-center">
+                <h2>
+                    @description
+                </h2>
             </div>
-            <form
-                method="post"
-                id="lead-collection-form"
-                action-xhr="/"
-                target="_top"
-                class="flex flex-column flex-center border-round box-shadow"
-            >
-                <input type="text" name="name" placeholder="Name" class="animate border-round" required />
-                <input type="email" name="email" placeholder="Work Email" class="animate border-round" required />
-                <input type="phone" name="phone" placeholder="Phone Number" class="animate border-round" required />
-                <input type="text" name="company" placeholder="Company" class="animate border-round" required />
-                <input type="submit" value="Request Demo" class="btn-primary text-bold border-round animate" />
-                <p class="text-secondary">
-                    By filling this form, you agree to our <a href="#">Terms</a> & <a href="#">Privacy Policy</a>
-                </p>
-            </form>*@
-
+        </header>
     </section>
     <section id="cutYtBody">
         <div>
@@ -681,14 +654,20 @@
                     </p>
                 </div>
             </form>
-        </div> 
+        </div>
     </section>
     <section id="generate">
         <div>
-            <form method="post" id="lead-collection-form3" action-xhr="/home/generate" class="flex-center">
+            <form method="post" id="lead-collection-form3" action-xhr="/home/generate" class="">
                 @*<input type="text" name="from" id="from" placeholder="From" class="animate border-round" required />
-                <input type="text" name="to" id="to" placeholder="To" class="animate border-round" required />*@
+        <input type="text" name="to" id="to" placeholder="To" class="animate border-round" required />*@
                 <input type="hidden" name="v" id="v" [value]="v" />
+                Choose download options:
+                <select id="downloadOptions" name="downloadOptions" style="width: 100%;">
+                    <option>@Cutyt.Core.Enums.DownloadOptions.VideoAndAudio</option>
+                    <option>@Cutyt.Core.Enums.DownloadOptions.MP3</option>
+                    @*<option>Audio only - MP3</option>*@
+                </select>
                 <p>
                     <input type="submit" value="Generate Links" class="btn-primary text-bold border-round animate" />
                 </p>

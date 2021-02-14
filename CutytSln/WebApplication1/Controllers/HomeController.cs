@@ -54,11 +54,20 @@ namespace WebApplication1.Controllers
 
                 var programFullPath = allFiles.FirstOrDefault(f => Path.GetFileName(f).ToLower().Equals(program.ToLower()));
 
-                var newProgramFullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "files", DateTime.Now.Ticks.ToString(), program);
+                var ticks = DateTime.Now.Ticks.ToString();
+                var newProgramFullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "files", ticks, program);
                 var newDirectory = Path.GetDirectoryName(newProgramFullPath);
                 Directory.CreateDirectory(newDirectory);
 
                 System.IO.File.Copy(programFullPath, newProgramFullPath);
+
+                var allMiscFiles = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "YoutubeMisc"));
+
+                foreach (var fileToCopy in allMiscFiles)
+                {
+                    newProgramFullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "files", ticks, System.IO.Path.GetFileName(fileToCopy));
+                    System.IO.File.Copy(fileToCopy, newProgramFullPath, true);
+                }
 
                 if (!string.IsNullOrEmpty(newProgramFullPath))
                 {
@@ -80,10 +89,10 @@ namespace WebApplication1.Controllers
 
                     string result = p.StandardOutput.ReadToEnd();
                     string error = p.StandardError.ReadToEnd();
-                    if (string.IsNullOrEmpty(error))
+                    if (error?.Contains("error", StringComparison.InvariantCultureIgnoreCase) != true)
                     {
                         var newFiles = Directory.GetFiles(newDirectory);
-                        var newFile = newFiles.FirstOrDefault(f => !f.EndsWith(".exe"));
+                        var newFile = newFiles.FirstOrDefault(f => !f.EndsWith(".exe") && !f.EndsWith(".dll"));
 
                         string name = Path.GetFileName(newFile);
 
