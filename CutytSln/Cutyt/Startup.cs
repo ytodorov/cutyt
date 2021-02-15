@@ -89,8 +89,8 @@ namespace Cutyt
                 app.UseRewriter(new RewriteOptions()
                 .AddRedirect("(.*)/$", "$1", (int)HttpStatusCode.MovedPermanently) // Strip trailing slash
                 //.AddRedirect("(.*[^/])$", "$1/", (int)HttpStatusCode.MovedPermanently) // Enforce trailing slash - Problems with static files - not found with ending slash
-                .AddRedirectToWww() //Very problematic. !!!could lead to error: This site can't be reached
-                .AddRedirectToHttps()
+                .AddRedirectToWww((int)HttpStatusCode.MovedPermanently) //Very problematic. !!!could lead to error: This site can't be reached
+                .AddRedirectToHttps((int)HttpStatusCode.MovedPermanently)
                 .Add(new RedirectLowerCaseRule())
                 );
             }
