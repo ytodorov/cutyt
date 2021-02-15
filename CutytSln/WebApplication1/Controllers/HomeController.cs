@@ -1,5 +1,6 @@
 ﻿using Cutyt.Core.Classes;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Hosting;
@@ -89,6 +90,36 @@ namespace WebApplication1.Controllers
 
                     string result = p.StandardOutput.ReadToEnd();
                     string error = p.StandardError.ReadToEnd();
+                    error = error.Replace("ERROR:", string.Empty).Trim();
+                    if (!string.IsNullOrWhiteSpace(result))
+                    {
+                        EventTelemetry et = new EventTelemetry()
+                        {
+                            Name = "result",
+                        };
+                        et.Properties.Add("text", result);
+
+                        telemetryClient.TrackEvent(et);
+                    }
+
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        EventTelemetry et = new EventTelemetry()
+                        {
+                            Name = "error",
+                        };
+                        et.Properties.Add("text", error);
+
+                        telemetryClient.TrackEvent(et);
+                    }
+
+                    string serverUrl = "http://localhost:14954";
+
+                    if (!hostEnvironment.IsDevelopment())
+                    {
+                        serverUrl = "http://cutyt.westeurope.cloudapp.azure.com";
+                    }
+
                     if (error?.Contains("error", StringComparison.InvariantCultureIgnoreCase) != true)
                     {
                         var newFiles = Directory.GetFiles(newDirectory);
@@ -107,12 +138,7 @@ namespace WebApplication1.Controllers
                         //string sas = "?sv=2019-12-12&ss=f&srt=sco&sp=rl&se=2051-02-09T05:56:05Z&st=2020-02-08T21:56:05Z&spr=https&sig=c5Z%2FrDJsaABP5NzNR56OI7RlVPCdfbJgBsCTxX3PiGw%3D";
                         //string url = $"https://stcutyt.file.core.windows.net/cutyt/{name}{sas}";
 
-                        string serverUrl = "http://localhost:14954";
-
-                        if (!hostEnvironment.IsDevelopment())
-                        {
-                            serverUrl = "http://cutyt.westeurope.cloudapp.azure.com";
-                        }
+                      
 
                         string url = newFile.Replace(hostEnvironment.ContentRootPath, serverUrl).Replace("\\", "/").Replace("wwwroot/", string.Empty);
                         LinkViewModel linkViewModel = new LinkViewModel()
@@ -122,7 +148,17 @@ namespace WebApplication1.Controllers
                         };                        
                         return Json(linkViewModel);
                     }
-                    return Content(result + "ГРЕШКИ" + error, "text/plain");
+                                      
+                    //var errorFilePath = Path.Combine(hostEnvironment.ContentRootPath, "error.txt");
+                    //System.IO.File.WriteAllText(errorFilePath, error);
+
+                    LinkViewModel errorViewModel = new LinkViewModel()
+                    {
+                        Name = "error",
+                        Url = error
+                    };
+
+                    return Json(errorViewModel);
                 }
                 return new JsonResult("No such program " + program);
             }
