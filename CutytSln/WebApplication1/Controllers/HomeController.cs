@@ -48,39 +48,43 @@ namespace WebApplication1.Controllers
 
             try
             {
-                var allFiles = Directory.GetFiles(Environment.CurrentDirectory, "*.*", SearchOption.AllDirectories);
+                //var allFiles = Directory.GetFiles(Environment.CurrentDirectory, "*.*", SearchOption.AllDirectories);
 
 
 
 
-                var programFullPath = allFiles.FirstOrDefault(f => Path.GetFileName(f).ToLower().Equals(program.ToLower()));
+                //var programFullPath = allFiles.FirstOrDefault(f => Path.GetFileName(f).ToLower().Equals(program.ToLower()));
+
+
+                var programFullPath = @"E:\Files\youtube-dl.exe";
 
                 var ticks = DateTime.Now.Ticks.ToString();
+
                 var newProgramFullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "files", ticks, program);
                 var newDirectory = Path.GetDirectoryName(newProgramFullPath);
                 Directory.CreateDirectory(newDirectory);
 
-                System.IO.File.Copy(programFullPath, newProgramFullPath);
+                //System.IO.File.Copy(programFullPath, newProgramFullPath);
 
-                var allMiscFiles = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "YoutubeMisc"));
+                //var allMiscFiles = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "YoutubeMisc"));
 
-                foreach (var fileToCopy in allMiscFiles)
-                {
-                    newProgramFullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "files", ticks, System.IO.Path.GetFileName(fileToCopy));
-                    System.IO.File.Copy(fileToCopy, newProgramFullPath, true);
-                }
+                //foreach (var fileToCopy in allMiscFiles)
+                //{
+                //    newProgramFullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "files", ticks, System.IO.Path.GetFileName(fileToCopy));
+                //    System.IO.File.Copy(fileToCopy, newProgramFullPath, true);
+                //}
 
-                if (!string.IsNullOrEmpty(newProgramFullPath))
+                if (!string.IsNullOrEmpty(programFullPath))
                 {
 
                     Process p = new Process();
-                    p.StartInfo.FileName = newProgramFullPath;
+                    p.StartInfo.FileName = programFullPath;
                     p.StartInfo.Arguments = args;
                     p.StartInfo.RedirectStandardOutput = true;
                     p.StartInfo.RedirectStandardError = true;
                     p.StartInfo.UseShellExecute = false;
 
-                    p.StartInfo.WorkingDirectory = newDirectory;
+                    p.StartInfo.WorkingDirectory = @"E:\Files";
 
                     p.StartInfo.CreateNoWindow = true;
                     p.StartInfo.ErrorDialog = false;
@@ -122,8 +126,8 @@ namespace WebApplication1.Controllers
 
                     if (error?.Contains("error", StringComparison.InvariantCultureIgnoreCase) != true)
                     {
-                        var newFiles = Directory.GetFiles(newDirectory);
-                        var newFile = newFiles.FirstOrDefault(f => !f.EndsWith(".exe") && !f.EndsWith(".dll"));
+                        var newFiles = Directory.GetFiles(@"E:\Files");
+                        var newFile = newFiles.OrderByDescending(s => new FileInfo(s).CreationTimeUtc).FirstOrDefault();
 
                         string name = Path.GetFileName(newFile);
 
@@ -138,9 +142,11 @@ namespace WebApplication1.Controllers
                         //string sas = "?sv=2019-12-12&ss=f&srt=sco&sp=rl&se=2051-02-09T05:56:05Z&st=2020-02-08T21:56:05Z&spr=https&sig=c5Z%2FrDJsaABP5NzNR56OI7RlVPCdfbJgBsCTxX3PiGw%3D";
                         //string url = $"https://stcutyt.file.core.windows.net/cutyt/{name}{sas}";
 
-                      
 
-                        string url = newFile.Replace(hostEnvironment.ContentRootPath, serverUrl).Replace("\\", "/").Replace("wwwroot/", string.Empty);
+                        var fileInWwwFiles = Path.Combine(newDirectory, name);
+                        System.IO.File.Copy(newFile, fileInWwwFiles);
+
+                        string url = fileInWwwFiles.Replace(hostEnvironment.ContentRootPath, serverUrl).Replace("\\", "/").Replace("wwwroot/", string.Empty);
                         LinkViewModel linkViewModel = new LinkViewModel()
                         {
                             Name = name,
