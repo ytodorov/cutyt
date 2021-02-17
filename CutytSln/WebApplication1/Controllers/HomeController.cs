@@ -127,6 +127,9 @@ namespace WebApplication1.Controllers
                     if (error?.Contains("error", StringComparison.InvariantCultureIgnoreCase) != true)
                     {
                         var newFiles = Directory.GetFiles(@"E:\Files");
+
+                        var v = args.Replace("https://www.youtube.com/watch?v=", string.Empty);
+                        newFiles = newFiles.Where(f => f.Contains(v, StringComparison.InvariantCultureIgnoreCase)).ToArray();
                         var newFile = newFiles.OrderByDescending(s => new FileInfo(s).CreationTimeUtc).FirstOrDefault();
 
                         string name = Path.GetFileName(newFile);
