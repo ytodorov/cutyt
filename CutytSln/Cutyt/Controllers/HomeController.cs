@@ -1,7 +1,10 @@
 ﻿using Cutyt.Core.Classes;
 using Cutyt.Core.Enums;
 using Cutyt.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,18 +28,23 @@ namespace Cutyt.Controllers
 
         private readonly IHttpClientFactory httpClientFactory;
 
+        private readonly IMemoryCache cache;
+
         private IHostEnvironment hostEnvironment;
 
-        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, IHostEnvironment hostEnvironment)
+        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, IHostEnvironment hostEnvironment, IMemoryCache cache)
         {
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
             this.hostEnvironment = hostEnvironment;
+            this.cache = cache;
         }
 
+        [ResponseCache(Duration = 100, Location = ResponseCacheLocation.Any, NoStore = false)]
         public IActionResult Index()
         {
-            return View();
+            var view = View();
+            return view;
         }
 
         [HttpPost]
