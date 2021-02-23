@@ -146,7 +146,7 @@ namespace WebApplication1.Controllers
                     p.StartInfo.ErrorDialog = false;
 
                     p.Start();
-                    p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
+                    p.WaitForExit((int)TimeSpan.FromHours(1).TotalMilliseconds);
 
                     string result = p.StandardOutput.ReadToEnd();
 
