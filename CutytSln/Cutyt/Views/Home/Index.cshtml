@@ -1,7 +1,7 @@
 ﻿@{
     Layout = null;
-    string title = "Download YouTube";
-    string description = "Convert files to mp3, aac, vorbis, m4a, opus or wav";
+    string title = "Cut YouTube";
+    string description = "Download YouTube files. Convert to mp3, aac, vorbis, m4a, opus or wav.";
     string sitename = "https://www.cutyt.com/";
     string author = "https://www.cutyt.com/";
     string canonicalUrl = "https://www.cutyt.com/";
@@ -40,2715 +40,12 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
 
-    <style amp-boilerplate>
-        body {
-            -webkit-animation: -amp-start 8s steps(1,end) 0s 1 normal both;
-            -moz-animation: -amp-start 8s steps(1,end) 0s 1 normal both;
-            -ms-animation: -amp-start 8s steps(1,end) 0s 1 normal both;
-            animation: -amp-start 8s steps(1,end) 0s 1 normal both
-        }
-
-        @@-webkit-keyframes -amp-start {
-            from {
-                visibility: hidden
-            }
-
-            to {
-                visibility: visible
-            }
-        }
-
-        @@-moz-keyframes -amp-start {
-            from {
-                visibility: hidden
-            }
-
-            to {
-                visibility: visible
-            }
-        }
-
-        @@-ms-keyframes -amp-start {
-            from {
-                visibility: hidden
-            }
-
-            to {
-                visibility: visible
-            }
-        }
-
-        @@-o-keyframes -amp-start {
-            from {
-                visibility: hidden
-            }
-
-            to {
-                visibility: visible
-            }
-        }
-
-        @@keyframes -amp-start {
-            from {
-                visibility: hidden
-            }
-
-            to {
-                visibility: visible
-            }
-        }
-    </style>
-    <noscript>
-    <style amp-boilerplate>
-        body {
-            -webkit-animation: none;
-            -moz-animation: none;
-            -ms-animation: none;
-            animation: none
-        }
-    </style></noscript>
     <link href="https://fonts.googleapis.com/css?family=Oswald:200,300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
 
-    <style amp-custom>
-        div, span, h1, h2, h3, h4, h5, h6, p, blockquote, a, ol, ul, li, figcaption, textarea, input {
-            font: inherit;
-        }
+    <partial name="_BoilerplateCssPartial.cshtml" />
+    <partial name="_AmpCustomCssPartial.cshtml" />
 
-        section {
-            background-color: #eeeeee;
-        }
-
-        section, .container, .container-fluid {
-            position: relative;
-            word-wrap: break-word;
-        }
-
-        a.mbr-iconfont:hover {
-            text-decoration: none;
-        }
-
-        .article .lead p, .article .lead ul, .article .lead ol, .article .lead pre, .article .lead blockquote {
-            margin-bottom: 0;
-        }
-
-        a {
-            font-style: normal;
-            font-weight: 400;
-            cursor: pointer;
-        }
-
-            a, a:hover {
-                text-decoration: none;
-            }
-
-        figure {
-            margin-bottom: 0;
-        }
-
-        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .display-1, .display-2, .display-3, .display-4 {
-            line-height: 1;
-            word-break: break-word;
-            word-wrap: break-word;
-        }
-
-        b, strong {
-            font-weight: bold;
-        }
-
-        blockquote {
-            padding: 10px 0 10px 20px;
-            position: relative;
-            border-left: 2px solid;
-            border-color: #ff3366;
-        }
-
-        input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active {
-            transition-delay: 9999s;
-            transition-property: background-color,color;
-        }
-
-        textarea[type="hidden"] {
-            display: none;
-        }
-
-        body {
-            position: relative;
-        }
-
-        section {
-            background-position: 50% 50%;
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-
-            section .mbr-background-video, section .mbr-background-video-preview {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                top: 0;
-            }
-
-        .row {
-            display: -webkit-box;
-            display: -webkit-flex;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-flex-wrap: wrap;
-            -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
-            margin-right: -15px;
-            margin-left: -15px;
-        }
-
-        @@media (min-width: 576px) {
-            .row {
-                margin-right: -15px;
-                margin-left: -15px;
-            }
-        }
-
-        @@media (min-width: 768px) {
-            .row {
-                margin-right: -15px;
-                margin-left: -15px;
-            }
-        }
-
-        @@media (min-width: 992px) {
-            .row {
-                margin-right: -15px;
-                margin-left: -15px;
-            }
-        }
-
-        @@media (min-width: 1200px) {
-            .row {
-                margin-right: -15px;
-                margin-left: -15px;
-            }
-        }
-
-        .hidden {
-            visibility: hidden;
-        }
-
-        .mbr-z-index20 {
-            z-index: 20;
-        }
-
-        .mbr-white {
-            color: #ffffff;
-        }
-
-        .mbr-black {
-            color: #000000;
-        }
-
-        .mbr-bg-white {
-            background-color: #ffffff;
-        }
-
-        .mbr-bg-black {
-            background-color: #000000;
-        }
-
-        .align-left {
-            text-align: left;
-        }
-
-        .align-center {
-            text-align: center;
-        }
-
-        .align-right {
-            text-align: right;
-        }
-
-        @@media (max-width: 767px) {
-            .align-left, .align-center, .align-right, .mbr-section-btn, .mbr-section-title {
-                text-align: center;
-            }
-        }
-
-        .mbr-light {
-            font-weight: 300;
-        }
-
-        .mbr-regular {
-            font-weight: 400;
-        }
-
-        .mbr-semibold {
-            font-weight: 500;
-        }
-
-        .mbr-bold {
-            font-weight: 700;
-        }
-
-        .mbr-figure img, .mbr-figure iframe {
-            display: block;
-            width: 100%;
-        }
-
-        .card {
-            background-color: transparent;
-            border: none;
-        }
-
-        .card-img {
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .media {
-            max-width: 100%;
-            margin: 0 auto;
-        }
-
-        .mbr-figure {
-            -ms-flex-item-align: center;
-            -ms-grid-row-align: center;
-            -webkit-align-self: center;
-            align-self: center;
-        }
-
-        .media-container > div {
-            max-width: 100%;
-        }
-
-        .mbr-figure img, .card-img img {
-            width: 100%;
-        }
-
-        @@media (max-width: 991px) {
-            .media-size-item {
-                width: auto;
-            }
-
-            .media {
-                width: auto;
-            }
-
-            .mbr-figure {
-                width: 100%;
-            }
-        }
-
-        .mbr-section-btn {
-            margin-left: -.25rem;
-            margin-right: -.25rem;
-            font-size: 0;
-        }
-
-        nav .mbr-section-btn {
-            margin-left: 0rem;
-            margin-right: 0rem;
-        }
-
-        .btn .mbr-iconfont, .btn.btn-sm .mbr-iconfont {
-            cursor: pointer;
-            margin-right: 0.5rem;
-        }
-
-        .btn.btn-md .mbr-iconfont, .btn.btn-md .mbr-iconfont {
-            margin-right: 0.8rem;
-        }
-
-        [type="submit"] {
-            -webkit-appearance: none;
-        }
-
-        .mbr-fullscreen .mbr-overlay {
-            min-height: 100vh;
-        }
-
-        .mbr-fullscreen {
-            display: flex;
-            display: -webkit-flex;
-            display: -moz-flex;
-            display: -ms-flex;
-            display: -o-flex;
-            align-items: center;
-            -webkit-align-items: center;
-            min-height: 100vh;
-            box-sizing: border-box;
-            padding-top: 3rem;
-            padding-bottom: 3rem;
-        }
-
-        .mbr-overlay {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-        }
-
-        amp-img img {
-            max-height: 100%;
-            max-width: 100%;
-        }
-
-        img.mbr-temp {
-            width: 100%;
-        }
-
-        .super-hide {
-            display: none;
-        }
-
-        .is-builder .nodisplay + img[async], .is-builder .nodisplay + img[decoding="async"], .is-builder amp-img > a + img[async], .is-builder amp-img > a + img[decoding="async"] {
-            display: none;
-        }
-
-        html:not(.is-builder) amp-img > a {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 1;
-        }
-
-        .is-builder .temp-amp-sizer {
-            position: absolute;
-        }
-
-        .is-builder amp-youtube .temp-amp-sizer, .is-builder amp-vimeo .temp-amp-sizer {
-            position: static;
-        }
-
-        .is-builder section.horizontal-menu .ampstart-btn {
-            display: none;
-        }
-
-        @@media (max-width: 991px) {
-            .is-builder section.horizontal-menu .navbar-toggler {
-                display: block;
-            }
-        }
-
-        .is-builder section.horizontal-menu .dropdown-menu {
-            z-index: auto;
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .is-builder section.horizontal-menu .nav-dropdown .link.dropdown-toggle[aria-expanded="true"] {
-            margin-right: 0;
-            padding: 0.667em 1em;
-        }
-
-        .container {
-            padding-right: 15px;
-            padding-left: 15px;
-            width: 100%;
-            margin-right: auto;
-            margin-left: auto;
-        }
-
-        @@media (max-width: 767px) {
-            .container {
-                max-width: 540px;
-            }
-        }
-
-        @@media (min-width: 768px) {
-            .container {
-                max-width: 720px;
-            }
-        }
-
-        @@media (min-width: 992px) {
-            .container {
-                max-width: 960px;
-            }
-        }
-
-        @@media (min-width: 1200px) {
-            .container {
-                max-width: 1140px;
-            }
-        }
-
-        .mbr-row {
-            display: -webkit-box;
-            display: -webkit-flex;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-flex-wrap: wrap;
-            -ms-flex-wrap: wrap;
-            flex-wrap: wrap;
-            margin-right: -15px;
-            margin-left: -15px;
-        }
-
-        .mbr-justify-content-center {
-            justify-content: center;
-        }
-
-        .mbr-justify-content-left {
-            justify-content: flex-start;
-        }
-
-        .mbr-justify-content-right {
-            justify-content: flex-end;
-        }
-
-        @@media (max-width: 767px) {
-            .mbr-col-sm-2 {
-                -ms-flex: 0 0 16.666667%;
-                flex: 0 0 16.666667%;
-                max-width: 16.666667%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-sm-6 {
-                -ms-flex: 0 0 50%;
-                flex: 0 0 50%;
-                max-width: 50%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-sm-8 {
-                -ms-flex: 0 0 66.666667%;
-                flex: 0 0 66.666667%;
-                max-width: 66.666667%;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .mbr-col-sm-12 {
-                -ms-flex: 0 0 100%;
-                flex: 0 0 100%;
-                max-width: 100%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-row {
-                margin: 0;
-            }
-        }
-
-        @@media (min-width: 768px) {
-            .mbr-col-md-2 {
-                -ms-flex: 0 0 16.666667%;
-                flex: 0 0 16.666667%;
-                max-width: 16.666667%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-md-3 {
-                -ms-flex: 0 0 25%;
-                flex: 0 0 25%;
-                max-width: 25%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-md-4 {
-                -ms-flex: 0 0 33.333333%;
-                flex: 0 0 33.333333%;
-                max-width: 33.333333%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-md-5 {
-                -ms-flex: 0 0 41.666667%;
-                flex: 0 0 41.666667%;
-                max-width: 41.666667%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-md-6 {
-                -ms-flex: 0 0 50%;
-                flex: 0 0 50%;
-                max-width: 50%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-md-7 {
-                -ms-flex: 0 0 58.333333%;
-                flex: 0 0 58.333333%;
-                max-width: 58.333333%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-md-8 {
-                -ms-flex: 0 0 66.666667%;
-                flex: 0 0 66.666667%;
-                max-width: 66.666667%;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .mbr-col-md-9 {
-                -ms-flex: 0 0 75%;
-                flex: 0 0 75%;
-                max-width: 75%;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .mbr-col-md-10 {
-                -ms-flex: 0 0 83.333333%;
-                flex: 0 0 83.333333%;
-                max-width: 83.333333%;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .mbr-col-md-12 {
-                -ms-flex: 0 0 100%;
-                flex: 0 0 100%;
-                max-width: 100%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-        }
-
-        @@media (min-width: 992px) {
-            .mbr-col-lg-1 {
-                -ms-flex: 0 0 8.333333%;
-                flex: 0 0 8.333333%;
-                max-width: 8.333333;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-lg-2 {
-                -ms-flex: 0 0 16.666667%;
-                flex: 0 0 16.666667%;
-                max-width: 16.666667%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-lg-3 {
-                -ms-flex: 0 0 25%;
-                flex: 0 0 25%;
-                max-width: 25%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-lg-4 {
-                -ms-flex: 0 0 33.33%;
-                flex: 0 0 33.33%;
-                max-width: 33.33%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-lg-5 {
-                -ms-flex: 0 0 41.666%;
-                flex: 0 0 41.666%;
-                max-width: 41.666%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-lg-6 {
-                -ms-flex: 0 0 50%;
-                flex: 0 0 50%;
-                max-width: 50%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-lg-7 {
-                -ms-flex: 0 0 58.333333%;
-                flex: 0 0 58.333333%;
-                max-width: 58.333333%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-lg-8 {
-                -ms-flex: 0 0 66.666667%;
-                flex: 0 0 66.666667%;
-                max-width: 66.666667%;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .mbr-col-lg-9 {
-                -ms-flex: 0 0 75%;
-                flex: 0 0 75%;
-                max-width: 75%;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .mbr-col-lg-10 {
-                -ms-flex: 0 0 83.3333%;
-                flex: 0 0 83.3333%;
-                max-width: 83.3333%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-lg-12 {
-                -ms-flex: 0 0 100%;
-                flex: 0 0 100%;
-                max-width: 100%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-        }
-
-        @@media (min-width: 1201px) {
-            .mbr-col-xl-7 {
-                -ms-flex: 0 0 58.333333%;
-                flex: 0 0 58.333333%;
-                max-width: 58.333333%;
-                padding-right: 15px;
-                padding-left: 15px;
-            }
-
-            .mbr-col-xl-8 {
-                -ms-flex: 0 0 66.666667%;
-                flex: 0 0 66.666667%;
-                max-width: 66.666667%;
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .mbr-col-xl-5 {
-                -ms-flex: 0 0 41.666667%;
-                flex: 0 0 41.666667%;
-                max-width: 41.666667%;
-            }
-        }
-
-        .amp-carousel-button:hover {
-            cursor: pointer;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Ubuntu;
-            font-style: normal;
-            font-weight: 300;
-            color: #29282d;
-        }
-
-        h1 {
-            letter-spacing: 20px;
-            margin-bottom: 3rem;
-        }
-
-        h2, h3, h4, h5, h6 {
-            letter-spacing: 3px;
-            margin: 0;
-            margin-bottom: 1.5rem;
-            padding: 0;
-            line-height: 1.2;
-        }
-
-        p {
-            margin: 0;
-            margin-bottom: 1.5rem;
-            padding: 0;
-        }
-
-        .mbr-section-title {
-            font-style: normal;
-            line-height: 1.2;
-        }
-
-        .mbr-section-subtitle {
-            font-style: normal;
-            line-height: 1.2;
-        }
-
-        .mbr-text {
-            font-style: normal;
-            line-height: 1.5;
-        }
-
-        .display-2 {
-            font-family: 'Oswald',sans-serif;
-            font-size: 5rem;
-        }
-
-        .display-3 {
-            font-family: 'Oswald',sans-serif;
-            font-size: 2rem;
-        }
-
-        .display-4 {
-            font-family: 'Ubuntu',sans-serif;
-            font-size: 1.2rem;
-        }
-
-        .display-5 {
-            font-family: 'Ubuntu',sans-serif;
-            font-size: 1rem;
-        }
-
-        .display-6 {
-            font-family: 'Ubuntu',sans-serif;
-            font-size: 0.8rem;
-        }
-
-        .display-7 {
-            font-family: 'Oswald',sans-serif;
-            font-size: 1.2rem;
-        }
-
-        @@media (max-width: 768px) {
-            .display-2 {
-                font-size: 4rem;
-                font-size: calc( 2.4rem + (5 - 2.4) * ((100vw - 20rem) / (48 - 20)));
-                line-height: calc( 1.4 * (2.4rem + (5 - 2.4) * ((100vw - 20rem) / (48 - 20))));
-            }
-
-            .display-3 {
-                font-size: 1.6rem;
-                font-size: calc( 1.35rem + (2 - 1.35) * ((100vw - 20rem) / (48 - 20)));
-                line-height: calc( 1.4 * (1.35rem + (2 - 1.35) * ((100vw - 20rem) / (48 - 20))));
-            }
-
-            .display-4 {
-                font-size: 0.96rem;
-                font-size: calc( 1.07rem + (1.2 - 1.07) * ((100vw - 20rem) / (48 - 20)));
-                line-height: calc( 1.4 * (1.07rem + (1.2 - 1.07) * ((100vw - 20rem) / (48 - 20))));
-            }
-
-            .display-5 {
-                font-size: 0.8rem;
-                font-size: calc( 1rem + (1 - 1) * ((100vw - 20rem) / (48 - 20)));
-                line-height: calc( 1.4 * (1rem + (1 - 1) * ((100vw - 20rem) / (48 - 20))));
-            }
-
-            .display-6 {
-                font-size: 0.64rem;
-                font-size: calc( 0.93rem + (0.8 - 0.93) * ((100vw - 20rem) / (48 - 20)));
-                line-height: calc( 1.4 * (0.93rem + (0.8 - 0.93) * ((100vw - 20rem) / (48 - 20))));
-            }
-
-            .display-7 {
-                font-size: 0.96rem;
-                font-size: calc( 1.07rem + (1.2 - 1.07) * ((100vw - 20rem) / (48 - 20)));
-                line-height: calc( 1.4 * (1.07rem + (1.2 - 1.07) * ((100vw - 20rem) / (48 - 20))));
-            }
-        }
-
-        .btn {
-            font-weight: 700;
-            border-width: 2px;
-            border-style: solid;
-            font-style: normal;
-            letter-spacing: 0px;
-            white-space: normal;
-            transition: all 0.3s ease-in-out,box-shadow 2s ease-in-out;
-            padding: 0.8rem 2rem;
-            border-radius: 3px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            word-break: break-word;
-        }
-
-            .btn:hover {
-                cursor: pointer;
-            }
-
-        .btn-sm {
-            border: 1px solid;
-            letter-spacing: 0px;
-            padding: 0.6rem 0.8rem;
-            border-radius: 3px;
-        }
-
-        .btn-md {
-            letter-spacing: 0px;
-            padding: 1rem 2rem;
-            border-radius: 3px;
-        }
-
-        .bg-primary {
-            background-color: #f34e3a;
-        }
-
-        .bg-success {
-            background-color: #45b87e;
-        }
-
-        .bg-info {
-            background-color: #6d85e1;
-        }
-
-        .bg-warning {
-            background-color: #0a193b;
-        }
-
-        .bg-danger {
-            background-color: #000000;
-        }
-
-        .btn-primary, .btn-primary:active, .btn-primary.active {
-            background-color: #f34e3a;
-            border-color: #f34e3a;
-            color: #ffffff;
-        }
-
-            .btn-primary:hover, .btn-primary:focus, .btn-primary.focus {
-                color: #f34e3a;
-                background: none;
-                border-color: #f34e3a;
-            }
-
-            .btn-primary.disabled, .btn-primary:disabled {
-                color: #ffffff;
-                background-color: #f34e3a;
-                border-color: #f34e3a;
-            }
-
-        .btn-secondary, .btn-secondary:active, .btn-secondary.active {
-            background-color: #4fc6cd;
-            border-color: #4fc6cd;
-            color: #ffffff;
-        }
-
-            .btn-secondary:hover, .btn-secondary:focus, .btn-secondary.focus {
-                color: #4fc6cd;
-                background: none;
-                border-color: #4fc6cd;
-            }
-
-            .btn-secondary.disabled, .btn-secondary:disabled {
-                color: #ffffff;
-                background-color: #4fc6cd;
-                border-color: #4fc6cd;
-            }
-
-        .btn-info, .btn-info:active, .btn-info.active {
-            background-color: #6d85e1;
-            border-color: #6d85e1;
-            color: #ffffff;
-        }
-
-            .btn-info:hover, .btn-info:focus, .btn-info.focus {
-                color: #6d85e1;
-                background: none;
-                border-color: #6d85e1;
-            }
-
-            .btn-info.disabled, .btn-info:disabled {
-                color: #ffffff;
-                background-color: #6d85e1;
-                border-color: #6d85e1;
-            }
-
-        .btn-success, .btn-success:active, .btn-success.active {
-            background-color: #45b87e;
-            border-color: #45b87e;
-            color: #ffffff;
-        }
-
-            .btn-success:hover, .btn-success:focus, .btn-success.focus {
-                color: #45b87e;
-                background: none;
-                border-color: #45b87e;
-            }
-
-            .btn-success.disabled, .btn-success:disabled {
-                color: #ffffff;
-                background-color: #45b87e;
-                border-color: #45b87e;
-            }
-
-        .btn-warning, .btn-warning:active, .btn-warning.active {
-            background-color: #0a193b;
-            border-color: #0a193b;
-            color: #ffffff;
-        }
-
-            .btn-warning:hover, .btn-warning:focus, .btn-warning.focus {
-                color: #0a193b;
-                background: none;
-                border-color: #0a193b;
-            }
-
-            .btn-warning.disabled, .btn-warning:disabled {
-                color: #ffffff;
-                background-color: #0a193b;
-                border-color: #0a193b;
-            }
-
-        .btn-danger, .btn-danger:active, .btn-danger.active {
-            background-color: #000000;
-            border-color: #000000;
-            color: #ffffff;
-        }
-
-            .btn-danger:hover, .btn-danger:focus, .btn-danger.focus {
-                color: #000000;
-                background: none;
-                border-color: #000000;
-            }
-
-            .btn-danger.disabled, .btn-danger:disabled {
-                color: #ffffff;
-                background-color: #000000;
-                border-color: #000000;
-            }
-
-        .btn-black, .btn-black:active, .btn-black.active {
-            background-color: #333333;
-            border-color: #333333;
-            color: #ffffff;
-        }
-
-            .btn-black:hover, .btn-black:focus, .btn-black.focus {
-                color: #333333;
-                background: none;
-                border-color: #333333;
-            }
-
-            .btn-black.disabled, .btn-black:disabled {
-                color: #ffffff;
-                background-color: #333333;
-                border-color: #333333;
-            }
-
-        .btn-white, .btn-white:active, .btn-white.active {
-            background-color: #ffffff;
-            border-color: #ffffff;
-            color: #808080;
-        }
-
-            .btn-white:hover, .btn-white:focus, .btn-white.focus {
-                color: #ffffff;
-                background: none;
-                border-color: #ffffff;
-            }
-
-            .btn-white.disabled, .btn-white:disabled {
-                color: #808080;
-                background-color: #ffffff;
-                border-color: #ffffff;
-            }
-
-            .btn-white, .btn-white:active, .btn-white.active {
-                color: #333333;
-            }
-
-                .btn-white:hover, .btn-white:focus, .btn-white.focus {
-                    color: #333333;
-                }
-
-                .btn-white.disabled, .btn-white:disabled {
-                    color: #333333;
-                }
-
-        .btn-primary-outline, .btn-primary-outline:active, .btn-primary-outline.active {
-            background: none;
-            border-color: #f34e3a;
-            color: #f34e3a;
-        }
-
-            .btn-primary-outline:hover, .btn-primary-outline:focus, .btn-primary-outline.focus {
-                color: #fff;
-                background-color: #f34e3a;
-                border-color: #f34e3a;
-            }
-
-            .btn-primary-outline.disabled, .btn-primary-outline:disabled {
-                color: #ffffff;
-                background-color: #f34e3a;
-                border-color: #f34e3a;
-            }
-
-        .btn-secondary-outline, .btn-secondary-outline:active, .btn-secondary-outline.active {
-            background: none;
-            border-color: #4fc6cd;
-            color: #4fc6cd;
-        }
-
-            .btn-secondary-outline:hover, .btn-secondary-outline:focus, .btn-secondary-outline.focus {
-                color: #fff;
-                background-color: #4fc6cd;
-                border-color: #4fc6cd;
-            }
-
-            .btn-secondary-outline.disabled, .btn-secondary-outline:disabled {
-                color: #ffffff;
-                background-color: #4fc6cd;
-                border-color: #4fc6cd;
-            }
-
-        .btn-info-outline, .btn-info-outline:active, .btn-info-outline.active {
-            background: none;
-            border-color: #6d85e1;
-            color: #6d85e1;
-        }
-
-            .btn-info-outline:hover, .btn-info-outline:focus, .btn-info-outline.focus {
-                color: #fff;
-                background-color: #6d85e1;
-                border-color: #6d85e1;
-            }
-
-            .btn-info-outline.disabled, .btn-info-outline:disabled {
-                color: #ffffff;
-                background-color: #6d85e1;
-                border-color: #6d85e1;
-            }
-
-        .btn-success-outline, .btn-success-outline:active, .btn-success-outline.active {
-            background: none;
-            border-color: #45b87e;
-            color: #45b87e;
-        }
-
-            .btn-success-outline:hover, .btn-success-outline:focus, .btn-success-outline.focus {
-                color: #fff;
-                background-color: #45b87e;
-                border-color: #45b87e;
-            }
-
-            .btn-success-outline.disabled, .btn-success-outline:disabled {
-                color: #ffffff;
-                background-color: #45b87e;
-                border-color: #45b87e;
-            }
-
-        .btn-warning-outline, .btn-warning-outline:active, .btn-warning-outline.active {
-            background: none;
-            border-color: #0a193b;
-            color: #0a193b;
-        }
-
-            .btn-warning-outline:hover, .btn-warning-outline:focus, .btn-warning-outline.focus {
-                color: #fff;
-                background-color: #0a193b;
-                border-color: #0a193b;
-            }
-
-            .btn-warning-outline.disabled, .btn-warning-outline:disabled {
-                color: #ffffff;
-                background-color: #0a193b;
-                border-color: #0a193b;
-            }
-
-        .btn-danger-outline, .btn-danger-outline:active, .btn-danger-outline.active {
-            background: none;
-            border-color: #000000;
-            color: #000000;
-        }
-
-            .btn-danger-outline:hover, .btn-danger-outline:focus, .btn-danger-outline.focus {
-                color: #fff;
-                background-color: #000000;
-                border-color: #000000;
-            }
-
-            .btn-danger-outline.disabled, .btn-danger-outline:disabled {
-                color: #ffffff;
-                background-color: #000000;
-                border-color: #000000;
-            }
-
-        .btn-black-outline, .btn-black-outline:active, .btn-black-outline.active {
-            background: none;
-            border-color: #333333;
-            color: #333333;
-        }
-
-            .btn-black-outline:hover, .btn-black-outline:focus, .btn-black-outline.focus {
-                color: #fff;
-                background-color: #333333;
-                border-color: #333333;
-            }
-
-            .btn-black-outline.disabled, .btn-black-outline:disabled {
-                color: #ffffff;
-                background-color: #333333;
-                border-color: #333333;
-            }
-
-        .btn-white-outline, .btn-white-outline:active, .btn-white-outline.active {
-            background: none;
-            border-color: #ffffff;
-            color: #ffffff;
-        }
-
-            .btn-white-outline:hover, .btn-white-outline:focus, .btn-white-outline.focus {
-                color: #333333;
-                background-color: #ffffff;
-                border-color: #ffffff;
-            }
-
-        .text-primary {
-            color: #f34e3a;
-        }
-
-        .text-secondary {
-            color: #4fc6cd;
-        }
-
-        .text-success {
-            color: #45b87e;
-        }
-
-        .text-info {
-            color: #6d85e1;
-        }
-
-        .text-warning {
-            color: #0a193b;
-        }
-
-        .text-danger {
-            color: #000000;
-        }
-
-        .text-white {
-            color: #ffffff;
-        }
-
-        .text-black {
-            color: #000000;
-        }
-
-        a.text-primary:hover, a.text-primary:focus {
-            color: #bc1e0b;
-        }
-
-        a.text-secondary:hover, a.text-secondary:focus {
-            color: #28888e;
-        }
-
-        a.text-success:hover, a.text-success:focus {
-            color: #296e4b;
-        }
-
-        a.text-info:hover, a.text-info:focus {
-            color: #2847c0;
-        }
-
-        a.text-warning:hover, a.text-warning:focus {
-            color: #000000;
-        }
-
-        a.text-danger:hover, a.text-danger:focus {
-            color: #000000;
-        }
-
-        a.text-white:hover, a.text-white:focus {
-            color: #b3b3b3;
-        }
-
-        a.text-black:hover, a.text-black:focus {
-            color: #4d4d4d;
-        }
-
-        .alert-success {
-            background-color: #45b87e;
-        }
-
-        .alert-info {
-            background-color: #6d85e1;
-        }
-
-        .alert-warning {
-            background-color: #0a193b;
-        }
-
-        .alert-danger {
-            background-color: #000000;
-        }
-
-        .btn-form {
-            border-radius: 3px;
-        }
-
-            .btn-form:hover {
-                cursor: pointer;
-            }
-
-        a, a:hover {
-            color: #f34e3a;
-        }
-
-        .mbr-plan-header.bg-primary .mbr-plan-subtitle, .mbr-plan-header.bg-primary .mbr-plan-price-desc {
-            color: #fffbfa;
-        }
-
-        .mbr-plan-header.bg-success .mbr-plan-subtitle, .mbr-plan-header.bg-success .mbr-plan-price-desc {
-            color: #a1dcbe;
-        }
-
-        .mbr-plan-header.bg-info .mbr-plan-subtitle, .mbr-plan-header.bg-info .mbr-plan-price-desc {
-            color: #ffffff;
-        }
-
-        .mbr-plan-header.bg-warning .mbr-plan-subtitle, .mbr-plan-header.bg-warning .mbr-plan-price-desc {
-            color: #4a78e0;
-        }
-
-        .mbr-plan-header.bg-danger .mbr-plan-subtitle, .mbr-plan-header.bg-danger .mbr-plan-price-desc {
-            color: #b3b3b3;
-        }
-
-        blockquote {
-            padding: 10px 0 10px 20px;
-            position: relative;
-            border-color: #f34e3a;
-            border-width: 3px;
-        }
-
-        ul, ol, pre, blockquote {
-            margin-bottom: 0;
-            margin-top: 0;
-        }
-
-        pre {
-            background: #f4f4f4;
-            padding: 10px 24px;
-            white-space: pre-wrap;
-        }
-
-        .inactive {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            pointer-events: none;
-            -webkit-user-drag: none;
-            user-drag: none;
-        }
-
-        html, body {
-            height: auto;
-            min-height: 100vh;
-        }
-
-        .popover-content ul.show {
-            min-height: 155px;
-        }
-
-        #scrollToTop {
-            display: none;
-        }
-
-        section.sidebar-open:before {
-            content: '';
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            left: 0;
-            background-color: rgba(0,0,0,0.2);
-            z-index: 1040;
-        }
-
-        form input, form textarea {
-            padding: 1rem;
-            border: 1px solid #e0e0e0;
-            background: #f3f4f5;
-        }
-
-        form .fieldset {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        div[submit-success] {
-            /*background: #45b87e;*/
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        div[submit-error] {
-            background: #000000;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .mobirise-spinner {
-            position: absolute;
-            top: 50%;
-            left: 40%;
-            margin-left: 10%;
-            -webkit-transform: translate3d(-50%,-50%,0);
-            z-index: 4;
-        }
-
-            .mobirise-spinner em {
-                width: 24px;
-                height: 24px;
-                background: #3ac;
-                border-radius: 100%;
-                display: inline-block;
-                -webkit-animation: slide 1s infinite;
-            }
-
-                .mobirise-spinner em:nth-child(1) {
-                    -webkit-animation-delay: 0.1s;
-                    background: #f34e3a;
-                }
-
-                .mobirise-spinner em:nth-child(2) {
-                    -webkit-animation-delay: 0.2s;
-                    background: #4fc6cd;
-                }
-
-                .mobirise-spinner em:nth-child(3) {
-                    -webkit-animation-delay: 0.3s;
-                    background: #45b87e;
-                }
-
-        @@-moz-keyframes slide {
-            0% {
-                -webkit-transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.3;
-                -webkit-transform: scale(2);
-            }
-
-            100% {
-                -webkit-transform: scale(1);
-            }
-        }
-
-        @@-webkit-keyframes slide {
-            0% {
-                -webkit-transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.3;
-                -webkit-transform: scale(2);
-            }
-
-            100% {
-                -webkit-transform: scale(1);
-            }
-        }
-
-        @@-o-keyframes slide {
-            0% {
-                -webkit-transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.3;
-                -webkit-transform: scale(2);
-            }
-
-            100% {
-                -webkit-transform: scale(1);
-            }
-        }
-
-        @@keyframes slide {
-            0% {
-                -webkit-transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.3;
-                -webkit-transform: scale(2);
-            }
-
-            100% {
-                -webkit-transform: scale(1);
-            }
-        }
-
-        .mobirise-loader .amp-active > div {
-            display: none;
-        }
-
-        .mbr-iconfont-btn {
-            display: flex;
-            align-items: center;
-            order: 2;
-            padding-left: 20px;
-            margin-left: 20px;
-            padding-right: 0px;
-            margin-right: 0px;
-            height: 50px;
-            border-left: 1px solid white;
-            transition: border-color 0.1s;
-        }
-
-        .btn {
-            height: 50px;
-            padding: 0px;
-            overflow: hidden;
-            letter-spacing: 3px;
-            padding-left: 20px;
-            padding-right: 20px;
-            box-sizing: content-box;
-            margin-right: 10px;
-            margin-left: 10px;
-        }
-
-            .btn:hover .mbr-iconfont-btn {
-                border-color: transparent;
-            }
-
-        .mbr-iconfont-btn {
-            transition: all 0.2s;
-        }
-
-        .btn:hover .mbr-iconfont-btn {
-            transform: scale(1.3);
-        }
-
-        .note-popover .btn {
-            margin: 0;
-            padding: 0;
-        }
-
-        .btn-primary-outline .mbr-iconfont-btn, .btn-secondary-outline .mbr-iconfont-btn, .btn-info-outline .mbr-iconfont-btn, .btn-success-outline .mbr-iconfont-btn, .btn-warning-outline .mbr-iconfont-btn, .btn-danger-outline .mbr-iconfont-btn, .btn-black-outline .mbr-iconfont-btn, .btn-white-outline .mbr-iconfont-btn {
-            border-color: transparent;
-        }
-
-        .btn-primary-outline:hover .mbr-iconfont-btn, .btn-secondary-outline:hover .mbr-iconfont-btn, .btn-info-outline:hover .mbr-iconfont-btn, .btn-success-outline:hover .mbr-iconfont-btn, .btn-warning-outline:hover .mbr-iconfont-btn, .btn-danger-outline:hover .mbr-iconfont-btn, .btn-black-outline:hover .mbr-iconfont-btn, .btn-white-outline:hover .mbr-iconfont-btn {
-            border-color: white;
-        }
-
-        label {
-            margin-bottom: 0;
-        }
-
-        .btn-white {
-            border-width: 0px;
-            background: none;
-            color: #f34e3a;
-        }
-
-            .btn-white:hover {
-                color: #f34e3a;
-                background-color: transparent;
-            }
-
-            .btn-white:focus {
-                color: #f34e3a;
-                background-color: transparent;
-            }
-
-            .btn-white:active {
-                color: #f34e3a;
-                background-color: transparent;
-            }
-
-            .btn-white .mbr-iconfont-btn {
-                padding-left: 0px;
-                border-left: none;
-            }
-
-        .btn-arrow {
-            border-width: 0px;
-            background: none;
-        }
-
-            .btn-arrow .mbr-iconfont-btn {
-                padding-left: 0px;
-                border-left: none;
-            }
-
-        .cid-qTgJKJ1CQy .nav-item:focus, .cid-qTgJKJ1CQy .nav-link:focus {
-            outline: none;
-        }
-
-        .cid-qTgJKJ1CQy #marker {
-            position: absolute;
-            top: 0;
-            width: 0;
-            height: 15vw;
-        }
-
-        .cid-qTgJKJ1CQy .navbar-info {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            text-align: center;
-            color: #b69e59;
-        }
-
-        .cid-qTgJKJ1CQy span, .cid-qTgJKJ1CQy a, .cid-qTgJKJ1CQy li {
-            font-weight: 600;
-        }
-
-        .cid-qTgJKJ1CQy .navbar-nav {
-            list-style-type: none;
-            display: flex;
-            flex-direction: row;
-            padding-left: 0;
-            min-width: 10rem;
-        }
-
-            .cid-qTgJKJ1CQy .navbar-nav .nav-link {
-                margin: .667em 1em;
-                font-weight: 600;
-            }
-
-        @@media (max-width: 991px) {
-            .cid-qTgJKJ1CQy ul.navbar-nav {
-                flex-direction: column;
-            }
-
-                .cid-qTgJKJ1CQy ul.navbar-nav li {
-                    margin: auto;
-                }
-
-            .cid-qTgJKJ1CQy .dropdown-toggle[data-toggle="dropdown-submenu"]:after {
-                content: '';
-                margin-left: .25rem;
-                border-top: 0.35em solid;
-                border-right: 0.35em solid transparent;
-                border-left: 0.35em solid transparent;
-                border-bottom: 0;
-                top: 55%;
-            }
-
-            .cid-qTgJKJ1CQy .nav-dropdown .dropdown-menu .dropdown-item {
-                justify-content: center;
-                display: flex;
-                align-items: center;
-            }
-
-            .cid-qTgJKJ1CQy .navbar-collapse .navbar-nav {
-                padding-top: 46px;
-            }
-
-            .cid-qTgJKJ1CQy #marker {
-                display: none;
-            }
-
-            .cid-qTgJKJ1CQy .navbar-caption {
-                display: none;
-            }
-        }
-
-        .cid-qTgJKJ1CQy .nav-dropdown .dropdown-menu {
-            border-radius: 0;
-            border: 0;
-            left: 0;
-            margin: 0;
-            min-width: 10rem;
-            padding-bottom: 1.25rem;
-            padding-top: 1.25rem;
-            position: absolute;
-        }
-
-            .cid-qTgJKJ1CQy .nav-dropdown .dropdown-menu .dropdown-item {
-                font-weight: 600;
-                line-height: 2;
-                display: flex;
-                align-items: center;
-                width: 100%;
-                padding: .25rem 1.5rem;
-                clear: both;
-                text-align: inherit;
-                white-space: nowrap;
-                background: 0 0;
-                border: 0;
-            }
-
-            .cid-qTgJKJ1CQy .nav-dropdown .dropdown-menu .dropdown {
-                position: relative;
-            }
-
-        .cid-qTgJKJ1CQy .nav-item.dropdown {
-            position: relative;
-        }
-
-            .cid-qTgJKJ1CQy .nav-item.dropdown .dropdown-menu {
-                z-index: -1;
-                opacity: 0;
-                pointer-events: none;
-            }
-
-            .cid-qTgJKJ1CQy .nav-item.dropdown:hover > .dropdown-menu {
-                z-index: 1;
-                opacity: 1;
-                pointer-events: all;
-            }
-
-        .cid-qTgJKJ1CQy .dropdown-menu .dropdown:hover > .dropdown-menu {
-            z-index: 1;
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .cid-qTgJKJ1CQy .link.dropdown-toggle:after {
-            content: '';
-            margin-left: .25rem;
-            border-top: 0.35em solid;
-            border-right: 0.35em solid transparent;
-            border-left: 0.35em solid transparent;
-            border-bottom: 0;
-        }
-
-        .cid-qTgJKJ1CQy .nav-dropdown .dropdown-submenu {
-            top: 0;
-        }
-
-        .cid-qTgJKJ1CQy .navbar {
-            z-index: 100;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            min-height: 77px;
-            transition: all .3s;
-            background: #ffffff;
-        }
-
-            .cid-qTgJKJ1CQy .navbar .navbar-logo {
-                margin-right: .8rem;
-            }
-
-                .cid-qTgJKJ1CQy .navbar .navbar-logo img {
-                    height: auto;
-                }
-
-            .cid-qTgJKJ1CQy .navbar.opened {
-                transition: all .3s;
-                background: #ffffff;
-            }
-
-            .cid-qTgJKJ1CQy .navbar .dropdown-item {
-                padding: .25rem 1.5rem;
-            }
-
-            .cid-qTgJKJ1CQy .navbar .navbar-collapse {
-                display: flex;
-                justify-content: flex-end;
-                z-index: 1;
-                align-items: center;
-            }
-
-            .cid-qTgJKJ1CQy .navbar.collapsed button.navbar-toggler {
-                display: block;
-            }
-
-            .cid-qTgJKJ1CQy .navbar.collapsed .navbar-collapse {
-                display: none;
-                position: absolute;
-                top: 0;
-                right: 0;
-                min-height: 100vh;
-                background: #ffffff;
-                padding: 1.5rem 2rem 1rem 2rem;
-            }
-
-            .cid-qTgJKJ1CQy .navbar.collapsed.opened .navbar-collapse.show, .cid-qTgJKJ1CQy .navbar.collapsed.opened .navbar-collapse.collapsing {
-                display: block;
-            }
-
-            .cid-qTgJKJ1CQy .navbar.collapsed.opened .dropdown-menu {
-                top: 0;
-            }
-
-            .cid-qTgJKJ1CQy .navbar.collapsed .dropdown-menu {
-                position: relative;
-                background: transparent;
-            }
-
-                .cid-qTgJKJ1CQy .navbar.collapsed .dropdown-menu .dropdown-submenu {
-                    left: 0;
-                }
-
-                .cid-qTgJKJ1CQy .navbar.collapsed .dropdown-menu .dropdown-item:after {
-                    right: auto;
-                }
-
-                .cid-qTgJKJ1CQy .navbar.collapsed .dropdown-menu .dropdown-item {
-                    padding: .25rem 1.5rem;
-                    text-align: center;
-                    margin: 0;
-                }
-
-            .cid-qTgJKJ1CQy .navbar.collapsed .navbar-brand {
-                flex-shrink: initial;
-                word-break: break-word;
-            }
-
-        @@media (max-width: 991px) {
-            .cid-qTgJKJ1CQy .navbar .navbar-collapse {
-                display: none;
-                position: absolute;
-                top: 0;
-                right: 0;
-                min-height: 100vh;
-                background: #ffffff;
-                padding: 1rem 2rem 1rem 2rem;
-            }
-
-            .cid-qTgJKJ1CQy .navbar.opened .navbar-collapse.show, .cid-qTgJKJ1CQy .navbar.opened .navbar-collapse.collapsing {
-                display: block;
-            }
-
-            .cid-qTgJKJ1CQy .navbar.opened .dropdown-menu {
-                top: 0;
-            }
-
-            .cid-qTgJKJ1CQy .navbar .dropdown-menu {
-                position: relative;
-                background: transparent;
-            }
-
-                .cid-qTgJKJ1CQy .navbar .dropdown-menu .dropdown-submenu {
-                    left: 0;
-                }
-
-                .cid-qTgJKJ1CQy .navbar .dropdown-menu .dropdown-item:after {
-                    right: auto;
-                }
-
-                .cid-qTgJKJ1CQy .navbar .dropdown-menu .dropdown-item {
-                    padding: .25rem 1.5rem;
-                    text-align: center;
-                    margin: 0;
-                }
-
-            .cid-qTgJKJ1CQy .navbar .navbar-brand {
-                flex-shrink: initial;
-                word-break: break-word;
-            }
-        }
-
-        .cid-qTgJKJ1CQy .navbar-brand {
-            display: flex;
-            flex-shrink: 0;
-            align-items: center;
-            margin-right: 0;
-            padding: 0;
-            transition: all .3s;
-            word-break: break-word;
-            z-index: 1;
-        }
-
-            .cid-qTgJKJ1CQy .navbar-brand .navbar-caption {
-                line-height: inherit;
-            }
-
-            .cid-qTgJKJ1CQy .navbar-brand .navbar-logo a {
-                outline: none;
-            }
-
-            .cid-qTgJKJ1CQy .navbar-brand .navbar-caption-wrap {
-                display: flex;
-            }
-
-        .cid-qTgJKJ1CQy .dropdown-item.active, .cid-qTgJKJ1CQy .dropdown-item:active {
-            background-color: transparent;
-        }
-
-        .cid-qTgJKJ1CQy .navbar-expand-lg .navbar-nav .nav-link {
-            padding: 0;
-        }
-
-        .cid-qTgJKJ1CQy .navbar.navbar-expand-lg .dropdown .dropdown-menu {
-            background: #ffffff;
-        }
-
-            .cid-qTgJKJ1CQy .navbar.navbar-expand-lg .dropdown .dropdown-menu .dropdown-submenu {
-                margin: 0;
-                left: 100%;
-            }
-
-        .cid-qTgJKJ1CQy .navbar .dropdown.open > .dropdown-menu {
-            display: block;
-        }
-
-        .cid-qTgJKJ1CQy ul.navbar-nav {
-            flex-wrap: wrap;
-        }
-
-        .cid-qTgJKJ1CQy .navbar-buttons {
-            text-align: right;
-        }
-
-        .cid-qTgJKJ1CQy button.navbar-toggler {
-            display: none;
-            outline: none;
-            width: 31px;
-            height: 20px;
-            cursor: pointer;
-            transition: all .2s;
-            position: absolute;
-            align-self: center;
-            right: 20px;
-            top: 25px;
-        }
-
-            .cid-qTgJKJ1CQy button.navbar-toggler .hamburger span {
-                position: absolute;
-                right: 0;
-                width: 30px;
-                height: 2px;
-                border-right: 5px;
-                background-color: #000000;
-            }
-
-                .cid-qTgJKJ1CQy button.navbar-toggler .hamburger span:nth-child(1) {
-                    top: 0;
-                    transition: all .2s;
-                }
-
-                .cid-qTgJKJ1CQy button.navbar-toggler .hamburger span:nth-child(2) {
-                    top: 8px;
-                    transition: all .15s;
-                }
-
-                .cid-qTgJKJ1CQy button.navbar-toggler .hamburger span:nth-child(3) {
-                    top: 8px;
-                    transition: all .15s;
-                }
-
-                .cid-qTgJKJ1CQy button.navbar-toggler .hamburger span:nth-child(4) {
-                    top: 16px;
-                    transition: all .2s;
-                }
-
-        .cid-qTgJKJ1CQy nav.opened .navbar-toggler:not(.hide) .hamburger span:nth-child(1) {
-            top: 8px;
-            width: 0;
-            opacity: 0;
-            right: 50%;
-            transition: all .2s;
-        }
-
-        .cid-qTgJKJ1CQy nav.opened .navbar-toggler:not(.hide) .hamburger span:nth-child(2) {
-            -webkit-transform: rotate(45deg);
-            transform: rotate(45deg);
-            transition: all .25s;
-        }
-
-        .cid-qTgJKJ1CQy nav.opened .navbar-toggler:not(.hide) .hamburger span:nth-child(3) {
-            -webkit-transform: rotate(-45deg);
-            transform: rotate(-45deg);
-            transition: all .25s;
-        }
-
-        .cid-qTgJKJ1CQy nav.opened .navbar-toggler:not(.hide) .hamburger span:nth-child(4) {
-            top: 8px;
-            width: 0;
-            opacity: 0;
-            right: 50%;
-            transition: all .2s;
-        }
-
-        .cid-qTgJKJ1CQy .navbar-dropdown {
-            padding: .5rem 1rem;
-            position: fixed;
-        }
-
-        .cid-qTgJKJ1CQy a.nav-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .cid-qTgJKJ1CQy .nav-link .mbr-iconfont, .cid-qTgJKJ1CQy .dropdown-item .mbr-iconfont {
-            margin-right: .2rem;
-        }
-
-        .cid-qTgJKJ1CQy .ampstart-btn.hamburger {
-            position: absolute;
-            top: 25px;
-            right: 20px;
-            margin-left: auto;
-            width: 30px;
-            height: 20px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            z-index: 1000;
-        }
-
-            .cid-qTgJKJ1CQy .ampstart-btn.hamburger.sticky-but {
-                position: fixed;
-            }
-
-            .cid-qTgJKJ1CQy .ampstart-btn.hamburger:focus {
-                outline: none;
-            }
-
-            .cid-qTgJKJ1CQy .ampstart-btn.hamburger span {
-                position: absolute;
-                right: 0;
-                width: 30px;
-                height: 2px;
-                border-right: 5px;
-                background-color: #000000;
-            }
-
-                .cid-qTgJKJ1CQy .ampstart-btn.hamburger span:nth-child(1) {
-                    top: 0;
-                    transition: all .2s;
-                }
-
-                .cid-qTgJKJ1CQy .ampstart-btn.hamburger span:nth-child(2) {
-                    top: 8px;
-                    transition: all .15s;
-                }
-
-                .cid-qTgJKJ1CQy .ampstart-btn.hamburger span:nth-child(3) {
-                    top: 8px;
-                    transition: all .15s;
-                }
-
-                .cid-qTgJKJ1CQy .ampstart-btn.hamburger span:nth-child(4) {
-                    top: 16px;
-                    transition: all .2s;
-                }
-
-        @@media (min-width: 992px) {
-            .cid-qTgJKJ1CQy .ampstart-btn, .cid-qTgJKJ1CQy amp-sidebar {
-                display: none;
-            }
-
-            .cid-qTgJKJ1CQy .dropdown-menu .dropdown-toggle:after {
-                content: '';
-                border-bottom: 0.35em solid transparent;
-                border-left: 0.35em solid;
-                border-right: 0;
-                border-top: 0.35em solid transparent;
-                margin-left: 0.3rem;
-                margin-top: -0.3077em;
-                position: absolute;
-                right: 1.1538em;
-                top: 50%;
-            }
-        }
-
-        .cid-qTgJKJ1CQy amp-sidebar {
-            min-width: 260px;
-            z-index: 1050;
-            background-color: #ffffff;
-        }
-
-            .cid-qTgJKJ1CQy amp-sidebar.open:after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                right: 0;
-                background-color: red;
-            }
-
-        .cid-qTgJKJ1CQy .open {
-            transform: translateX(0%);
-            display: block;
-        }
-
-        .cid-qTgJKJ1CQy .builder-sidebar {
-            background-color: #ffffff;
-            position: relative;
-            height: 100vh;
-            z-index: 1030;
-            padding: 1rem 2rem;
-            max-width: 20rem;
-        }
-
-            .cid-qTgJKJ1CQy .builder-sidebar .dropdown {
-                position: relative;
-            }
-
-                .cid-qTgJKJ1CQy .builder-sidebar .dropdown:hover > .dropdown-menu {
-                    position: relative;
-                    text-align: center;
-                }
-
-        .cid-qTgJKJ1CQy .sidebar {
-            padding: 1rem 0;
-            margin: 0;
-        }
-
-            .cid-qTgJKJ1CQy .sidebar > li {
-                list-style: none;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .cid-qTgJKJ1CQy .sidebar a {
-                display: block;
-                text-decoration: none;
-                margin-bottom: 10px;
-            }
-
-        .cid-qTgJKJ1CQy .close-sidebar {
-            width: 30px;
-            height: 30px;
-            position: relative;
-            cursor: pointer;
-            background-color: transparent;
-            border: none;
-        }
-
-            .cid-qTgJKJ1CQy .close-sidebar:focus {
-                outline: 2px auto #f34e3a;
-            }
-
-            .cid-qTgJKJ1CQy .close-sidebar span {
-                position: absolute;
-                left: 0;
-                width: 30px;
-                height: 2px;
-                border-right: 5px;
-                background-color: #000000;
-            }
-
-                .cid-qTgJKJ1CQy .close-sidebar span:nth-child(1) {
-                    transform: rotate(45deg);
-                }
-
-                .cid-qTgJKJ1CQy .close-sidebar span:nth-child(2) {
-                    transform: rotate(-45deg);
-                }
-
-        .cid-qTgJKJ1CQy amp-img {
-            width: 75px;
-            display: flex;
-            align-items: center;
-        }
-
-        @@media (max-width: 768px) {
-            .cid-qTgJKJ1CQy amp-img {
-                max-height: 55px;
-                max-width: 55px;
-            }
-        }
-
-        .cid-qTgJKJ1CQy .navbar-info span {
-            word-break: break-word;
-        }
-
-        .cid-qTgJKJ1CQy .navbar.collapsed .navbar-collapse .navbar-nav {
-            padding-top: 46px;
-        }
-
-        @@media (min-width: 992px) {
-            .cid-qTgJKJ1CQy {
-                min-height: 21px;
-            }
-
-                .cid-qTgJKJ1CQy .navbar:not(.collapsed) .navbar-collapse {
-                    position: absolute;
-                    left: 0;
-                    bottom: 0;
-                    width: 100%;
-                    transform: translateY(100%);
-                    padding: 0 1rem .5rem 1rem;
-                    background: #ffffff;
-                    justify-content: center;
-                }
-
-                .cid-qTgJKJ1CQy .navbar:not(.collapsed) .navbar-brand {
-                    flex-basis: auto;
-                }
-
-                .cid-qTgJKJ1CQy .navbar:not(.collapsed) .navbar-collapse {
-                    justify-content: flex-end;
-                    position: static;
-                    transform: translateY(0);
-                    flex: 2 1 60%;
-                    padding: 0;
-                }
-
-                .cid-qTgJKJ1CQy .navbar:not(.collapsed) .navbar-buttons {
-                    order: 1;
-                }
-
-                .cid-qTgJKJ1CQy .navbar:not(.collapsed) .navbar-buttons {
-                    flex-basis: auto;
-                }
-
-                .cid-qTgJKJ1CQy .navbar.collapsed {
-                    padding-right: 71px;
-                }
-
-                    .cid-qTgJKJ1CQy .navbar.collapsed .navbar-buttons {
-                        flex-basis: auto;
-                    }
-
-                    .cid-qTgJKJ1CQy .navbar.collapsed .navbar-brand {
-                        flex-basis: auto;
-                    }
-        }
-
-        @@media (max-width: 991px) {
-            .cid-qTgJKJ1CQy .navbar {
-                padding-right: 71px;
-            }
-
-            .cid-qTgJKJ1CQy .navbar-buttons {
-                display: none;
-            }
-
-            .cid-qTgJKJ1CQy .navbar-brand {
-                flex-basis: auto;
-            }
-        }
-
-        @@media (max-width: 767px) {
-            .cid-qTgJKJ1CQy .navbar-brand {
-                flex-basis: 100%;
-            }
-        }
-
-        .cid-qTgJKJ1CQy .navbar-schedule {
-            color: #000000;
-        }
-
-        .cid-qTgJKJ1CQy .phone-wrap {
-            color: #000000;
-        }
-
-        .cid-qTgW2u389N {
-            padding-top: 7rem;
-            padding-bottom: 3rem;
-            background-color: #f7f7f7;
-        }
-
-            .cid-qTgW2u389N .mbr-section-title {
-                color: #29282d;
-            }
-
-            .cid-qTgW2u389N .mbr-text, .cid-qTgW2u389N .mbr-section-btn {
-                color: #828282;
-            }
-
-        .cid-qTgW5lPO8j {
-            padding-top: 90px;
-            padding-bottom: 90px;
-            background-color: #ffffff;
-        }
-
-            .cid-qTgW5lPO8j .mbr-section-subtitle {
-                color: #828282;
-            }
-
-            .cid-qTgW5lPO8j .area {
-                width: 100%;
-            }
-
-            .cid-qTgW5lPO8j label.input-label {
-                display: flex;
-                flex-direction: column;
-                margin: 0;
-                padding: 10px;
-            }
-
-            .cid-qTgW5lPO8j label.area {
-                padding: 10px;
-                padding-right: 15px;
-                padding-left: 15px;
-                justify-content: center;
-                margin: auto;
-                align-items: center;
-                display: flex;
-            }
-
-            .cid-qTgW5lPO8j textarea {
-                width: 100%;
-                margin: 5px 20px 20px 20px;
-            }
-
-            .cid-qTgW5lPO8j input {
-                margin-left: 10px;
-                margin-right: 10px;
-                margin-bottom: 5px;
-                margin-top: 15px;
-                /*width: 30%;*/
-                width: 100%;
-            }
-
-            .cid-qTgW5lPO8j .mbr-section-btn {
-                margin-left: 20px;
-                margin-right: 20px;
-            }
-
-            .cid-qTgW5lPO8j .input-group-btn {
-                display: block;
-            }
-
-        @@media (max-width: 992px) {
-            .cid-qTgW5lPO8j label.input-label {
-                width: 100%;
-            }
-
-            .cid-qTgW5lPO8j label.area {
-                padding-right: 10px;
-                padding-left: 10px;
-            }
-
-            .cid-qTgW5lPO8j input {
-                width: 100%;
-            }
-
-            .cid-qTgW5lPO8j textarea {
-                width: 100%;
-                margin: 5px 0px 20px 0px;
-            }
-
-            .cid-qTgW5lPO8j .mbr-section-btn {
-                margin-left: 0px;
-                margin-right: 0px;
-            }
-        }
-
-        .cid-qTgW5ybP1X {
-            padding-top: 90px;
-            padding-bottom: 90px;
-            background-color: #29282d;
-        }
-
-            .cid-qTgW5ybP1X .mbr-section-subtitle {
-                color: #dadada;
-            }
-
-            .cid-qTgW5ybP1X .area {
-                width: 100%;
-            }
-
-            .cid-qTgW5ybP1X label.input-label {
-                display: flex;
-                flex-direction: column;
-                margin: 0;
-                padding: 10px;
-            }
-
-            .cid-qTgW5ybP1X label.area {
-                padding: 10px;
-                padding-right: 15px;
-                padding-left: 15px;
-                justify-content: center;
-                margin: auto;
-                align-items: center;
-                display: flex;
-            }
-
-            .cid-qTgW5ybP1X textarea {
-                width: 100%;
-                margin: 5px 20px 20px 20px;
-            }
-
-            .cid-qTgW5ybP1X input {
-                margin-left: 10px;
-                margin-right: 10px;
-                margin-bottom: 5px;
-                margin-top: 15px;
-                width: 30%;
-            }
-
-            .cid-qTgW5ybP1X .mbr-section-btn {
-                margin-left: 20px;
-                margin-right: 20px;
-            }
-
-            .cid-qTgW5ybP1X .input-group-btn {
-                display: block;
-            }
-
-        @@media (max-width: 992px) {
-            .cid-qTgW5ybP1X label.input-label {
-                width: 100%;
-            }
-
-            .cid-qTgW5ybP1X label.area {
-                padding-right: 10px;
-                padding-left: 10px;
-            }
-
-            .cid-qTgW5ybP1X input {
-                width: 100%;
-            }
-
-            .cid-qTgW5ybP1X textarea {
-                width: 100%;
-                margin: 5px 0px 20px 0px;
-            }
-
-            .cid-qTgW5ybP1X .mbr-section-btn {
-                margin-left: 0px;
-                margin-right: 0px;
-            }
-        }
-
-        .cid-qTgW5ybP1X H2 {
-            color: #ffffff;
-        }
-
-        .cid-qTgW5W1x3G {
-            padding-top: 60px;
-            padding-bottom: 60px;
-            background-color: #ffffff;
-        }
-
-            .cid-qTgW5W1x3G .mbr-section-subtitle {
-                color: #b9b9b9;
-                font-style: italic;
-            }
-
-            .cid-qTgW5W1x3G .fieldset {
-                width: 100%;
-                border-radius: 3px;
-                justify-content: space-between;
-                align-items: center;
-                margin-top: 10px;
-            }
-
-            .cid-qTgW5W1x3G label {
-                width: 70%;
-                margin: 0;
-            }
-
-            .cid-qTgW5W1x3G input {
-                color: white;
-                width: 100%;
-                border: none;
-            }
-
-                .cid-qTgW5W1x3G input:focus {
-                    outline: none;
-                }
-
-        @@media (max-width: 992px) {
-            .cid-qTgW5W1x3G .mbr-section-btn {
-                margin: auto;
-                margin-top: 1rem;
-            }
-
-            .cid-qTgW5W1x3G label {
-                width: 100%;
-            }
-        }
-
-        .cid-qTgW5W1x3G H2 {
-            color: #29282d;
-        }
-
-        .cid-qTgW6a2qxc {
-            padding-top: 60px;
-            padding-bottom: 60px;
-            background-color: #ffffff;
-        }
-
-            .cid-qTgW6a2qxc .google-map {
-                margin-bottom: 3rem;
-                height: 325px;
-                position: relative;
-                width: 100%;
-            }
-
-                .cid-qTgW6a2qxc .google-map iframe {
-                    height: 100%;
-                    width: 100%;
-                }
-
-                .cid-qTgW6a2qxc .google-map [data-state-details] {
-                    color: #ffffff;
-                    height: 1.5em;
-                    margin-top: -0.75em;
-                    padding-left: 1.25rem;
-                    padding-right: 1.25rem;
-                    position: absolute;
-                    text-align: center;
-                    top: 50%;
-                    width: 100%;
-                }
-
-                .cid-qTgW6a2qxc .google-map[data-state] {
-                    background: #e9e5dc;
-                }
-
-                .cid-qTgW6a2qxc .google-map[data-state="loading"] [data-state-details] {
-                    display: none;
-                }
-
-            .cid-qTgW6a2qxc .group-title {
-                color: #29282d;
-                margin-bottom: 0;
-                text-align: left;
-            }
-
-            .cid-qTgW6a2qxc textarea, .cid-qTgW6a2qxc .area {
-                width: 100%;
-            }
-
-            .cid-qTgW6a2qxc input {
-                margin-bottom: 2rem;
-                width: 100%;
-            }
-
-            .cid-qTgW6a2qxc label .area {
-                margin-bottom: 0;
-            }
-
-            .cid-qTgW6a2qxc .items {
-                padding-right: 30px;
-                padding-left: 15px;
-                padding-bottom: 30px;
-            }
-
-            .cid-qTgW6a2qxc .mbr-section-btn {
-                margin-top: 1.5rem;
-            }
-
-            .cid-qTgW6a2qxc .map-placeholder {
-                color: gray;
-                display: none;
-            }
-
-                .cid-qTgW6a2qxc .map-placeholder h4 {
-                    padding-top: 5rem;
-                    color: #ffffff;
-                    text-align: center;
-                }
-
-        @@media (max-width: 992px) {
-            .cid-qTgW6a2qxc h3 {
-                margin-top: 1rem;
-            }
-        }
-
-        .cid-qTgW6a2qxc .text {
-            text-align: left;
-            color: #828282;
-        }
-
-        .cid-qTgW6a2qxc .sub-title {
-            color: #000000;
-        }
-
-        .cid-qTkdYvHfr3 {
-            padding-top: 5rem;
-            padding-bottom: 1rem;
-            background-color: #f7f7f7;
-        }
-
-            .cid-qTkdYvHfr3 .card {
-                margin-bottom: 1rem;
-                width: 100%;
-            }
-
-            .cid-qTkdYvHfr3 .card-wrapper {
-                background: #ffffff;
-                box-shadow: 2px 2px 25px -7px rgba(0,0,0,0.1);
-                transition: all 0.3s;
-            }
-
-                .cid-qTkdYvHfr3 .card-wrapper:hover {
-                    box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
-                }
-
-            .cid-qTkdYvHfr3 .card-box {
-                padding: 2rem;
-            }
-
-            .cid-qTkdYvHfr3 .card-sub-title {
-                color: #29282d;
-            }
-
-            .cid-qTkdYvHfr3 h3, .cid-qTkdYvHfr3 h4 {
-                margin-bottom: 1.5rem;
-            }
-
-            .cid-qTkdYvHfr3 h2 {
-                margin-bottom: 3rem;
-            }
-
-            .cid-qTkdYvHfr3 .card-title {
-                text-align: center;
-            }
-
-            .cid-qTkdYvHfr3 .mbr-text, .cid-qTkdYvHfr3 .mbr-section-btn {
-                text-align: center;
-            }
-
-        .cid-qTkdYI4TFb {
-            padding-top: 2rem;
-            padding-bottom: 1rem;
-            background-color: #f7f7f7;
-        }
-
-            .cid-qTkdYI4TFb .card {
-                margin-bottom: 1rem;
-                width: 100%;
-            }
-
-            .cid-qTkdYI4TFb .card-wrapper {
-                background: #ffffff;
-                box-shadow: 2px 2px 25px -7px rgba(0,0,0,0.1);
-                transition: all 0.3s;
-            }
-
-                .cid-qTkdYI4TFb .card-wrapper:hover {
-                    box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
-                }
-
-            .cid-qTkdYI4TFb .card-box {
-                padding: 2rem;
-            }
-
-            .cid-qTkdYI4TFb .card-sub-title {
-                color: #29282d;
-            }
-
-            .cid-qTkdYI4TFb h3, .cid-qTkdYI4TFb h4 {
-                margin-bottom: 1.5rem;
-            }
-
-            .cid-qTkdYI4TFb h2 {
-                margin-bottom: 3rem;
-            }
-
-            .cid-qTkdYI4TFb .mbr-text, .cid-qTkdYI4TFb .mbr-section-btn {
-                text-align: center;
-            }
-
-            .cid-qTkdYI4TFb .card-title {
-                text-align: center;
-            }
-
-        .cid-qTkdYUWuWw {
-            padding-top: 2rem;
-            padding-bottom: 1rem;
-            background-color: #f7f7f7;
-        }
-
-            .cid-qTkdYUWuWw .card {
-                margin-bottom: 1rem;
-                width: 100%;
-            }
-
-            .cid-qTkdYUWuWw .card-wrapper {
-                background: #ffffff;
-                box-shadow: 2px 2px 25px -7px rgba(0,0,0,0.1);
-                transition: all 0.3s;
-            }
-
-                .cid-qTkdYUWuWw .card-wrapper:hover {
-                    box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
-                }
-
-            .cid-qTkdYUWuWw .card-box {
-                padding: 1rem;
-            }
-
-            .cid-qTkdYUWuWw .card-sub-title {
-                color: #29282d;
-            }
-
-            .cid-qTkdYUWuWw h3, .cid-qTkdYUWuWw h4 {
-                margin-bottom: 1.5rem;
-            }
-
-            .cid-qTkdYUWuWw h2 {
-                margin-bottom: 3rem;
-            }
-
-            .cid-qTkdYUWuWw .mbr-text, .cid-qTkdYUWuWw .mbr-section-btn {
-                text-align: center;
-            }
-
-            .cid-qTkdYUWuWw .card-title {
-                text-align: center;
-            }
-
-        .cid-qTkdZ8Vbj7 {
-            padding-top: 2rem;
-            padding-bottom: 1rem;
-            background-color: #f7f7f7;
-        }
-
-            .cid-qTkdZ8Vbj7 .card {
-                margin-bottom: 1rem;
-                width: 100%;
-            }
-
-            .cid-qTkdZ8Vbj7 .card-wrapper {
-                background: #ffffff;
-                box-shadow: 2px 2px 25px -7px rgba(0,0,0,0.1);
-                transition: all 0.3s;
-            }
-
-                .cid-qTkdZ8Vbj7 .card-wrapper:hover {
-                    box-shadow: 0px 0px 15px 1px rgba(0,0,0,0.1);
-                }
-
-            .cid-qTkdZ8Vbj7 .card-box {
-                padding: 2rem;
-            }
-
-            .cid-qTkdZ8Vbj7 .card-sub-title {
-                color: #29282d;
-            }
-
-            .cid-qTkdZ8Vbj7 h3, .cid-qTkdZ8Vbj7 h4 {
-                margin-bottom: 1.5rem;
-            }
-
-            .cid-qTkdZ8Vbj7 h2 {
-                margin-bottom: 3rem;
-            }
-
-            .cid-qTkdZ8Vbj7 .mbr-text, .cid-qTkdZ8Vbj7 .mbr-section-btn {
-                text-align: center;
-            }
-
-            .cid-qTkdZ8Vbj7 .card-title {
-                text-align: center;
-            }
-
-        .cid-qTkdZp51B1 {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-            /*background-color: #29282d;*/
-        }
-
-            .cid-qTkdZp51B1 .text1 {
-                /*color: #b9b9b9;*/
-            }
-
-            .cid-qTkdZp51B1 h4 {
-                margin: 0;
-            }
-
-        .engine {
-            position: absolute;
-            text-indent: -2400px;
-            text-align: center;
-            padding: 0;
-            top: 0;
-            left: -2400px;
-        }
-
-        .hide {
-            display: none;
-        }
-    </style>
 
 </head>
 <body>
@@ -2781,7 +78,7 @@
             <p class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">We'll display different options for download</p>
             <div class="mbr-row mbr-justify-content-center">
                 <div class="mbr-col-lg-12  mbr-col-md-10 " data-form-type="formoid">
-                    <form class="mbr-form user-invalid" method="post" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({'v': event.response.v})" data-form-title="Mobirise Form" novalidate="">
+                    <form class="mbr-form user-invalid" method="post" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({ 'youTubeInfoResult': event.response.youTubeInfoResult })" data-form-title="Mobirise Form" novalidate="">
 
                         <div class="fieldset">
                             <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" />
@@ -2793,13 +90,24 @@
                                 </button>
                             </div>
                         </div>
+                        <div submitting>
+                            <template type="amp-mustache">
+                                Form submitting... Thank you for waiting!
+                            </template>
+                        </div>
                         <div submit-success="">
                             <template type="amp-mustache">
-                                <amp-youtube data-videoid="{{v}}"
+                                <amp-youtube data-videoid="{{youTubeInfoResult.v}}"
                                              layout="fixed-height"
                                              width="auto"
                                              height="270"></amp-youtube>
 
+                                @*{{#youTubeInfoResult.infos}}
+                                <div>
+                                    <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" />
+                                    <label for="{{formatCode}}">{{textWithoutCode}}</label>
+                                </div>
+                                {{/youTubeInfoResult.infos}}*@
 
                             </template>
                         </div>
@@ -2810,14 +118,22 @@
                         </div>
                     </form>
 
-                    <div>
+                    <div [class]="youTubeInfoResult.v ? 'show' : 'hide'" class="hide">
                         <form method="post" id="lead-collection-form3" action-xhr="/home/generate">
-                            <input type="hidden" name="v" id="v" [value]="v" />
+                            <input type="hidden" name="v" id="v" [value]="youTubeInfoResult.v" />
                             @*Choose download options:
                                 <select id="downloadOptions" name="downloadOptions" style="width: 100%;">
                                     <option>@Cutyt.Core.Enums.DownloadOptions.VideoAndAudio</option>
                                 </select>*@
-
+                        @*<template type="amp-mustache">
+                            {{#youTubeInfoResult.infos}}
+                            <div>
+                                <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" />
+                                <label for="{{formatCode}}">{{textWithoutCode}}</label>
+                            </div>
+                            {{/youTubeInfoResult.infos}}
+                        </template>*@
+                            To download the best video and audio quality click the button below:
                             <div class="align-center">
                                 <div class="mbr-section-btn input-group-btn">
                                     <button type="submit" class="btn btn-lg mbr-editable-button btn-warning-outline display-6">
@@ -2846,7 +162,444 @@
             </div>
         </div>
     </section>
+    @*<section class="table2 cid-qTgVMysdUY" id="table2-1y">
 
+
+
+            <div class="container">
+                <div class="mbr-row mbr-justify-content-center">
+                    <div class="mbr-col-md-12 mbr-col-lg-12 mbr-col-sm-12">
+                        <h2 class="mbr-fonts-style main-title mbr-black align-center mbr-bold display-3">Download Options</h2>
+                        <div class="wrapscroll">
+                            <div class="scroll">
+                                <table class="table mbr-text mbr-fonts-style" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th class="time1">
+                                                <p class="mbr-text tabletitle mbr-fonts-style display-7"></p>
+                                            </th>
+                                            <th>
+                                                <p class="mbr-text tabletitle mbr-fonts-style display-6">
+                                                    <span>MONDAY</span>
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p class="mbr-text tabletitle mbr-fonts-style display-6">
+                                                    <span>TUESDAY</span>
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p class="mbr-text tabletitle mbr-fonts-style display-6">
+                                                    <span>WEDNESDAY </span>
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p class="mbr-text tabletitle mbr-fonts-style display-6">
+                                                    <span>THURSDAY</span>
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p class="mbr-text tabletitle mbr-fonts-style display-6">
+                                                    <span>FRIDAY</span>
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p class="mbr-text tabletitle mbr-fonts-style display-6">
+                                                    <span>SATURDAY</span>
+                                                </p>
+                                            </th>
+                                            <th>
+                                                <p class="mbr-text tabletitle mbr-fonts-style display-6">
+                                                    <span>SUNDAY</span>
+                                                </p>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="time1">
+                                                <p class="mbr-text mbr-fonts-style row-time display-6">10.00</p>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type1 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">James Math</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type2 mbr-bold display-7">
+                                                        <a href="#" class="text-info">CARDIO</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type3 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type4 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type5 mbr-bold display-7">
+                                                        <a href="#" class="text-secondary">BOX</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Matthew Dunn</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type6 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type7 mbr-bold display-7">
+                                                        <a href="#" class="text-success">FITNESS</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Barbara Holland</h4>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+
+
+
+
+
+
+
+
+                                            <td class="time1">
+                                                <p class="mbr-text mbr-fonts-style row-time display-6">12.00</p>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type8 mbr-bold display-7">
+                                                        <a href="#" class="text-success">FITNESS</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Barbara Holy</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type9 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">James Math</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type10 mbr-bold display-7">
+                                                        <a href="#" class="text-secondary">BOX</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type11 mbr-bold display-7">
+                                                        <a href="#" class="text-success">FITNESS</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Matthew Dunn</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type12 mbr-bold display-7">
+                                                        <a href="#" class="text-info">CARDIO</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type13 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type14 mbr-bold display-7">
+                                                        <a href="#" class="text-secondary">BOX</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+
+
+
+
+
+
+
+
+                                            <td class="time1">
+                                                <p class="mbr-text mbr-fonts-style row-time display-6">16.00</p>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type15 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type16 mbr-bold display-7">
+                                                        <a href="#" class="text-secondary">BOX</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Matthew Dunn</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type17 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type18 mbr-bold display-7">
+                                                        <a href="#" class="text-info">CARDIO</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Barbara Holy</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type19 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type20 mbr-bold display-7">
+                                                        <a href="#" class="text-info">CARDIO</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Matthew Dunn</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type21 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+
+
+
+
+
+
+
+
+                                            <td class="time1">
+                                                <p class="mbr-text mbr-fonts-style row-time display-6">18.00</p>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type22 mbr-bold display-7">
+                                                        <a href="#" class="text-info">CARDIO</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type23 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type24 mbr-bold display-7">
+                                                        <a href="#" class="text-info">CARDIO</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type25 mbr-bold display-7">
+                                                        <a href="#" class="text-success">FITNESS</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type26 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">James Math</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type27 mbr-bold display-7">
+                                                        <a href="#" class="text-success">FITNESS</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type28 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">James Math</h4>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+
+
+
+
+
+
+
+
+                                            <td class="time1">
+                                                <p class="mbr-text mbr-fonts-style row-time display-6">20.00</p>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type29 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Barbara Holy</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type30 mbr-bold display-7">
+                                                        <a href="#" class="text-secondary">BOX</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type31 mbr-bold display-7">
+                                                        <a href="#" class="text-success">FITNESS</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Barbara Holy</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type32 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type33 mbr-bold display-7">
+                                                        <a href="#" class="text-secondary">BOX</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">James Math</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type34 mbr-bold display-7">
+                                                        <a href="#">CROSSFIT</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Amanda Snow</h4>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="box">
+                                                    <h2 class="mbr-fonts-style type35 mbr-bold display-7">
+                                                        <a href="#" class="text-info">CARDIO</a>
+                                                    </h2>
+                                                    <h3 class="mbr-fonts-style time display-6">10.00 - 11.00</h3>
+                                                    <h4 class="mbr-fonts-style name display-6">Matthew Dunn</h4>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>*@
     <section class="footer1 cid-qTkdZp51B1" id="footer3-4c">
         <div class="container">
 

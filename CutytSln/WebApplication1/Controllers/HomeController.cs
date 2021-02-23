@@ -38,7 +38,63 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M")
+        public IActionResult GetYoutubeInfo(string url = "https://www.youtube.com/watch?v=vLM-v7LeiEg")
+        {
+            var programFullPath = @"E:\Files\youtube-dl.exe";
+            var args = $"-F {url}";
+            Process p = new Process();
+            p.StartInfo.FileName = programFullPath;
+            p.StartInfo.Arguments = args;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+
+            p.StartInfo.WorkingDirectory = @"E:\Files";
+
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.ErrorDialog = false;
+
+            p.Start();
+            p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
+
+            string result = p.StandardOutput.ReadToEnd();
+            string error = p.StandardError.ReadToEnd();
+
+            var rows = result.Split($"\n");
+
+            List<YouTubeInfoViewModel> infos = new List<YouTubeInfoViewModel>();
+
+            var startIndex = rows.ToList().IndexOf("format code  extension  resolution note");
+            for (int i = startIndex + 1; i < rows.Length - 1; i++)
+            {
+                YouTubeInfoViewModel info = new YouTubeInfoViewModel();
+
+                
+                var currentRow = rows[i];
+
+                info.TextWithoutCode = currentRow.Substring(4).Trim();
+
+                var rowparts = currentRow.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                info.FormatCode = rowparts[0];
+                info.Extension = rowparts[1];
+
+                int infoLength = currentRow.LastIndexOf(",") - currentRow.IndexOf(",");
+
+                int resolutionLength = currentRow.IndexOf(",") - 24;
+
+                info.Resolution = currentRow.Substring(24, resolutionLength).Trim(',').Trim();
+
+                info.Note = currentRow.Substring(currentRow.IndexOf(",") + 1, infoLength).Trim(',').Trim();
+
+                info.Size = currentRow.Substring(currentRow.LastIndexOf(",") + 1).Trim();
+
+                infos.Add(info);
+            }
+
+            return Json(infos);
+        }
+
+            public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M")
         {
             HttpContext.Response.ContentType = "text/plain; charset=utf-8";
             if (!program.EndsWith(".exe"))
@@ -93,6 +149,23 @@ namespace WebApplication1.Controllers
                     p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
 
                     string result = p.StandardOutput.ReadToEnd();
+
+                    string finalFileName = string.Empty;
+
+                    var resultRows = result.Split($"\n", StringSplitOptions.RemoveEmptyEntries);
+
+                    var lastResultRow = resultRows.Last(s => !string.IsNullOrWhiteSpace(s));
+
+                    if (lastResultRow.Contains(" has already been downloaded and merged", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        finalFileName = lastResultRow.Replace(" has already been downloaded and merged", string.Empty).Replace("[download] ", string.Empty).Trim();
+                    }
+                    else if (lastResultRow.Contains("Merging formats into"))
+                    {
+                        finalFileName = lastResultRow.Replace("[ffmpeg] Merging formats into ", string.Empty).Trim();
+
+                    }
+
                     string error = p.StandardError.ReadToEnd();
                     error = error.Replace("ERROR:", string.Empty).Trim();
                     if (!string.IsNullOrWhiteSpace(result))
@@ -128,9 +201,15 @@ namespace WebApplication1.Controllers
                     {
                         var newFiles = Directory.GetFiles(@"E:\Files");
 
-                        var v = args.Replace("https://www.youtube.com/watch?v=", string.Empty);
-                        newFiles = newFiles.Where(f => f.Contains(v, StringComparison.InvariantCultureIgnoreCase)).ToArray();
-                        var newFile = newFiles.OrderByDescending(s => new FileInfo(s).CreationTimeUtc).FirstOrDefault();
+                        var startIndexOfV = args.IndexOf("?v=");
+                        var lastIndexOfQuote = args.LastIndexOf("\"");
+
+                        var v = args.Substring(startIndexOfV + 3, lastIndexOfQuote - 3 - startIndexOfV);
+
+
+                        //var v = args.Replace("https://www.youtube.com/watch?v=", string.Empty);
+                        newFiles = newFiles.Where(f => f.Contains(finalFileName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+                        var newFile = newFiles.OrderByDescending(s => new FileInfo(s).LastAccessTimeUtc).FirstOrDefault();
 
                         string name = Path.GetFileName(newFile);
 

@@ -14,6 +14,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -32,12 +33,25 @@ namespace Cutyt.Controllers
 
         private IHostEnvironment hostEnvironment;
 
+        private string serverAddressOfServices = "http://localhost:14954/";
+        private string ytServerAddress = "https://localhost:44309/";
+
+        HttpClient httpClient = null;
+
         public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, IHostEnvironment hostEnvironment, IMemoryCache cache)
         {
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
             this.hostEnvironment = hostEnvironment;
             this.cache = cache;
+
+            if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
+            {
+                serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
+                ytServerAddress = "https://www.cutyt.com/";
+            }
+
+            httpClient = httpClientFactory.CreateClient();
         }
 
         [ResponseCache(Duration = 100, Location = ResponseCacheLocation.Any, NoStore = false)]
@@ -48,33 +62,19 @@ namespace Cutyt.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Generate(string v, DownloadOptions downloadOptions)
+        public async Task<JsonResult> Generate(string v, string formatCode)
         {
-            var httpClient = httpClientFactory.CreateClient();
-
             var youTubeV = $"https://www.youtube.com/watch?v={v}";
-
-            string serverAddressOfServices = "http://localhost:14954/";
-            string ytServerAddress = "https://localhost:44309/";
-
-            if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
-            {
-                serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
-                ytServerAddress = "https://www.cutyt.com/";
-
-            }
 
             var additionalOptions = string.Empty;
 
-            if (downloadOptions != DownloadOptions.VideoAndAudio)
-            {
-                additionalOptions = $" -x --audio-format {downloadOptions.ToString().ToLowerInvariant()} ";
-            }
+            //var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args={additionalOptions}{youTubeV}");
 
-            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args={additionalOptions}{youTubeV}");
+            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args=-f bestvideo%2Bbestaudio \"{youTubeV}\" -k"); // %2B = +
 
 
-            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+
+             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true
             };
@@ -115,7 +115,15 @@ namespace Cutyt.Controllers
                 var qs = parts[1];
                 var parsedQS = HttpUtility.ParseQueryString(qs);
                 var v = parsedQS["v"];
-                var result = new { v };
+
+                string url = $"https://www.youtube.com/watch?v={v}";
+
+                var httpClient = httpClientFactory.CreateClient();
+                var infos = httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={url}").Result;
+                YouTubeInfoResult youTubeInfoResult = new YouTubeInfoResult();
+                youTubeInfoResult.V = v;
+                youTubeInfoResult.Infos = infos;
+                var result = new { youTubeInfoResult };
                 return Json(result);
             }
             return Json(string.Empty);
