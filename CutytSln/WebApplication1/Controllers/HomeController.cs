@@ -225,14 +225,14 @@ namespace WebApplication1.Controllers
                         //string url = $"https://stcutyt.file.core.windows.net/cutyt/{name}{sas}";
 
 
-                        var fileInWwwFiles = Path.Combine(newDirectory, name);
-                        System.IO.File.Copy(newFile, fileInWwwFiles);
+                        //var fileInWwwFiles = Path.Combine(newDirectory, name);
+                        //System.IO.File.Copy(newFile, fileInWwwFiles);
 
-                        string url = fileInWwwFiles.Replace(hostEnvironment.ContentRootPath, serverUrl).Replace("\\", "/").Replace("wwwroot/", string.Empty);
+                        //string url = fileInWwwFiles.Replace(hostEnvironment.ContentRootPath, serverUrl).Replace("\\", "/").Replace("wwwroot/", string.Empty);
                         LinkViewModel linkViewModel = new LinkViewModel()
                         {
                             Name = name,
-                            Url = url
+                            Url = $"http://cutyt.westeurope.cloudapp.azure.com/{finalFileName}"
                         };                        
                         return Json(linkViewModel);
                     }

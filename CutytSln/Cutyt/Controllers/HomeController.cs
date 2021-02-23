@@ -48,7 +48,9 @@ namespace Cutyt.Controllers
             if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
             {
                 serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
-                ytServerAddress = "https://www.cutyt.com/";
+                //ytServerAddress = "https://www.cutyt.com/";
+                ytServerAddress = "http://cutyt.westeurope.cloudapp.azure.com/";
+
             }
 
             httpClient = httpClientFactory.CreateClient();
@@ -86,19 +88,18 @@ namespace Cutyt.Controllers
 
             var fileNameFromUrl = linkviewModel.Url.Substring(linkviewModel.Url.LastIndexOf("/") + 1);
 
-            using (var client = new WebClient())
-            {
+            //using (var client = new WebClient())
+            //{
 
-                var localFile = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "files", fileNameFromUrl);
+            //    var localFile = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "files", fileNameFromUrl);
 
-                client.DownloadFile(linkviewModel.Url, localFile);
-
-            }
+            //    client.DownloadFile(linkviewModel.Url, localFile);
+            //}
 
             LinkViewModel result = new LinkViewModel()
             {
                 Name = fileNameFromUrl,
-                Url = $"{ytServerAddress}files/{fileNameFromUrl}"
+                Url = $"{ytServerAddress}/{fileNameFromUrl}"
             };
 
 

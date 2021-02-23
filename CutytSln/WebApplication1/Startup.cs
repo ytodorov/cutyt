@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,7 +48,11 @@ namespace WebApplication1
 
             app.UseStaticFiles(new StaticFileOptions
             {
-                ContentTypeProvider = provider
+                FileProvider = new PhysicalFileProvider(
+                     Path.Combine(@"E:\Files")),
+                ContentTypeProvider = provider,
+                ServeUnknownFileTypes = true,
+                
             });
 
             app.UseRouting();
