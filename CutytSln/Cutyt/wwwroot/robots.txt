@@ -1,0 +1,3 @@
+﻿Sitemap: https://www.cutyt.com/sitemap.xml
+User-agent: *
+Disallow: /error
