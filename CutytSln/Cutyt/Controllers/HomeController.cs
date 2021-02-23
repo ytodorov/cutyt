@@ -34,7 +34,7 @@ namespace Cutyt.Controllers
         private IHostEnvironment hostEnvironment;
 
         private string serverAddressOfServices = "http://localhost:14954/";
-        private string ytServerAddress = "https://localhost:44309/";
+        //private string ytServerAddress = "https://localhost:44309/";
 
         HttpClient httpClient = null;
 
@@ -49,11 +49,13 @@ namespace Cutyt.Controllers
             {
                 serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
                 //ytServerAddress = "https://www.cutyt.com/";
-                ytServerAddress = "http://cutyt.westeurope.cloudapp.azure.com/";
+                //ytServerAddress = "http://cutyt.westeurope.cloudapp.azure.com/";
 
             }
 
             httpClient = httpClientFactory.CreateClient();
+
+            httpClient.Timeout = TimeSpan.FromHours(1);
         }
 
         [ResponseCache(Duration = 100, Location = ResponseCacheLocation.Any, NoStore = false)]
@@ -68,13 +70,7 @@ namespace Cutyt.Controllers
         {
             var youTubeV = $"https://www.youtube.com/watch?v={v}";
 
-            var additionalOptions = string.Empty;
-
-            //var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args={additionalOptions}{youTubeV}");
-
-            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args=-f bestvideo%2Bbestaudio \"{youTubeV}\" -k"); // %2B = +
-
-
+            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args=-f bestvideo%2Bbestaudio \"{youTubeV}\" -k -v --no-part"); // %2B = +
 
              JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
             {
@@ -83,23 +79,12 @@ namespace Cutyt.Controllers
 
             var linkviewModel = JsonSerializer.Deserialize<LinkViewModel>(json, jsonSerializerOptions);
 
-            //var resultLink = link.Replace(@"C:\inetpub\wwwroot\wwwroot\", "http://cutyt.westeurope.cloudapp.azure.com/").Replace("\\", "/");
-            //var name = resultLink.Substring(resultLink.LastIndexOf("/") + 1);
-
             var fileNameFromUrl = linkviewModel.Url.Substring(linkviewModel.Url.LastIndexOf("/") + 1);
-
-            //using (var client = new WebClient())
-            //{
-
-            //    var localFile = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot", "files", fileNameFromUrl);
-
-            //    client.DownloadFile(linkviewModel.Url, localFile);
-            //}
 
             LinkViewModel result = new LinkViewModel()
             {
                 Name = fileNameFromUrl,
-                Url = $"{ytServerAddress}/{fileNameFromUrl}"
+                Url = $"{serverAddressOfServices}{fileNameFromUrl}"
             };
 
 

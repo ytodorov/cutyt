@@ -69,7 +69,7 @@ namespace WebApplication1.Controllers
             {
                 YouTubeInfoViewModel info = new YouTubeInfoViewModel();
 
-                
+
                 var currentRow = rows[i];
 
                 info.TextWithoutCode = currentRow.Substring(4).Trim();
@@ -94,7 +94,7 @@ namespace WebApplication1.Controllers
             return Json(infos);
         }
 
-            public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M")
+        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M")
         {
             HttpContext.Response.ContentType = "text/plain; charset=utf-8";
             if (!program.EndsWith(".exe"))
@@ -104,14 +104,6 @@ namespace WebApplication1.Controllers
 
             try
             {
-                //var allFiles = Directory.GetFiles(Environment.CurrentDirectory, "*.*", SearchOption.AllDirectories);
-
-
-
-
-                //var programFullPath = allFiles.FirstOrDefault(f => Path.GetFileName(f).ToLower().Equals(program.ToLower()));
-
-
                 var programFullPath = @"E:\Files\youtube-dl.exe";
 
                 var ticks = DateTime.Now.Ticks.ToString();
@@ -130,6 +122,28 @@ namespace WebApplication1.Controllers
                 //    System.IO.File.Copy(fileToCopy, newProgramFullPath, true);
                 //}
 
+                var fileNameFromArgs = GetFileNameFromArgs(args);
+                var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
+                var allFiles = Directory.GetFiles(@"E:\Files");
+
+                var existingFiles = allFiles
+                    .Where(f => f.Contains($"{fileNameWithoutExtensions}", StringComparison.InvariantCultureIgnoreCase) 
+                    && !f.EndsWith(".part", StringComparison.InvariantCultureIgnoreCase)
+                    && !f.EndsWith(".ytdl", StringComparison.InvariantCultureIgnoreCase))
+                    .ToList();
+                var existingFile = existingFiles.OrderByDescending(s => new FileInfo(s).Length).FirstOrDefault();
+                if (!string.IsNullOrEmpty(existingFile))
+                {
+                    var existingFileName = Path.GetFileName(existingFile);
+                    LinkViewModel linkViewModel = new LinkViewModel()
+                    {
+                        Name = existingFileName,
+                        Url = $"http://cutyt.westeurope.cloudapp.azure.com/{existingFileName}"
+                    };
+                    return Json(linkViewModel);
+                }
+
+
                 if (!string.IsNullOrEmpty(programFullPath))
                 {
 
@@ -145,8 +159,10 @@ namespace WebApplication1.Controllers
                     p.StartInfo.CreateNoWindow = true;
                     p.StartInfo.ErrorDialog = false;
 
+                    p.OutputDataReceived += P_OutputDataReceived;
+
                     p.Start();
-                    p.WaitForExit((int)TimeSpan.FromHours(1).TotalMilliseconds);
+                    p.WaitForExit((int)TimeSpan.FromMinutes(5).TotalMilliseconds);
 
                     string result = p.StandardOutput.ReadToEnd();
 
@@ -158,18 +174,15 @@ namespace WebApplication1.Controllers
 
                     if (lastResultRow.Contains(" has already been downloaded and merged", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        finalFileName = lastResultRow.Replace(" has already been downloaded and merged", string.Empty).Replace("[download] ", string.Empty).Trim();
+                        finalFileName = lastResultRow.Replace(" has already been downloaded and merged", string.Empty).Replace("[download] ", string.Empty).Trim('"').Trim();
                     }
                     else if (lastResultRow.Contains("Merging formats into"))
                     {
-                        finalFileName = lastResultRow.Replace("[ffmpeg] Merging formats into ", string.Empty).Trim();
+                        finalFileName = lastResultRow.Replace("[ffmpeg] Merging formats into ", string.Empty).Trim('"').Trim();
 
                     }
 
-                    string error = p.StandardError.ReadToEnd();
-                    error = error.Replace("ERROR:", string.Empty).Trim();
-                    if (!string.IsNullOrWhiteSpace(result))
-                    {
+                    
                         EventTelemetry et = new EventTelemetry()
                         {
                             Name = "result",
@@ -177,68 +190,39 @@ namespace WebApplication1.Controllers
                         et.Properties.Add("text", result);
 
                         telemetryClient.TrackEvent(et);
-                    }
-
-                    if (!string.IsNullOrEmpty(error))
+                    string error = p.StandardError.ReadToEnd();
+                    if (error.Contains("error", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        EventTelemetry et = new EventTelemetry()
+                        EventTelemetry etError = new EventTelemetry()
                         {
                             Name = "error",
                         };
-                        et.Properties.Add("text", error);
+                        etError.Properties.Add("text", error);
 
-                        telemetryClient.TrackEvent(et);
-                    }
-
-                    string serverUrl = "http://localhost:14954";
-
-                    if (!hostEnvironment.IsDevelopment())
-                    {
-                        serverUrl = "http://cutyt.westeurope.cloudapp.azure.com";
+                        telemetryClient.TrackEvent(etError);
                     }
 
                     if (error?.Contains("error", StringComparison.InvariantCultureIgnoreCase) != true)
                     {
                         var newFiles = Directory.GetFiles(@"E:\Files");
 
-                        var startIndexOfV = args.IndexOf("?v=");
-                        var lastIndexOfQuote = args.LastIndexOf("\"");
+                        //var startIndexOfV = args.IndexOf("?v=");
+                        //var lastIndexOfQuote = args.LastIndexOf("\"");
 
-                        var v = args.Substring(startIndexOfV + 3, lastIndexOfQuote - 3 - startIndexOfV);
+                        //var v = args.Substring(startIndexOfV + 3, lastIndexOfQuote - 3 - startIndexOfV);
 
-
-                        //var v = args.Replace("https://www.youtube.com/watch?v=", string.Empty);
-                        newFiles = newFiles.Where(f => f.Contains(finalFileName, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+                        newFiles = newFiles.Where(f => f.Contains(fileNameWithoutExtensions, StringComparison.InvariantCultureIgnoreCase)).ToArray();
                         var newFile = newFiles.OrderByDescending(s => new FileInfo(s).LastAccessTimeUtc).FirstOrDefault();
 
                         string name = Path.GetFileName(newFile);
 
-                        // Copy File To Azure Storage
-                        // System.IO.File.Copy(newFile, Path.Combine(@"\\stcutyt.file.core.windows.net", name), true);
-
-                        //Helpers.UploadFileInAzureFileShare(newFile, hostEnvironment);
-
-                        //var fileToDelete = newFiles.FirstOrDefault(f => f.EndsWith(".exe"));
-                        //System.IO.File.Delete(fileToDelete);
-
-                        //string sas = "?sv=2019-12-12&ss=f&srt=sco&sp=rl&se=2051-02-09T05:56:05Z&st=2020-02-08T21:56:05Z&spr=https&sig=c5Z%2FrDJsaABP5NzNR56OI7RlVPCdfbJgBsCTxX3PiGw%3D";
-                        //string url = $"https://stcutyt.file.core.windows.net/cutyt/{name}{sas}";
-
-
-                        //var fileInWwwFiles = Path.Combine(newDirectory, name);
-                        //System.IO.File.Copy(newFile, fileInWwwFiles);
-
-                        //string url = fileInWwwFiles.Replace(hostEnvironment.ContentRootPath, serverUrl).Replace("\\", "/").Replace("wwwroot/", string.Empty);
                         LinkViewModel linkViewModel = new LinkViewModel()
                         {
                             Name = name,
                             Url = $"http://cutyt.westeurope.cloudapp.azure.com/{finalFileName}"
-                        };                        
+                        };
                         return Json(linkViewModel);
                     }
-                                      
-                    //var errorFilePath = Path.Combine(hostEnvironment.ContentRootPath, "error.txt");
-                    //System.IO.File.WriteAllText(errorFilePath, error);
 
                     LinkViewModel errorViewModel = new LinkViewModel()
                     {
@@ -256,6 +240,40 @@ namespace WebApplication1.Controllers
                 var json = new JsonResult(ex.Message + ex.StackTrace);
                 return json;
             }
+        }
+
+        private void P_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            var data = e.Data;
+        }
+
+        private string GetFileNameFromArgs(string args)
+        {
+            string filename = string.Empty;
+            // youtube-dl -f bestvideo+bestaudio "https://www.youtube.com/watch?v=LXb3EKWsInQ&t=156s" -k
+
+            var programFullPath = @"E:\Files\youtube-dl.exe";
+
+            Process p = new Process();
+            p.StartInfo.FileName = programFullPath;
+            p.StartInfo.Arguments = $"{args} --get-filename";
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+
+            p.StartInfo.WorkingDirectory = @"E:\Files";
+
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.ErrorDialog = false;
+
+            p.Start();
+            p.WaitForExit((int)TimeSpan.FromHours(1).TotalMilliseconds);
+
+            string result = p.StandardOutput.ReadToEnd().Trim();
+
+            return result;
+
+
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
