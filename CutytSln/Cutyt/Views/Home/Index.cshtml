@@ -30,6 +30,7 @@
     <script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"></script>
     <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+    <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
 
     <link rel="canonical" href="@canonicalUrl" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
@@ -102,11 +103,11 @@
                                              height="270"></amp-youtube>
 
                                 @*{{#youTubeInfoResult.infos}}
-                                <div>
-                                    <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" />
-                                    <label for="{{formatCode}}">{{textWithoutCode}}</label>
-                                </div>
-                                {{/youTubeInfoResult.infos}}*@
+                                    <div>
+                                        <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" />
+                                        <label for="{{formatCode}}">{{textWithoutCode}}</label>
+                                    </div>
+                                    {{/youTubeInfoResult.infos}}*@
 
                             </template>
                         </div>
@@ -124,14 +125,14 @@
                                 <select id="downloadOptions" name="downloadOptions" style="width: 100%;">
                                     <option>@Cutyt.Core.Enums.DownloadOptions.VideoAndAudio</option>
                                 </select>*@
-                        @*<template type="amp-mustache">
-                            {{#youTubeInfoResult.infos}}
-                            <div>
-                                <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" />
-                                <label for="{{formatCode}}">{{textWithoutCode}}</label>
-                            </div>
-                            {{/youTubeInfoResult.infos}}
-                        </template>*@
+                            @*<template type="amp-mustache">
+                                    {{#youTubeInfoResult.infos}}
+                                    <div>
+                                        <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" />
+                                        <label for="{{formatCode}}">{{textWithoutCode}}</label>
+                                    </div>
+                                    {{/youTubeInfoResult.infos}}
+                                </template>*@
                             To download the best video and audio quality click the button below:
                             <div class="align-center">
                                 <div class="mbr-section-btn input-group-btn">
@@ -159,6 +160,22 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+    <section class="form1 cid-qTgW5lPO8j" id="form1-27">
+        <div class="container">
+            <h2 class="align-center mbr-bold mbr-fonts-style display-3">Recent Downloads</h2>
+            <p class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">We maintain a list of all files for easy retrieval and sharing</p>
+            <div class="mbr-row mbr-justify-content-center">
+                <div class="mbr-col-lg-12  mbr-col-md-10">
+                    <amp-list width="auto" height="500" layout="fixed-height" src="/home/getallfiles" binding="refresh">
+                        <template type="amp-mustache">
+                            <p><a href="{{url}}">{{name}}</a></p>
+                        </template>
+                    </amp-list>
+                </div>
+            </div>
+
         </div>
     </section>
     @*<section class="table2 cid-qTgVMysdUY" id="table2-1y">

@@ -65,12 +65,30 @@ namespace Cutyt.Controllers
             return view;
         }
 
-        [HttpPost]
+        public async Task<JsonResult> GetAllFiles()
+        {
+            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/getallfiles");
+
+            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var items = JsonSerializer.Deserialize<List<LinkViewModel>>(json, jsonSerializerOptions);
+
+            var result = new { items };
+
+            return Json(result);
+        }
+
+            [HttpPost]
         public async Task<JsonResult> Generate(string v, string formatCode)
         {
-            var youTubeV = $"https://www.youtube.com/watch?v={v}";
+            var youTubeUrl = $"https://www.youtube.com/watch?v={v}";
 
-            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args=-f bestvideo%2Bbestaudio \"{youTubeV}\" -k -v --no-part"); // %2B = +
+            // PROBLEMS with bestvideo%2Bbestaudio - youtube-dl is stuck and does not quit on time
+            // best - use single file -> mp4
+            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args=-f best --no-part \"{youTubeUrl}\" -k -v&ytUrl={youTubeUrl}"); // %2B = +
 
              JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
             {

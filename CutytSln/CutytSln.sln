@@ -9,7 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication1", "WebAppli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cutyt.Core", "Cutyt.Core\Cutyt.Core.csproj", "{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{4E731865-9748-4D90-ADAA-6A78167345C6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "youtube-dl", "youtube-dl", "{31DB3226-CA46-4B4A-AA14-F1303BC3F226}"
+	ProjectSection(SolutionItems) = preProject
+		E:\Files\test\ffmpeg.exe = E:\Files\test\ffmpeg.exe
+		E:\Files\test\ffplay.exe = E:\Files\test\ffplay.exe
+		E:\Files\test\ffprobe.exe = E:\Files\test\ffprobe.exe
+		E:\Files\test\youtube-dl.exe = E:\Files\test\youtube-dl.exe
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +35,6 @@ Global
 		{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E731865-9748-4D90-ADAA-6A78167345C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E731865-9748-4D90-ADAA-6A78167345C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E731865-9748-4D90-ADAA-6A78167345C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E731865-9748-4D90-ADAA-6A78167345C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -22,10 +22,18 @@ namespace WebApplication1.Controllers
 
         private TelemetryClient telemetryClient;
 
+        private string serverAddressOfServices = "http://localhost:14954/";
+
         public HomeController(IHostEnvironment hostEnvironment, TelemetryClient telemetryClient)
         {
             this.hostEnvironment = hostEnvironment;
             this.telemetryClient = telemetryClient;
+
+            if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
+            {
+                serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
+
+            }
         }
 
         public IActionResult Index()
@@ -94,7 +102,31 @@ namespace WebApplication1.Controllers
             return Json(infos);
         }
 
-        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M")
+        public IActionResult GetAllFiles()
+        {
+            var files = Directory.GetFiles(@"E:\Files").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
+
+            files = files.Where(f => !f.EndsWith(".dll") && !f.EndsWith(".exe") && !f.EndsWith(".part") && !f.EndsWith(".ytdl") && !f.Contains("-frag", StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+            List<LinkViewModel> list = new List<LinkViewModel>();
+
+            foreach (var file in files)
+            {
+                var name = Path.GetFileName(file);
+                LinkViewModel linkViewModel = new LinkViewModel()
+                {
+                    Name = name,
+                    Url = $"{serverAddressOfServices}{name}"
+                };
+
+                list.Add(linkViewModel);
+            }
+
+
+            return Json(list);
+        }
+
+        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "")
         {
             HttpContext.Response.ContentType = "text/plain; charset=utf-8";
             if (!program.EndsWith(".exe"))
@@ -122,12 +154,12 @@ namespace WebApplication1.Controllers
                 //    System.IO.File.Copy(fileToCopy, newProgramFullPath, true);
                 //}
 
-                var fileNameFromArgs = GetFileNameFromArgs(args);
+                var fileNameFromArgs = GetFileNameFromArgs(ytUrl);
                 var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
                 var allFiles = Directory.GetFiles(@"E:\Files");
 
                 var existingFiles = allFiles
-                    .Where(f => f.Contains($"{fileNameWithoutExtensions}", StringComparison.InvariantCultureIgnoreCase) 
+                    .Where(f => f.Contains($"{fileNameWithoutExtensions}", StringComparison.InvariantCultureIgnoreCase)
                     && !f.EndsWith(".part", StringComparison.InvariantCultureIgnoreCase)
                     && !f.EndsWith(".ytdl", StringComparison.InvariantCultureIgnoreCase))
                     .ToList();
@@ -159,10 +191,8 @@ namespace WebApplication1.Controllers
                     p.StartInfo.CreateNoWindow = true;
                     p.StartInfo.ErrorDialog = false;
 
-                    p.OutputDataReceived += P_OutputDataReceived;
-
                     p.Start();
-                    p.WaitForExit((int)TimeSpan.FromMinutes(5).TotalMilliseconds);
+                    p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
 
                     string result = p.StandardOutput.ReadToEnd();
 
@@ -182,14 +212,14 @@ namespace WebApplication1.Controllers
 
                     }
 
-                    
-                        EventTelemetry et = new EventTelemetry()
-                        {
-                            Name = "result",
-                        };
-                        et.Properties.Add("text", result);
 
-                        telemetryClient.TrackEvent(et);
+                    EventTelemetry et = new EventTelemetry()
+                    {
+                        Name = "result",
+                    };
+                    et.Properties.Add("text", result);
+
+                    telemetryClient.TrackEvent(et);
                     string error = p.StandardError.ReadToEnd();
                     if (error.Contains("error", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -212,22 +242,24 @@ namespace WebApplication1.Controllers
                         //var v = args.Substring(startIndexOfV + 3, lastIndexOfQuote - 3 - startIndexOfV);
 
                         newFiles = newFiles.Where(f => f.Contains(fileNameWithoutExtensions, StringComparison.InvariantCultureIgnoreCase)).ToArray();
-                        var newFile = newFiles.OrderByDescending(s => new FileInfo(s).LastAccessTimeUtc).FirstOrDefault();
+                        var newFile = newFiles.OrderBy(s => s.Length).FirstOrDefault();
 
                         string name = Path.GetFileName(newFile);
 
                         LinkViewModel linkViewModel = new LinkViewModel()
                         {
                             Name = name,
-                            Url = $"http://cutyt.westeurope.cloudapp.azure.com/{finalFileName}"
+                            Url = $"{serverAddressOfServices}{name}"
                         };
                         return Json(linkViewModel);
                     }
 
+                    System.IO.File.WriteAllText(@"E:\Files\error.txt", error);
+
                     LinkViewModel errorViewModel = new LinkViewModel()
                     {
                         Name = "error",
-                        Url = error
+                        Url = $"{serverAddressOfServices}error.txt"
                     };
 
                     return Json(errorViewModel);
@@ -247,7 +279,7 @@ namespace WebApplication1.Controllers
             var data = e.Data;
         }
 
-        private string GetFileNameFromArgs(string args)
+        private string GetFileNameFromArgs(string ytUrl)
         {
             string filename = string.Empty;
             // youtube-dl -f bestvideo+bestaudio "https://www.youtube.com/watch?v=LXb3EKWsInQ&t=156s" -k
@@ -256,7 +288,7 @@ namespace WebApplication1.Controllers
 
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = $"{args} --get-filename";
+            p.StartInfo.Arguments = $"--get-filename {ytUrl}";
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
