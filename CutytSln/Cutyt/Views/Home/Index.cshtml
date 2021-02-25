@@ -34,7 +34,7 @@
 
     <link rel="canonical" href="@canonicalUrl" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
-    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">*@
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -92,7 +92,7 @@
                         </div>
                         <div submitting>
                             <template type="amp-mustache">
-                                Form submitting... Thank you for waiting!
+                                Generating preview .. just wait 2-3 seconds
                             </template>
                         </div>
                         <div submit-success="">
@@ -102,12 +102,12 @@
                                              width="auto"
                                              height="270"></amp-youtube>
 
-                                @*{{#youTubeInfoResult.infos}}
-                                    <div>
-                                        <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" />
-                                        <label for="{{formatCode}}">{{textWithoutCode}}</label>
-                                    </div>
-                                    {{/youTubeInfoResult.infos}}*@
+                                {{#youTubeInfoResult.infos}}
+                                <div>
+                                    <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" checked="checked" />
+                                    <label for="{{formatCode}}">{{textWithoutCode}}</label>
+                                </div>
+                                {{/youTubeInfoResult.infos}}
 
                             </template>
                         </div>
@@ -133,7 +133,7 @@
                                     </div>
                                     {{/youTubeInfoResult.infos}}
                                 </template>*@
-                            To download the best video and audio quality click the button below:
+                            @*To download the best video and audio quality click the button below:*@
                             <div class="align-center">
                                 <div class="mbr-section-btn input-group-btn">
                                     <button type="submit" class="btn btn-lg mbr-editable-button btn-warning-outline display-6">
@@ -143,7 +143,7 @@
                             </div>
                             <div submitting>
                                 <template type="amp-mustache">
-                                    Form submitting... Thank you for waiting!
+                                    The download link is being generated. Please wait ...
                                 </template>
                             </div>
                             <div submit-success>
@@ -153,7 +153,7 @@
                             </div>
                             <div submit-error>
                                 <template type="amp-mustache">
-                                    Oops! Error!
+                                    There was an error. Please try again.
                                 </template>
                             </div>
                         </form>
@@ -162,7 +162,7 @@
             </div>
         </div>
     </section>
-    <section class="form1 cid-qTgW5lPO8j" id="form1-27">
+    @*<section class="form1 cid-qTgW5lPO8j" id="form1-27">
         <div class="container">
             <h2 class="align-center mbr-bold mbr-fonts-style display-3">Recent Downloads</h2>
             <p class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">We maintain a list of all files for easy retrieval and sharing</p>
@@ -176,6 +176,82 @@
                 </div>
             </div>
 
+        </div>
+    </section>*@
+
+    <section class="features1 cid-qTgUKsQcnH" id="features1-v">
+        <div class="container">
+            <div class="mbr-row mbr-justify-content-center">
+                <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3">
+                    <div class="card-wrapper">
+                        <div class="card-img">
+                            <span class="mbr-iconfont fa-dollar fa"></span>
+                        </div>
+                        <div class="card-box">
+                            <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">FREE SERVICE</h4>
+
+                            <p class="mbr-text mbr-fonts-style align-center display-5">
+                                Our service is always free. No registration required. Download youtube videos without having to pay anything.
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3">
+                    <div class="card-wrapper">
+                        <div class="card-img">
+                            <span class="mbr-iconfont fa-download fa"></span>
+                        </div>
+
+                        <div class="card-box">
+                            <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">UNLIMITED DOWNLOADS</h4>
+
+                            <p class="mbr-text mbr-fonts-style align-center display-5">
+                                Download youtube videos as much as you like! No limitations for the number of downloads. Unrestricted file sizes.
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3">
+                    <div class="card-wrapper">
+                        <div class="card-img">
+                            <span class="mbr-iconfont fa-user-secret fa"></span>
+                        </div>
+                        <div class="card-box">
+                            <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">SECURE DOWNLOADS</h4>
+
+                            <p class="mbr-text mbr-fonts-style align-center display-5">
+                                We use HTTPS for secure connections. We do not collect any personal data. We do not use cookies, but third party services may use them.
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3 last-child">
+                    <div class="card-wrapper">
+                        <div class="card-img">
+                            <span class="mbr-iconfont fa-windows fa"></span>
+                        </div>
+                        <div class="card-box">
+                            <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">RUNS EVERYWHERE</h4>
+
+                            <p class="mbr-text mbr-fonts-style align-center display-5">
+                                Our responsive and ultra fast website can be used on every platform that is out there. Windows, Linux, Mac, Android, iOS - we support everything.
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
         </div>
     </section>
     @*<section class="table2 cid-qTgVMysdUY" id="table2-1y">
@@ -621,7 +697,7 @@
 
             <div class="mbr-row mbr-justify-content-center">
                 <div class="mbr-col-lg-12 mbr-col-md-12">
-                    <h3 class="mbr-fonts-style text1 align-center display-5">&#169; @DateTime.Now.Year <a href="https://www.cutyt.com">cutyt.com</a>. All Rights Reserved.</h3>
+                    <h3 class="mbr-fonts-style text1 align-center display-5">&#169; @DateTime.Now.Year <a href="@canonicalUrl">cutyt.com</a>. All Rights Reserved.</h3>
                 </div>
             </div>
         </div>

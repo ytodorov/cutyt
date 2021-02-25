@@ -126,6 +126,9 @@ namespace Cutyt.Controllers
                 var infos = httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={url}").Result;
                 YouTubeInfoResult youTubeInfoResult = new YouTubeInfoResult();
                 youTubeInfoResult.V = v;
+
+                // show only best for now
+                infos = infos.Where(s => s.TextWithoutCode.Contains("(best)")).ToList();
                 youTubeInfoResult.Infos = infos;
                 var result = new { youTubeInfoResult };
                 return Json(result);

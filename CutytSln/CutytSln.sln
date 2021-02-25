@@ -11,10 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cutyt.Core", "Cutyt.Core\Cu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "youtube-dl", "youtube-dl", "{31DB3226-CA46-4B4A-AA14-F1303BC3F226}"
 	ProjectSection(SolutionItems) = preProject
-		E:\Files\test\ffmpeg.exe = E:\Files\test\ffmpeg.exe
-		E:\Files\test\ffplay.exe = E:\Files\test\ffplay.exe
-		E:\Files\test\ffprobe.exe = E:\Files\test\ffprobe.exe
-		E:\Files\test\youtube-dl.exe = E:\Files\test\youtube-dl.exe
+		youtube-dl\ffmpeg.exe = youtube-dl\ffmpeg.exe
+		youtube-dl\ffplay.exe = youtube-dl\ffplay.exe
+		youtube-dl\ffprobe.exe = youtube-dl\ffprobe.exe
+		youtube-dl\youtube-dl.exe = youtube-dl\youtube-dl.exe
 	EndProjectSection
 EndProject
 Global

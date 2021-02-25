@@ -20,5 +20,10 @@ namespace Cutyt.Core.Classes
         public string Size { get; set; }
 
         public string TextWithoutCode { get; set; }
+
+        public override string ToString()
+        {
+            return $"{FormatCode} {Note}";
+        }
     }
 }
