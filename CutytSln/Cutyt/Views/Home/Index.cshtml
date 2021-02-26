@@ -72,6 +72,8 @@
             </div>
         </div>
     </section>
+    <amp-pixel src="@(canonicalUrl)pixel?bar=QUERY_PARAM(baz,biz)"></amp-pixel>
+    <amp-pixel src="@(canonicalUrl)pixel?RANDOM"></amp-pixel>
     <section class="form1 cid-qTgW5lPO8j" id="form1-26">
         <div class="container">
             <h2 class="align-center mbr-bold mbr-fonts-style display-3">Paste YouTube Url here</h2>
@@ -163,21 +165,21 @@
         </div>
     </section>
     @*<section class="form1 cid-qTgW5lPO8j" id="form1-27">
-        <div class="container">
-            <h2 class="align-center mbr-bold mbr-fonts-style display-3">Recent Downloads</h2>
-            <p class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">We maintain a list of all files for easy retrieval and sharing</p>
-            <div class="mbr-row mbr-justify-content-center">
-                <div class="mbr-col-lg-12  mbr-col-md-10">
-                    <amp-list width="auto" height="500" layout="fixed-height" src="/home/getallfiles" binding="refresh">
-                        <template type="amp-mustache">
-                            <p><a href="{{url}}">{{name}}</a></p>
-                        </template>
-                    </amp-list>
+            <div class="container">
+                <h2 class="align-center mbr-bold mbr-fonts-style display-3">Recent Downloads</h2>
+                <p class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">We maintain a list of all files for easy retrieval and sharing</p>
+                <div class="mbr-row mbr-justify-content-center">
+                    <div class="mbr-col-lg-12  mbr-col-md-10">
+                        <amp-list width="auto" height="500" layout="fixed-height" src="/home/getallfiles" binding="refresh">
+                            <template type="amp-mustache">
+                                <p><a href="{{url}}">{{name}}</a></p>
+                            </template>
+                        </amp-list>
+                    </div>
                 </div>
-            </div>
 
-        </div>
-    </section>*@
+            </div>
+        </section>*@
 
     <section class="features1 cid-qTgUKsQcnH" id="features1-v">
         <div class="container">
