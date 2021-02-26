@@ -1,5 +1,6 @@
 ﻿using Cutyt.Core.Classes;
 using Cutyt.Core.Enums;
+using Cutyt.Core.ViewModels;
 using Cutyt.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -58,10 +59,13 @@ namespace Cutyt.Controllers
             httpClient.Timeout = TimeSpan.FromHours(1);
         }
 
-        [ResponseCache(Duration = 100, Location = ResponseCacheLocation.Any, NoStore = false)]
         public IActionResult Index()
         {
-            var view = View();
+            var queryString = Request.QueryString;
+            IndexViewModel indexViewModel = new IndexViewModel();
+            var queryStringNV = HttpUtility.ParseQueryString(queryString.ToString());
+            indexViewModel.V = queryStringNV["v"];
+            var view = View(indexViewModel);
             return view;
         }
 
@@ -142,7 +146,6 @@ namespace Cutyt.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

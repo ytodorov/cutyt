@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IndexViewModel
+@{
     Layout = null;
     string title = "Cut YouTube";
     string description = "Download YouTube videos. Convert files to mp3, mp4, mkv, webp, aac, vorbis, m4a, opus, wav and many more.";
@@ -72,22 +73,20 @@
             </div>
         </div>
     </section>
-    <amp-pixel src="@(canonicalUrl)pixel?bar=QUERY_PARAM(baz,biz)"></amp-pixel>
-    <amp-pixel src="@(canonicalUrl)pixel?RANDOM"></amp-pixel>
     <section class="form1 cid-qTgW5lPO8j" id="form1-26">
         <div class="container">
             <h2 class="align-center mbr-bold mbr-fonts-style display-3">Paste YouTube Url here</h2>
             <p class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">We'll display different options for download</p>
             <div class="mbr-row mbr-justify-content-center">
                 <div class="mbr-col-lg-12  mbr-col-md-10 " data-form-type="formoid">
-                    <form class="mbr-form user-invalid" method="post" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({ 'youTubeInfoResult': event.response.youTubeInfoResult })" data-form-title="Mobirise Form" novalidate="">
+                    <form class="mbr-form user-invalid" method="post" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({ 'youTubeInfoResult': event.response.youTubeInfoResult })" novalidate="">
 
                         <div class="fieldset">
-                            <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" />
+                            <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" value="@(!string.IsNullOrEmpty(Model?.V) ? $"https://www.youtube.com/watch?v={Model?.V}" : "")" />
                         </div>
                         <div class="align-center">
                             <div class="mbr-section-btn input-group-btn">
-                                <button type="submit" class="btn btn-lg mbr-editable-button btn-warning-outline display-6">
+                                <button type="submit" class="btn btn-lg mbr-editable-button btn-warning-outline display-6" on="tap: AMP.setState({ 'youTubeInfoResult': '' })">
                                     @*<span class="fa fa-arrow-right mbr-iconfont mbr-iconfont-btn"></span>*@Preview
                                 </button>
                             </div>
