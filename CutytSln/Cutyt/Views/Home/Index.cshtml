@@ -32,6 +32,7 @@
     <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
+    <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
 
     <link rel="canonical" href="@canonicalUrl" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
@@ -102,13 +103,18 @@
                                              layout="fixed-height"
                                              width="auto"
                                              height="270"></amp-youtube>
-
-                                {{#youTubeInfoResult.infos}}
-                                <div>
-                                    <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" checked="checked" />
-                                    <label for="{{formatCode}}">{{textWithoutCode}}</label>
-                                </div>
-                                {{/youTubeInfoResult.infos}}
+                                <amp-selector layout="container"
+                                              class="radio-selector"
+                                              on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
+                                    {{#youTubeInfoResult.infos}}
+                                    <div option="{{downloadSwitchAudioAndVideo}}" selected class="align-center">
+                                        <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto" checked="checked" />
+                                        <label for="{{downloadSwitchAudioAndVideo}}">{{textWithoutCode}}</label>
+                                    </div>
+                                    {{/youTubeInfoResult.infos}}
+                                </amp-selector>
+                                @*<div>Last selected option:<code [text]="selectedOption">a</code></div>
+                                <div>All selected option(s): <code [text]="allSelectedOptions.join(', ')">a</code></div>*@
 
                             </template>
                         </div>
@@ -122,23 +128,11 @@
                     <div [class]="youTubeInfoResult.v ? 'show' : 'hide'" class="hide">
                         <form method="post" id="lead-collection-form3" action-xhr="/home/generate">
                             <input type="hidden" name="v" id="v" [value]="youTubeInfoResult.v" />
-                            @*Choose download options:
-                                <select id="downloadOptions" name="downloadOptions" style="width: 100%;">
-                                    <option>@Cutyt.Core.Enums.DownloadOptions.VideoAndAudio</option>
-                                </select>*@
-                            @*<template type="amp-mustache">
-                                    {{#youTubeInfoResult.infos}}
-                                    <div>
-                                        <input type="radio" name="info" id="{{formatCode}}" value="{{formatCode}}" style="width:auto" />
-                                        <label for="{{formatCode}}">{{textWithoutCode}}</label>
-                                    </div>
-                                    {{/youTubeInfoResult.infos}}
-                                </template>*@
-                            @*To download the best video and audio quality click the button below:*@
+                            <input type="hidden" name="selectedOption" id="selectedOption" [value]="selectedOption" />     
                             <div class="align-center">
                                 <div class="mbr-section-btn input-group-btn">
                                     <button type="submit" class="btn btn-lg mbr-editable-button btn-warning-outline display-6">
-                                        @*<span class="fa fa-arrow-right mbr-iconfont mbr-iconfont-btn"></span>*@Generate Links
+                                        @*<span class="fa fa-arrow-right mbr-iconfont mbr-iconfont-btn"></span>*@Generate Download Links
                                     </button>
                                 </div>
                             </div>

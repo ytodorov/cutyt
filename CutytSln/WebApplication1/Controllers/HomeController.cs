@@ -99,6 +99,26 @@ namespace WebApplication1.Controllers
                 infos.Add(info);
             }
 
+            foreach (var info in infos)
+            {
+                if (info.TextWithoutCode.Contains("video only"))
+                {
+                    info.DownloadSwitchAudioAndVideo = $"{info.FormatCode}+bestaudio";
+                }
+                else
+                {
+                    info.DownloadSwitchAudioAndVideo = info.FormatCode;
+                }
+                //else if (!info.TextWithoutCode.Contains("audio only"))
+                //{
+                //    info.DownloadSwitchAudioAndVideo = info.FormatCode;
+                //}
+                //else
+                //{
+                    
+                //}
+            }
+
             return Json(infos);
         }
 
@@ -126,7 +146,7 @@ namespace WebApplication1.Controllers
             return Json(list);
         }
 
-        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "")
+        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "", string V = "", string selectedOption = "")
         {
             HttpContext.Response.ContentType = "text/plain; charset=utf-8";
             if (!program.EndsWith(".exe"))
@@ -136,6 +156,7 @@ namespace WebApplication1.Controllers
 
             try
             {
+                var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
                 var programFullPath = @"E:\Files\youtube-dl.exe";
 
                 var ticks = DateTime.Now.Ticks.ToString();
@@ -154,16 +175,16 @@ namespace WebApplication1.Controllers
                 //    System.IO.File.Copy(fileToCopy, newProgramFullPath, true);
                 //}
 
-                var fileNameFromArgs = GetFileNameFromArgs(ytUrl);
+                var fileNameFromArgs = GetFileNameFromArgs(ytUrl, selectedOption);
                 var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
                 var allFiles = Directory.GetFiles(@"E:\Files");
 
                 var existingFiles = allFiles
-                    .Where(f => f.Contains($"{fileNameWithoutExtensions}", StringComparison.InvariantCultureIgnoreCase)
+                    .Where(f => f.Contains($"{V}", StringComparison.InvariantCultureIgnoreCase) && f.Contains($"{selectedOptionWithoutPlus}", StringComparison.InvariantCultureIgnoreCase)
                     && !f.EndsWith(".part", StringComparison.InvariantCultureIgnoreCase)
                     && !f.EndsWith(".ytdl", StringComparison.InvariantCultureIgnoreCase))
                     .ToList();
-                var existingFile = existingFiles.OrderByDescending(s => new FileInfo(s).Length).FirstOrDefault();
+                var existingFile = existingFiles.OrderBy(s =>s.Length).FirstOrDefault();
                 if (!string.IsNullOrEmpty(existingFile))
                 {
                     var existingFileName = Path.GetFileName(existingFile);
@@ -195,6 +216,7 @@ namespace WebApplication1.Controllers
                     p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
 
                     string result = p.StandardOutput.ReadToEnd();
+                    string error = p.StandardError.ReadToEnd();
 
                     string finalFileName = string.Empty;
 
@@ -220,7 +242,7 @@ namespace WebApplication1.Controllers
                     et.Properties.Add("text", result);
 
                     telemetryClient.TrackEvent(et);
-                    string error = p.StandardError.ReadToEnd();
+                   
                     if (error.Contains("error", StringComparison.InvariantCultureIgnoreCase))
                     {
                         EventTelemetry etError = new EventTelemetry()
@@ -236,12 +258,7 @@ namespace WebApplication1.Controllers
                     {
                         var newFiles = Directory.GetFiles(@"E:\Files");
 
-                        //var startIndexOfV = args.IndexOf("?v=");
-                        //var lastIndexOfQuote = args.LastIndexOf("\"");
-
-                        //var v = args.Substring(startIndexOfV + 3, lastIndexOfQuote - 3 - startIndexOfV);
-
-                        newFiles = newFiles.Where(f => f.Contains(fileNameWithoutExtensions, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+                        newFiles = newFiles.Where(f => f.Contains($"{V}{selectedOptionWithoutPlus}", StringComparison.InvariantCultureIgnoreCase)).ToArray();
                         var newFile = newFiles.OrderBy(s => s.Length).FirstOrDefault();
 
                         string name = Path.GetFileName(newFile);
@@ -279,7 +296,7 @@ namespace WebApplication1.Controllers
             var data = e.Data;
         }
 
-        private string GetFileNameFromArgs(string ytUrl)
+        private string GetFileNameFromArgs(string ytUrl, string selectedOptions)
         {
             string filename = string.Empty;
             // youtube-dl -f bestvideo+bestaudio "https://www.youtube.com/watch?v=LXb3EKWsInQ&t=156s" -k
@@ -303,8 +320,12 @@ namespace WebApplication1.Controllers
 
             string result = p.StandardOutput.ReadToEnd().Trim();
 
-            return result;
+            //var extension = Path.GetExtension(result);
+            //var fileNameWithoutExtension = Path.GetFileName(result);
 
+            //string fileNameWithSelectedOption = $"{fileNameWithoutExtension}.{selectedOptions}{extension}";
+            //return fileNameWithSelectedOption;
+            return result;
 
         }
 

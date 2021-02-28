@@ -85,16 +85,23 @@ namespace Cutyt.Controllers
             return Json(result);
         }
 
-            [HttpPost]
-        public async Task<JsonResult> Generate(string v, string formatCode)
+        [HttpPost]
+        public async Task<JsonResult> Generate(string v, string selectedOption)
         {
+            if (string.IsNullOrEmpty(selectedOption))
+            {
+                selectedOption = "best";
+            }
             var youTubeUrl = $"https://www.youtube.com/watch?v={v}";
 
-            // PROBLEMS with bestvideo%2Bbestaudio - youtube-dl is stuck and does not quit on time
+            // PROBLEMS with bestvideo%2Bbestaudio - youtube-dl is stuck and does not quit on time. This was due from wrong exe files.
             // best - use single file -> mp4
-            var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/exec?args=-f best --no-part \"{youTubeUrl}\" -k -v&ytUrl={youTubeUrl}"); // %2B = +
+            var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
+            var encodedUrl = $"{serverAddressOfServices}home/exec?args=-f {HttpUtility.UrlEncode(selectedOption)}" +
+                $" --no-part \"{youTubeUrl}\" --output \"{v}{selectedOptionWithoutPlus}.%(ext)s\" -k -v&ytUrl={youTubeUrl}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}";
+            var json = await httpClient.GetStringAsync(encodedUrl); // %2B = +
 
-             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true
             };
@@ -103,10 +110,12 @@ namespace Cutyt.Controllers
 
             var fileNameFromUrl = linkviewModel.Url.Substring(linkviewModel.Url.LastIndexOf("/") + 1);
 
+            var encodedUrlResult = $"{serverAddressOfServices}{HttpUtility.UrlEncode(fileNameFromUrl)}";
+
             LinkViewModel result = new LinkViewModel()
             {
                 Name = fileNameFromUrl,
-                Url = $"{serverAddressOfServices}{fileNameFromUrl}"
+                Url = encodedUrlResult
             };
 
 
@@ -132,8 +141,15 @@ namespace Cutyt.Controllers
                 youTubeInfoResult.V = v;
 
                 // show only best for now
-                infos = infos.Where(s => s.TextWithoutCode.Contains("(best)")).ToList();
+                //infos = infos.Where(s => s.TextWithoutCode.Contains("(best)")).ToList();
+
+                foreach (var info in infos)
+                {
+                    info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
+                }
                 youTubeInfoResult.Infos = infos;
+
+              
                 var result = new { youTubeInfoResult };
                 return Json(result);
             }

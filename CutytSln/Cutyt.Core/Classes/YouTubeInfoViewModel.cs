@@ -21,9 +21,11 @@ namespace Cutyt.Core.Classes
 
         public string TextWithoutCode { get; set; }
 
+        public string DownloadSwitchAudioAndVideo { get; set; }
+
         public override string ToString()
         {
-            return $"{FormatCode} {Note}";
+            return $"{FormatCode} {TextWithoutCode}";
         }
     }
 }
