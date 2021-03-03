@@ -92,6 +92,17 @@ namespace WebApplication1.Controllers
 
                 info.Resolution = currentRow.Substring(24, resolutionLength).Trim(',').Trim();
 
+                var resolutionParts = info.Resolution?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                if (resolutionParts?.Length == 3)
+                {
+                    var resolutionInP = resolutionParts[1]?.Trim();
+
+                    if (resolutionInP.EndsWith("p", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        info.VideoResolutionP = resolutionInP;
+                    }
+                }
+
                 info.Note = currentRow.Substring(currentRow.IndexOf(",") + 1, infoLength).Trim(',').Trim();
 
                 info.Size = currentRow.Substring(currentRow.LastIndexOf(",") + 1).Trim();

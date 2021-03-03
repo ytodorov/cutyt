@@ -147,6 +147,12 @@ namespace Cutyt.Controllers
                 {
                     info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
                 }
+
+                infos = infos.GroupBy(c => c.VideoResolutionP)
+                    .Select(s => s.LastOrDefault())
+                    .Where(s => s.VideoResolutionP != null)
+                    .ToList();
+
                 youTubeInfoResult.Infos = infos;
 
               

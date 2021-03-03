@@ -23,6 +23,11 @@ namespace Cutyt.Core.Classes
 
         public string DownloadSwitchAudioAndVideo { get; set; }
 
+        /// <summary>
+        /// 720p, 1080p etc.
+        /// </summary>
+        public string VideoResolutionP { get; set; }
+
         public override string ToString()
         {
             return $"{FormatCode} {TextWithoutCode}";

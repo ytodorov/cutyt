@@ -87,15 +87,28 @@
                         </div>
                         <div class="align-center">
                             <div class="mbr-section-btn input-group-btn">
-                                <button type="submit" class="btn btn-lg mbr-editable-button btn-warning-outline display-6" on="tap: AMP.setState({ 'youTubeInfoResult': '' })">
+                                <button type="submit" class="btn btn-lg mbr-editable-button btn-primary-outline display-6" on="tap: AMP.setState({ 'youTubeInfoResult': '' })">
                                     @*<span class="fa fa-arrow-right mbr-iconfont mbr-iconfont-btn"></span>*@Preview
                                 </button>
                             </div>
                         </div>
                         <div submitting>
+
                             <template type="amp-mustache">
-                                Generating preview .. just wait 2-3 seconds
+                                <div class="container">
+                                    <div class="mbr-row mbr-justify-content-center">
+                                        <h3>
+                                            <i class="fa fa-refresh fa-spin"></i>
+                                            <span class="sr-only">Generating preview ...</span>
+                                            Generating preview ...
+                                            <i class="fa fa-refresh fa-spin"></i>
+                                            <span class="sr-only">Generating preview ...</span>
+                                        </h3>
+                                    </div>
+                                </div>
                             </template>
+
+
                         </div>
                         <div submit-success="">
                             <template type="amp-mustache">
@@ -107,14 +120,14 @@
                                               class="radio-selector"
                                               on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
                                     {{#youTubeInfoResult.infos}}
-                                    <div option="{{downloadSwitchAudioAndVideo}}" selected class="align-center">
-                                        <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto" checked="checked" />
-                                        <label for="{{downloadSwitchAudioAndVideo}}">{{textWithoutCode}}</label>
+                                    <div option="{{downloadSwitchAudioAndVideo}}" selected>
+                                        <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
+                                        <label for="{{downloadSwitchAudioAndVideo}}">{{videoResolutionP}}-{{size}}</label>
                                     </div>
                                     {{/youTubeInfoResult.infos}}
                                 </amp-selector>
                                 @*<div>Last selected option:<code [text]="selectedOption">a</code></div>
-                                <div>All selected option(s): <code [text]="allSelectedOptions.join(', ')">a</code></div>*@
+                                    <div>All selected option(s): <code [text]="allSelectedOptions.join(', ')">a</code></div>*@
 
                             </template>
                         </div>
@@ -128,17 +141,27 @@
                     <div [class]="youTubeInfoResult.v ? 'show' : 'hide'" class="hide">
                         <form method="post" id="lead-collection-form3" action-xhr="/home/generate">
                             <input type="hidden" name="v" id="v" [value]="youTubeInfoResult.v" />
-                            <input type="hidden" name="selectedOption" id="selectedOption" [value]="selectedOption" />     
+                            <input type="hidden" name="selectedOption" id="selectedOption" [value]="selectedOption" />
                             <div class="align-center">
                                 <div class="mbr-section-btn input-group-btn">
-                                    <button type="submit" class="btn btn-lg mbr-editable-button btn-warning-outline display-6">
+                                    <button type="submit" class="btn btn-lg mbr-editable-button btn-secondary-outline display-6">
                                         @*<span class="fa fa-arrow-right mbr-iconfont mbr-iconfont-btn"></span>*@Generate Download Links
                                     </button>
                                 </div>
                             </div>
-                            <div submitting>
+                            <div submitting>                              
                                 <template type="amp-mustache">
-                                    The download link is being generated. Please wait ...
+                                    <div class="container">
+                                        <div class="mbr-row mbr-justify-content-center">
+                                            <h3>
+                                                <i class="fa fa-cog fa-spin"></i>
+                                                <span class="sr-only">The download link is being generated...</span>
+                                                The download link is being generated...
+                                                <i class="fa fa-cog fa-spin"></i>
+                                                <span class="sr-only">The download link is being generated...</span>
+                                            </h3>
+                                        </div>
+                                    </div>
                                 </template>
                             </div>
                             <div submit-success>
