@@ -97,7 +97,7 @@ namespace WebApplication1.Controllers
                 {
                     var resolutionInP = resolutionParts[1]?.Trim();
 
-                    if (resolutionInP.EndsWith("p", StringComparison.InvariantCultureIgnoreCase))
+                    if (!resolutionInP.Contains("audio", StringComparison.InvariantCultureIgnoreCase))
                     {
                         info.VideoResolutionP = resolutionInP;
                     }

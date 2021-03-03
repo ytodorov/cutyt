@@ -112,28 +112,25 @@
                         </div>
                         <div submit-success="">
                             <template type="amp-mustache">
-                                <amp-youtube data-videoid="{{youTubeInfoResult.v}}"
-                                             layout="fixed-height"
-                                             width="auto"
-                                             height="270"></amp-youtube>
-                                <amp-selector layout="container"
-                                              class="radio-selector"
-                                              on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
-                                    {{#youTubeInfoResult.infos}}
-                                    <div option="{{downloadSwitchAudioAndVideo}}" selected>
-                                        <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
-                                        <label for="{{downloadSwitchAudioAndVideo}}">{{videoResolutionP}}-{{size}}</label>
-                                    </div>
-                                    {{/youTubeInfoResult.infos}}
-                                </amp-selector>
-                                @*<div>Last selected option:<code [text]="selectedOption">a</code></div>
-                                    <div>All selected option(s): <code [text]="allSelectedOptions.join(', ')">a</code></div>*@
-
+                                        <amp-youtube data-videoid="{{youTubeInfoResult.v}}"
+                                                     layout="fixed-height"
+                                                     width="auto"
+                                                     height="270"></amp-youtube>
+                                        <amp-selector layout="container"
+                                                      class="radio-selector"
+                                                      on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
+                                            {{#youTubeInfoResult.infos}}
+                                            <div option="{{downloadSwitchAudioAndVideo}}" selected>
+                                                <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
+                                                <label for="{{downloadSwitchAudioAndVideo}}">{{videoResolutionP}}-{{size}}</label>
+                                            </div>
+                                            {{/youTubeInfoResult.infos}}
+                                        </amp-selector>
                             </template>
                         </div>
                         <div submit-error="">
                             <template data-form-alert="" type="amp-mustache">
-                                Failed! {{error}}
+                                There was an error. Please try again.
                             </template>
                         </div>
                     </form>
@@ -149,24 +146,26 @@
                                     </button>
                                 </div>
                             </div>
-                            <div submitting>                              
+                            <div submitting>
                                 <template type="amp-mustache">
                                     <div class="container">
                                         <div class="mbr-row mbr-justify-content-center">
-                                            <h3>
-                                                <i class="fa fa-cog fa-spin"></i>
-                                                <span class="sr-only">The download link is being generated...</span>
-                                                The download link is being generated...
-                                                <i class="fa fa-cog fa-spin"></i>
-                                                <span class="sr-only">The download link is being generated...</span>
-                                            </h3>
+                                            <i class="fa fa-cog fa-spin"></i>
+                                            <span class="sr-only">The download link is being generated...</span>
+                                            The download link is being generated...
+                                            <i class="fa fa-cog fa-spin"></i>
+                                            <span class="sr-only">The download link is being generated...</span>
                                         </div>
                                     </div>
                                 </template>
                             </div>
                             <div submit-success>
                                 <template type="amp-mustache">
-                                    <a target="_blank" href="{{url}}">{{name}}</a>
+                                    <div class="container">
+                                        <div class="mbr-row mbr-justify-content-center">
+                                            <a target="_blank" href="{{url}}">{{name}}</a>
+                                        </div>
+                                    </div>
                                 </template>
                             </div>
                             <div submit-error>
