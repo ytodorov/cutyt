@@ -76,12 +76,12 @@ namespace Cutyt.Controllers
             IndexViewModel indexViewModel = new IndexViewModel();
             var queryStringNV = HttpUtility.ParseQueryString(queryString.ToString());
             indexViewModel.V = queryStringNV["v"];
-            var view = RedirectPermanent($"{cutYtBaseAddress}youtube/{v}");
+            var view = RedirectPermanent($"{cutYtBaseAddress}youtube?v={v}");
 
             return view;
         }
 
-        [Route("/youtube/{v}")]
+        [Route("/youtube")]
         public IActionResult Youtube(string v)
         {
             IndexViewModel indexViewModel = new IndexViewModel();
