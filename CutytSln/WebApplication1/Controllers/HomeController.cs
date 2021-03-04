@@ -176,16 +176,6 @@ namespace WebApplication1.Controllers
                 var newDirectory = Path.GetDirectoryName(newProgramFullPath);
                 Directory.CreateDirectory(newDirectory);
 
-                //System.IO.File.Copy(programFullPath, newProgramFullPath);
-
-                //var allMiscFiles = Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "YoutubeMisc"));
-
-                //foreach (var fileToCopy in allMiscFiles)
-                //{
-                //    newProgramFullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "files", ticks, System.IO.Path.GetFileName(fileToCopy));
-                //    System.IO.File.Copy(fileToCopy, newProgramFullPath, true);
-                //}
-
                 var fileNameFromArgs = GetFileNameFromArgs(ytUrl, selectedOption);
                 var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
                 var allFiles = Directory.GetFiles(@"E:\Files");
@@ -224,7 +214,7 @@ namespace WebApplication1.Controllers
                     p.StartInfo.ErrorDialog = false;
 
                     p.Start();
-                    p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
+                    p.WaitForExit((int)TimeSpan.FromSeconds(5).TotalMilliseconds);
 
                     string result = p.StandardOutput.ReadToEnd();
                     string error = p.StandardError.ReadToEnd();

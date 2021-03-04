@@ -35,7 +35,8 @@ namespace Cutyt.Controllers
         private IHostEnvironment hostEnvironment;
 
         private string serverAddressOfServices = "http://localhost:14954/";
-        //private string ytServerAddress = "https://localhost:44309/";
+
+        private string cutYtBaseAddress = "https://localhost:44309/";
 
         HttpClient httpClient = null;
 
@@ -49,8 +50,7 @@ namespace Cutyt.Controllers
             if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
             {
                 serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
-                //ytServerAddress = "https://www.cutyt.com/";
-                //ytServerAddress = "http://cutyt.westeurope.cloudapp.azure.com/";
+                cutYtBaseAddress = "https://www.cutyt.com/";
 
             }
 
@@ -68,6 +68,38 @@ namespace Cutyt.Controllers
             var view = View(indexViewModel);
             return view;
         }
+
+        [Route("watch")]
+        public IActionResult WatchYoutube(string v)
+        {
+            var queryString = Request.QueryString;
+            IndexViewModel indexViewModel = new IndexViewModel();
+            var queryStringNV = HttpUtility.ParseQueryString(queryString.ToString());
+            indexViewModel.V = queryStringNV["v"];
+            var view = RedirectPermanent($"{cutYtBaseAddress}youtube/{v}");
+
+            return view;
+        }
+
+        [Route("/youtube/{v}")]
+        public IActionResult Youtube(string v)
+        {
+            IndexViewModel indexViewModel = new IndexViewModel();
+            indexViewModel.V = v;
+            var view = View("Index", indexViewModel);
+            return view;
+        }
+
+        //[Route("/youtube/{v}")]
+        //public IActionResult Youtube2(string v)
+        //{
+        //    var queryString = Request.QueryString;
+        //    IndexViewModel indexViewModel = new IndexViewModel();
+        //    var queryStringNV = HttpUtility.ParseQueryString(queryString.ToString());
+        //    indexViewModel.V = queryStringNV["v"];
+        //    var view = View();
+        //    return view;
+        //}
 
         public async Task<JsonResult> GetAllFiles()
         {
