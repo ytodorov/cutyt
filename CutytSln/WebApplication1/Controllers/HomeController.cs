@@ -63,7 +63,7 @@ namespace WebApplication1.Controllers
             p.StartInfo.ErrorDialog = false;
 
             p.Start();
-            p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
+            //p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
 
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
@@ -72,7 +72,7 @@ namespace WebApplication1.Controllers
 
             List<YouTubeInfoViewModel> infos = new List<YouTubeInfoViewModel>();
 
-            var startIndex = rows.ToList().IndexOf("format code  extension  resolution note");
+            var startIndex = rows.ToList().IndexOf(rows.FirstOrDefault(f=> f.StartsWith("format")));
             for (int i = startIndex + 1; i < rows.Length - 1; i++)
             {
                 YouTubeInfoViewModel info = new YouTubeInfoViewModel();
@@ -80,17 +80,27 @@ namespace WebApplication1.Controllers
 
                 var currentRow = rows[i];
 
-                info.TextWithoutCode = currentRow.Substring(4).Trim();
+                
 
                 var rowparts = currentRow.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                 info.FormatCode = rowparts[0];
                 info.Extension = rowparts[1];
 
+                info.TextWithoutCode = currentRow.Replace(rowparts[0], string.Empty).Trim();
+
                 int infoLength = currentRow.LastIndexOf(",") - currentRow.IndexOf(",");
 
+                if (currentRow.Contains("audio only", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    info.Resolution = $"{rowparts[2]} {rowparts[3]}";
+                }
+                else
+                {
+                    info.Resolution = rowparts[2];
+                }
                 int resolutionLength = currentRow.IndexOf(",") - 24;
 
-                info.Resolution = currentRow.Substring(24, resolutionLength).Trim(',').Trim();
+                //info.Resolution = currentRow.Substring(24, resolutionLength).Trim(',').Trim();
 
                 var resolutionParts = info.Resolution?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
                 if (resolutionParts?.Length == 3)
@@ -101,6 +111,11 @@ namespace WebApplication1.Controllers
                     {
                         info.VideoResolutionP = resolutionInP;
                     }
+                }
+
+                if (!resolutionParts[0].Contains("audio", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    info.ResolutionWidthByHeight = resolutionParts[0];
                 }
 
                 info.Note = currentRow.Substring(currentRow.IndexOf(",") + 1, infoLength).Trim(',').Trim();
@@ -214,7 +229,7 @@ namespace WebApplication1.Controllers
                     p.StartInfo.ErrorDialog = false;
 
                     p.Start();
-                    p.WaitForExit((int)TimeSpan.FromSeconds(5).TotalMilliseconds);
+                    //p.WaitForExit((int)TimeSpan.FromSeconds(5).TotalMilliseconds);
 
                     string result = p.StandardOutput.ReadToEnd();
                     string error = p.StandardError.ReadToEnd();
@@ -317,7 +332,7 @@ namespace WebApplication1.Controllers
             p.StartInfo.ErrorDialog = false;
 
             p.Start();
-            p.WaitForExit((int)TimeSpan.FromHours(1).TotalMilliseconds);
+            //p.WaitForExit((int)TimeSpan.FromHours(1).TotalMilliseconds);
 
             string result = p.StandardOutput.ReadToEnd().Trim();
 

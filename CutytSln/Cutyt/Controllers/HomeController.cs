@@ -90,17 +90,6 @@ namespace Cutyt.Controllers
             return view;
         }
 
-        //[Route("/youtube/{v}")]
-        //public IActionResult Youtube2(string v)
-        //{
-        //    var queryString = Request.QueryString;
-        //    IndexViewModel indexViewModel = new IndexViewModel();
-        //    var queryStringNV = HttpUtility.ParseQueryString(queryString.ToString());
-        //    indexViewModel.V = queryStringNV["v"];
-        //    var view = View();
-        //    return view;
-        //}
-
         public async Task<JsonResult> GetAllFiles()
         {
             var json = await httpClient.GetStringAsync($"{serverAddressOfServices}home/getallfiles");
@@ -118,19 +107,29 @@ namespace Cutyt.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Generate(string v, string selectedOption)
+        public async Task<JsonResult> Generate(string v, string vimeoId, string selectedOption)
         {
             if (string.IsNullOrEmpty(selectedOption))
             {
                 selectedOption = "best";
             }
-            var youTubeUrl = $"https://www.youtube.com/watch?v={v}";
+
+            string url = string.Empty;
+            if (v != "-1")
+            {
+
+                url = $"https://www.youtube.com/watch?v={v}";
+            }
+            if (vimeoId != "-1")
+            {
+                url = $"https://vimeo.com/{vimeoId}";
+            }
 
             // PROBLEMS with bestvideo%2Bbestaudio - youtube-dl is stuck and does not quit on time. This was due from wrong exe files.
             // best - use single file -> mp4
             var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
             var encodedUrl = $"{serverAddressOfServices}home/exec?args=-f {HttpUtility.UrlEncode(selectedOption)}" +
-                $" --no-part \"{youTubeUrl}\" --output \"{v}{selectedOptionWithoutPlus}.%(ext)s\" -k -v&ytUrl={youTubeUrl}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}";
+                $" --no-part \"{url}\" --output \"{v}{selectedOptionWithoutPlus}.%(ext)s\" -k -v&ytUrl={url}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}";
             var json = await httpClient.GetStringAsync(encodedUrl); // %2B = +
 
             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
@@ -157,41 +156,34 @@ namespace Cutyt.Controllers
         [HttpPost]
         public IActionResult GetYouTubeV(string ytUrl)
         {
+            var parsedQSTest = HttpUtility.ParseQueryString(ytUrl);
+
             ytUrl = GetFullUrlFromYouTube(ytUrl);
+            YouTubeInfoResult youTubeInfoResult = new YouTubeInfoResult();
+            SetVideoIdPart(ytUrl, youTubeInfoResult);
             var parts = ytUrl?.Split(new string[] { "/watch?" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            if (parts?.Count == 2)
+            //string url = $"https://www.youtube.com/watch?v={v}";
+
+            var httpClient = httpClientFactory.CreateClient();
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
+
+            var infos = httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={ytUrl}").Result;
+
+            foreach (var info in infos)
             {
-                var qs = parts[1];
-                var parsedQS = HttpUtility.ParseQueryString(qs);
-                var v = parsedQS["v"];
-
-                string url = $"https://www.youtube.com/watch?v={v}";
-
-                var httpClient = httpClientFactory.CreateClient();
-                var infos = httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={url}").Result;
-                YouTubeInfoResult youTubeInfoResult = new YouTubeInfoResult();
-                youTubeInfoResult.V = v;
-
-                // show only best for now
-                //infos = infos.Where(s => s.TextWithoutCode.Contains("(best)")).ToList();
-
-                foreach (var info in infos)
-                {
-                    info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
-                }
-
-                infos = infos.GroupBy(c => c.VideoResolutionP)
-                    .Select(s => s.LastOrDefault())
-                    .Where(s => s.VideoResolutionP != null)
-                    .ToList();
-
-                youTubeInfoResult.Infos = infos;
-
-              
-                var result = new { youTubeInfoResult };
-                return Json(result);
+                info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
             }
-            return Json(string.Empty);
+
+            infos = infos.GroupBy(c => c.ResolutionWidthByHeight)
+                .Select(s => s.LastOrDefault())
+                .Where(s => s.ResolutionWidthByHeight != null)
+                .ToList();
+
+            youTubeInfoResult.Infos = infos;
+
+
+            var result = new { youTubeInfoResult };
+            return Json(result);
         }
         //getyoutubev
 
@@ -203,6 +195,25 @@ namespace Cutyt.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private void SetVideoIdPart(string url, YouTubeInfoResult youTubeInfoResult)
+        {
+            youTubeInfoResult.V = "-1";
+            youTubeInfoResult.VimeoId = "-1";
+            var parts = url?.Split(new string[] { "/watch?" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (parts?.Count == 2)
+            {
+                var qs = parts[1];
+                var parsedQS = HttpUtility.ParseQueryString(qs);
+                var v = parsedQS["v"];
+                youTubeInfoResult.V = v;
+            }
+            else if (url.Contains("https://vimeo.com/", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var vimeoId = url.Replace("https://vimeo.com/", string.Empty);
+                youTubeInfoResult.VimeoId = vimeoId;
+            }
         }
 
         private string GetFullUrlFromYouTube(string url)

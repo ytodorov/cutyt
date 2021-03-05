@@ -28,6 +28,11 @@ namespace Cutyt.Core.Classes
         /// </summary>
         public string VideoResolutionP { get; set; }
 
+        /// <summary>
+        /// 1280x720
+        /// </summary>
+        public string ResolutionWidthByHeight { get; set; }
+
         public override string ToString()
         {
             return $"{FormatCode} {TextWithoutCode}";

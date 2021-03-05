@@ -33,6 +33,7 @@
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
     <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
+    @*<script async custom-element="amp-vimeo" src="https://cdn.ampproject.org/v0/amp-vimeo-0.1.js"></script>*@
 
     <link rel="canonical" href="@canonicalUrl" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
@@ -112,20 +113,24 @@
                         </div>
                         <div submit-success="">
                             <template type="amp-mustache">
-                                        <amp-youtube data-videoid="{{youTubeInfoResult.v}}"
-                                                     layout="fixed-height"
-                                                     width="auto"
-                                                     height="270"></amp-youtube>
-                                        <amp-selector layout="container"
-                                                      class="radio-selector"
-                                                      on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
-                                            {{#youTubeInfoResult.infos}}
-                                            <div option="{{downloadSwitchAudioAndVideo}}" selected>
-                                                <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
-                                                <label for="{{downloadSwitchAudioAndVideo}}">{{videoResolutionP}}-{{size}}</label>
-                                            </div>
-                                            {{/youTubeInfoResult.infos}}
-                                        </amp-selector>
+                                <amp-youtube data-videoid="{{youTubeInfoResult.v}}" [class]="{{youTubeInfoResult.v}} != '-1' ? 'show' : 'hide'" class="hide"
+                                             layout="fixed-height"
+                                             width="auto"
+                                             height="270"></amp-youtube>
+                                @*<amp-vimeo data-videoid="{{youTubeInfoResult.vimeoId}}" [class]="{{youTubeInfoResult.vimeoId}} != '-1' ? 'show' : 'hide'" class="hide"
+                                           layout="fixed-height"
+                                           width="auto"
+                                           height="270"></amp-vimeo>*@
+                                <amp-selector layout="container"
+                                              class="radio-selector"
+                                              on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
+                                    {{#youTubeInfoResult.infos}}
+                                    <div option="{{downloadSwitchAudioAndVideo}}" selected>
+                                        <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
+                                        <label for="{{downloadSwitchAudioAndVideo}}">{{resolutionWidthByHeight}}-{{size}}</label>
+                                    </div>
+                                    {{/youTubeInfoResult.infos}}
+                                </amp-selector>
                             </template>
                         </div>
                         <div submit-error="">
@@ -138,6 +143,7 @@
                     <div [class]="youTubeInfoResult.v ? 'show' : 'hide'" class="hide">
                         <form method="post" id="lead-collection-form3" action-xhr="/home/generate">
                             <input type="hidden" name="v" id="v" [value]="youTubeInfoResult.v" />
+                            <input type="hidden" name="vimeoId" id="vimeoId" [value]="youTubeInfoResult.vimeoId" />
                             <input type="hidden" name="selectedOption" id="selectedOption" [value]="selectedOption" />
                             <div class="align-center">
                                 <div class="mbr-section-btn input-group-btn">
@@ -202,7 +208,7 @@
                 <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3">
                     <div class="card-wrapper">
                         <div class="card-img">
-                            <span class="mbr-iconfont fa-dollar fa"></span>
+                            <span class="mbr-iconfont fa-dollar fa" style="color: rebeccapurple;"></span>
                         </div>
                         <div class="card-box">
                             <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">FREE SERVICE</h4>
@@ -217,8 +223,8 @@
 
                 <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3">
                     <div class="card-wrapper">
-                        <div class="card-img">
-                            <span class="mbr-iconfont fa-download fa"></span>
+                        <div class="card-img" >
+                            <span class="mbr-iconfont fa-download fa" style="color: rebeccapurple;"></span>
                         </div>
 
                         <div class="card-box">
@@ -235,7 +241,7 @@
                 <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3">
                     <div class="card-wrapper">
                         <div class="card-img">
-                            <span class="mbr-iconfont fa-user-secret fa"></span>
+                            <span class="mbr-iconfont fa-user-secret fa" style="color: rebeccapurple;"></span>
                         </div>
                         <div class="card-box">
                             <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">SECURE DOWNLOADS</h4>
@@ -250,8 +256,8 @@
 
                 <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3 last-child">
                     <div class="card-wrapper">
-                        <div class="card-img">
-                            <span class="mbr-iconfont fa-windows fa"></span>
+                        <div class="card-img" style="color: rebeccapurple;">
+                            <span class="mbr-iconfont fa-windows fa" style="color: rebeccapurple;"></span>
                         </div>
                         <div class="card-box">
                             <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">RUNS EVERYWHERE</h4>

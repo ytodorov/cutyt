@@ -10,6 +10,8 @@ namespace Cutyt.Core.Classes
     {
         public string V { get; set; }
 
+        public string VimeoId { get; set; }
+
         public List<YouTubeInfoViewModel> Infos { get; set; }
     }
 }
