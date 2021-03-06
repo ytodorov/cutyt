@@ -52,6 +52,8 @@ namespace Cutyt
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "document", "text/html", "image/x-icon" });
             });
 
+            services.AddResponseCaching();
+
             services.AddControllersWithViews();
 
             // very importan for AMP
@@ -100,8 +102,6 @@ namespace Cutyt
 
             app.UseResponseCompression();
 
-            app.UseResponseCompression();
-
             var provider = new FileExtensionContentTypeProvider();
             // Add new mappings
             provider.Mappings[".mkv"] = "video/x-matroska";
@@ -111,10 +111,10 @@ namespace Cutyt
             {
                 ContentTypeProvider = provider
             });
-
+                        
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseResponseCaching();
 
             app.UseEndpoints(endpoints =>
             {

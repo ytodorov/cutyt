@@ -33,6 +33,7 @@
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>
     <script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"></script>
+    <script async custom-element="amp-addthis" src="https://cdn.ampproject.org/v0/amp-addthis-0.1.js"></script>
 
     <link rel="canonical" href="@canonicalUrl" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
@@ -63,6 +64,8 @@
             }
         </script>
     </amp-analytics>
+    <amp-addthis width="320" height="92" layout="responsive" data-pub-id="ra-6043f6619df39ba3" data-widget-id="5vfb" data-widget-type="floating"></amp-addthis>
+
     <section class="header2 cid-qTgUa10oxi" id="header2-q">
 
         <div class="container">
@@ -112,20 +115,20 @@
                         </div>
                         <div submit-success="">
                             <template type="amp-mustache">
-                                        <amp-youtube data-videoid="{{youTubeInfoResult.v}}"
-                                                     layout="fixed-height"
-                                                     width="auto"
-                                                     height="270"></amp-youtube>
-                                        <amp-selector layout="container"
-                                                      class="radio-selector"
-                                                      on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
-                                            {{#youTubeInfoResult.infos}}
-                                            <div option="{{downloadSwitchAudioAndVideo}}" selected>
-                                                <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
-                                                <label for="{{downloadSwitchAudioAndVideo}}">{{videoResolutionP}}-{{size}}</label>
-                                            </div>
-                                            {{/youTubeInfoResult.infos}}
-                                        </amp-selector>
+                                <amp-youtube data-videoid="{{youTubeInfoResult.v}}"
+                                             layout="fixed-height"
+                                             width="auto"
+                                             height="270"></amp-youtube>
+                                <amp-selector layout="container"
+                                              class="radio-selector"
+                                              on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
+                                    {{#youTubeInfoResult.infos}}
+                                    <div option="{{downloadSwitchAudioAndVideo}}" selected>
+                                        <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
+                                        <label for="{{downloadSwitchAudioAndVideo}}">{{videoResolutionP}}-{{size}}</label>
+                                    </div>
+                                    {{/youTubeInfoResult.infos}}
+                                </amp-selector>
                             </template>
                         </div>
                         <div submit-error="">
