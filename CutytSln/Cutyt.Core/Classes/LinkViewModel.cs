@@ -11,5 +11,13 @@ namespace Cutyt.Core.Classes
         public string Url { get; set; }
 
         public string Name { get; set; }
+
+        public string V { get; set; }
+
+        public string FileName { get; set; }
+
+        public string FileNameWithVideoFormatCode { get; set; }
+
+        public string FormatCode { get; set; }
     }
 }

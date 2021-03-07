@@ -174,22 +174,10 @@ namespace WebApplication1.Controllers
 
         public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "", string V = "", string selectedOption = "")
         {
-            HttpContext.Response.ContentType = "text/plain; charset=utf-8";
-            if (!program.EndsWith(".exe"))
-            {
-                program += ".exe";
-            }
-
             try
             {
                 var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
                 var programFullPath = @"E:\Files\youtube-dl.exe";
-
-                var ticks = DateTime.Now.Ticks.ToString();
-
-                var newProgramFullPath = Path.Combine(Environment.CurrentDirectory, "wwwroot", "files", ticks, program);
-                var newDirectory = Path.GetDirectoryName(newProgramFullPath);
-                Directory.CreateDirectory(newDirectory);
 
                 var fileNameFromArgs = GetFileNameFromArgs(ytUrl, selectedOption);
                 var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);

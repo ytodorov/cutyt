@@ -66,40 +66,32 @@
             }
         </script>
     </amp-analytics>
-    <nav class="navbar navbar-dropdown  navbar-fixed-top navbar-expand-lg">
+    <nav class="navbar navbar-dropdown  navbar-fixed-top navbar-expand-lg align-center">
         <div class="navbar-brand">
             <span class="navbar-caption-wrap">
-                <a class="navbar-caption text-danger display-7" href="/">
-                    <amp-img src="android-chrome-192x192.png" layout="fixed" width="30" height="30" alt="Cut YouTube">
-                    </amp-img>Cut YouTube
+                <a class="navbar-caption text-danger display-7" href="/" title="Home">
+                    <amp-img src="android-chrome-192x192.png" layout="fixed" width="17" height="17" alt="@(title)">
+                    </amp-img>Home
                 </a>
             </span>
         </div>
-
-
-
-
     </nav>
-    <section class="header2 cid-qTgUa10oxi" id="header2-q">
-
-        <div class="container">
-            <div class="mbr-row mbr-justify-content-center">
-                <div class="mbr-col-lg-8 mbr-col-md-12">
-                    <h1 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-3 cap">@(title.ToUpperInvariant())</h1>
-                    <h2 class="mbr-fonts-style mbr-text align-center display-4">@description</h2>
+    <header>
+        <section class="header2 cid-qTgUa10oxi" id="header2-q">
+            <div class="container">
+                <div class="mbr-row mbr-justify-content-center">
+                    <div class="mbr-col-lg-8 mbr-col-md-12">
+                        <h1 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-3 cap">@(title.ToUpperInvariant())</h1>
+                        <h2 class="mbr-fonts-style mbr-text align-center display-4">@description</h2>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </header>
     <section class="form1 cid-qTgW5lPO8j" id="form1-26">
         <div class="container">
             <div class="mbr-row mbr-justify-content-center">
-                <amp-addthis width="320" height="92" data-pub-id="ra-6043f6619df39ba3" data-widget-id="jasp" data-widget-type="inline"></amp-addthis>
-            </div>
-            <h2 class="align-center mbr-bold mbr-fonts-style display-3">Paste YouTube Url here</h2>
-            <p class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">We'll display different options for download</p>
-            <div class="mbr-row mbr-justify-content-center">
-                <div class="mbr-col-lg-12  mbr-col-md-10 " data-form-type="formoid">
+                <div class="mbr-col-lg-12  mbr-col-md-12 " data-form-type="formoid">
                     <form class="mbr-form user-invalid" method="post" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({ 'youTubeInfoResult': event.response.youTubeInfoResult })" novalidate="">
 
                         <div class="fieldset">
@@ -108,7 +100,7 @@
                         <div class="align-center">
                             <div class="mbr-section-btn input-group-btn">
                                 <button type="submit" class="btn btn-lg mbr-editable-button btn-primary-outline display-6" on="tap: AMP.setState({ 'youTubeInfoResult': '' })">
-                                    @*<span class="fa fa-arrow-right mbr-iconfont mbr-iconfont-btn"></span>*@Preview
+                                    Preview
                                 </button>
                             </div>
                         </div>
@@ -191,19 +183,21 @@
                             <div class="align-center">
                                 <div class="mbr-section-btn input-group-btn">
                                     <button type="submit" class="btn btn-lg mbr-editable-button btn-secondary-outline display-6">
-                                        @*<span class="fa fa-arrow-right mbr-iconfont mbr-iconfont-btn"></span>*@Generate Download Links
+                                        Generate Download Links
                                     </button>
                                 </div>
                             </div>
                             <div submitting>
                                 <template type="amp-mustache">
                                     <div class="container">
+
                                         <div class="mbr-row mbr-justify-content-center">
                                             <i class="fa fa-cog fa-spin"></i>
                                             <span class="sr-only">The download link is being generated...</span>
-                                            The download link is being generated...
-                                            <i class="fa fa-cog fa-spin"></i>
-                                            <span class="sr-only">The download link is being generated...</span>
+                                            The download link is being generated... Why don't you share us while you are waiting:
+                                        </div>
+                                        <div class="mbr-row mbr-justify-content-center">
+                                            <amp-addthis width="320" height="92" data-pub-id="ra-6043f6619df39ba3" data-widget-id="jasp" data-widget-type="inline"></amp-addthis>
                                         </div>
                                     </div>
                                 </template>
@@ -211,8 +205,12 @@
                             <div submit-success>
                                 <template type="amp-mustache">
                                     <div class="container">
+
                                         <div class="mbr-row mbr-justify-content-center">
-                                            <a target="_blank" href="{{url}}">{{name}}</a>
+                                            <a target="_blank" title="{{name}}" href="{{url}}">{{name}}</a>
+                                        </div>
+                                        <div class="mbr-row mbr-justify-content-center">
+                                           <amp-addthis width="320" height="92" data-pub-id="ra-6043f6619df39ba3" data-widget-id="jasp" data-widget-type="inline"></amp-addthis>
                                         </div>
                                     </div>
                                 </template>
@@ -223,6 +221,76 @@
                                 </template>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features1 cid-qTgUKsQcnH" id="features1-v">
+        <div class="container">
+            <div class="mbr-row mbr-justify-content-center">
+                <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3">
+                    <div class="card-wrapper">
+                        <div class="card-img">
+                            <span class="mbr-iconfont fa-bullhorn fa" style="color: rebeccapurple;"></span>
+                        </div>
+                        <div class="card-box">
+                            <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">NO ADS</h4>
+
+                            <p class="mbr-text mbr-fonts-style align-center display-5">
+                                Tired of ads? With our service no advertisements will be shown while you are enjoing you favorite video or audio
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3">
+                    <div class="card-wrapper">
+                        <div class="card-img">
+                            <span class="mbr-iconfont fa-bolt fa" style="color: rebeccapurple;"></span>
+                        </div>
+
+                        <div class="card-box">
+                            <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">NO BUFFER</h4>
+
+                            <p class="mbr-text mbr-fonts-style align-center display-5">
+                               Slow connection can make you video stop while buffering. This is no longer the case when you download your file with Cutyt.
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3">
+                    <div class="card-wrapper">
+                        <div class="card-img">
+                            <span class="mbr-iconfont fa-cloud-download  fa" style="color: rebeccapurple;"></span>
+                        </div>
+                        <div class="card-box">
+                            <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">SAVE BANDWIDTH</h4>
+
+                            <p class="mbr-text mbr-fonts-style align-center display-5">
+                                When you are wathcing high resolution videos like 1080p or 4K you are downloading huge ammoung of data every time. With Cutyt you are downloading only once.
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mbr-col-sm-12 mbr-col-md-6 mbr-col-lg-3 last-child">
+                    <div class="card-wrapper">
+                        <div class="card-img" style="color: rebeccapurple;">
+                            <span class="mbr-iconfont fa-windows fa" style="color: rebeccapurple;"></span>
+                        </div>
+                        <div class="card-box">
+                            <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">WORKS OFFLINE</h4>
+
+                            <p class="mbr-text mbr-fonts-style align-center display-5">
+                                Once you download the file no internet connection will be required to watch or listen it again.
+                            </p>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -304,7 +372,7 @@
             <div class="mbr-row mbr-justify-content-center">
                 <div class="mbr-col-lg-12 mbr-col-md-12">
                     <h3 class="mbr-fonts-style text1 align-center display-5">
-                        &#169; @DateTime.Now.Year <a href="@canonicalUrl">cutyt.com</a>. All Rights Reserved. Follow us: <a target="_blank" href="https://www.facebook.com/Cutyt-162865322145097">
+                        &#169; @DateTime.Now.Year <a href="@canonicalUrl" title="@canonicalUrl">cutyt.com</a>. All Rights Reserved. Follow us: <a target="_blank" title="https://www.facebook.com/Cutyt-162865322145097" href="https://www.facebook.com/Cutyt-162865322145097">
                             <span class="mbr-iconfont-c fa-facebook-f fa"></span>
                         </a>
                     </h3>
