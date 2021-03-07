@@ -124,19 +124,43 @@
                                              width="auto"
                                              height="270"></amp-youtube>
                                 @*<amp-vimeo data-videoid="{{youTubeInfoResult.vimeoId}}" [class]="{{youTubeInfoResult.vimeoId}} != '-1' ? 'show' : 'hide'" class="hide"
-                                    layout="fixed-height"
-                                    width="auto"
-                                    height="270"></amp-vimeo>*@
-                                <amp-selector layout="container"
-                                              class="radio-selector"
-                                              on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
-                                    {{#youTubeInfoResult.infos}}
-                                    <div option="{{downloadSwitchAudioAndVideo}}" selected>
-                                        <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
-                                        <label for="{{downloadSwitchAudioAndVideo}}">{{resolutionWidthByHeight}}-{{size}}</label>
+        layout="fixed-height"
+        width="auto"
+        height="270"></amp-vimeo>*@
+                            <amp-selector layout="container"
+                                          class="radio-selector"
+                                          on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
+
+                                <div class="container">
+                                    <div class="mbr-row mbr-justify-content-center">
+                                        <div class="mbr-col-lg-8 mbr-col-md-12">
+                                            <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Video</h2>
+                                                {{#youTubeInfoResult.infos}}
+                                                <div option="{{downloadSwitchAudioAndVideo}}" selected>
+                                                    <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
+                                                    <label for="{{downloadSwitchAudioAndVideo}}">{{resolutionWidthByHeight}}-{{size}}</label>
+                                                </div>
+                                                {{/youTubeInfoResult.infos}}
+                                        </div>                                     
                                     </div>
-                                    {{/youTubeInfoResult.infos}}
-                                </amp-selector>
+                                </div>
+                                <div class="container">
+                                    <div class="mbr-row mbr-justify-content-center">                                       
+                                        <div class="mbr-col-lg-8 mbr-col-md-12">
+                                            <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Audio</h2>
+                                                <div option="bestaudio -x --audio-format mp3">
+                                                    <input type="radio" name="info" id="mp3" value="bestaudio -x --audio-format mp3" style="width:auto;margin-bottom:5px; margin-top:5px;" />
+                                                    <label for="mp3">MP3</label>
+                                                </div>
+                                                <div option="bestaudio -x --audio-format aac">
+                                                    <input type="radio" name="info" id="aac" value="bestaudio -x --audio-format aac" style="width:auto;margin-bottom:5px; margin-top:5px;" />
+                                                    <label for="aac">AAC</label>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </amp-selector>
+                            
                             </template>
                         </div>
                         <div submit-error="">
