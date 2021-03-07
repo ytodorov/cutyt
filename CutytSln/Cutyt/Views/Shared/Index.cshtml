@@ -66,7 +66,20 @@
             }
         </script>
     </amp-analytics>
+    <nav class="navbar navbar-dropdown  navbar-fixed-top navbar-expand-lg">
+        <div class="navbar-brand">
+            <span class="navbar-caption-wrap">
+                <a class="navbar-caption text-danger display-7" href="/">
+                    <amp-img src="android-chrome-192x192.png" layout="fixed" width="30" height="30" alt="Cut YouTube">
+                    </amp-img>Cut YouTube
+                </a>
+            </span>
+        </div>
 
+
+
+
+    </nav>
     <section class="header2 cid-qTgUa10oxi" id="header2-q">
 
         <div class="container">
@@ -124,30 +137,30 @@
                                              width="auto"
                                              height="270"></amp-youtube>
                                 @*<amp-vimeo data-videoid="{{youTubeInfoResult.vimeoId}}" [class]="{{youTubeInfoResult.vimeoId}} != '-1' ? 'show' : 'hide'" class="hide"
-        layout="fixed-height"
-        width="auto"
-        height="270"></amp-vimeo>*@
-                            <amp-selector layout="container"
-                                          class="radio-selector"
-                                          on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
+                                    layout="fixed-height"
+                                    width="auto"
+                                    height="270"></amp-vimeo>*@
+                                <amp-selector layout="container"
+                                              class="radio-selector"
+                                              on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
 
-                                <div class="container">
-                                    <div class="mbr-row mbr-justify-content-center">
-                                        <div class="mbr-col-lg-8 mbr-col-md-12">
-                                            <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Video</h2>
+                                    <div class="container">
+                                        <div class="mbr-row mbr-justify-content-center">
+                                            <div class="mbr-col-lg-8 mbr-col-md-12">
+                                                <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Video</h2>
                                                 {{#youTubeInfoResult.infos}}
                                                 <div option="{{downloadSwitchAudioAndVideo}}" selected>
                                                     <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
                                                     <label for="{{downloadSwitchAudioAndVideo}}">{{resolutionWidthByHeight}}-{{size}}</label>
                                                 </div>
                                                 {{/youTubeInfoResult.infos}}
-                                        </div>                                     
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="container">
-                                    <div class="mbr-row mbr-justify-content-center">                                       
-                                        <div class="mbr-col-lg-8 mbr-col-md-12">
-                                            <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Audio</h2>
+                                    <div class="container">
+                                        <div class="mbr-row mbr-justify-content-center">
+                                            <div class="mbr-col-lg-8 mbr-col-md-12">
+                                                <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Audio</h2>
                                                 <div option="bestaudio -x --audio-format mp3">
                                                     <input type="radio" name="info" id="mp3" value="bestaudio -x --audio-format mp3" style="width:auto;margin-bottom:5px; margin-top:5px;" />
                                                     <label for="mp3">MP3</label>
@@ -156,11 +169,11 @@
                                                     <input type="radio" name="info" id="aac" value="bestaudio -x --audio-format aac" style="width:auto;margin-bottom:5px; margin-top:5px;" />
                                                     <label for="aac">AAC</label>
                                                 </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </amp-selector>
-                            
+                                </amp-selector>
+
                             </template>
                         </div>
                         <div submit-error="">
@@ -215,23 +228,6 @@
             </div>
         </div>
     </section>
-    @*<section class="form1 cid-qTgW5lPO8j" id="form1-27">
-            <div class="container">
-                <h2 class="align-center mbr-bold mbr-fonts-style display-3">Recent Downloads</h2>
-                <p class="mbr-section-subtitle align-center mbr-light mbr-fonts-style display-5">We maintain a list of all files for easy retrieval and sharing</p>
-                <div class="mbr-row mbr-justify-content-center">
-                    <div class="mbr-col-lg-12  mbr-col-md-10">
-                        <amp-list width="auto" height="500" layout="fixed-height" src="/home/getallfiles" binding="refresh">
-                            <template type="amp-mustache">
-                                <p><a href="{{url}}">{{name}}</a></p>
-                            </template>
-                        </amp-list>
-                    </div>
-                </div>
-
-            </div>
-        </section>*@
-
     <section class="features1 cid-qTgUKsQcnH" id="features1-v">
         <div class="container">
             <div class="mbr-row mbr-justify-content-center">
@@ -307,7 +303,11 @@
 
             <div class="mbr-row mbr-justify-content-center">
                 <div class="mbr-col-lg-12 mbr-col-md-12">
-                    <h3 class="mbr-fonts-style text1 align-center display-5">&#169; @DateTime.Now.Year <a href="@canonicalUrl">cutyt.com</a>. All Rights Reserved.</h3>
+                    <h3 class="mbr-fonts-style text1 align-center display-5">
+                        &#169; @DateTime.Now.Year <a href="@canonicalUrl">cutyt.com</a>. All Rights Reserved. Follow us: <a target="_blank" href="https://www.facebook.com/Cutyt-162865322145097">
+                            <span class="mbr-iconfont-c fa-facebook-f fa"></span>
+                        </a>
+                    </h3>
                 </div>
             </div>
         </div>
