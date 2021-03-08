@@ -193,9 +193,20 @@ namespace Cutyt.Controllers
             return View();
         }
 
-        public IActionResult Error()
+        [Route("error")]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error(string id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            if (id == "404")
+            {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.NotFound;               
+            }
+            else if (id == "500")
+            {
+                HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            }
+            
+            return View("Index");
         }
 
         private void SetVideoIdPart(string url, YouTubeInfoResult youTubeInfoResult)
