@@ -137,20 +137,20 @@
                                               on="select: AMP.setState({selectedOption: event.targetOption, allSelectedOptions: event.selectedOptions})">
 
                                     <div class="container">
-                                        <div class="mbr-row mbr-justify-content-center">
+                                        <div class="mbr-row mbr-justify-content-center mbr-bold">
                                             <div class="mbr-col-lg-8 mbr-col-md-12">
                                                 <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Video</h2>
                                                 {{#youTubeInfoResult.infos}}
                                                 <div option="{{downloadSwitchAudioAndVideo}}" selected>
                                                     <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
-                                                    <label for="{{downloadSwitchAudioAndVideo}}">{{resolutionWidthByHeight}}-{{size}}</label>
+                                                    <label for="{{downloadSwitchAudioAndVideo}}">{{videoResolutionP}} ({{size}})</label>
                                                 </div>
                                                 {{/youTubeInfoResult.infos}}
                                             </div>
                                         </div>
                                     </div>
                                     <div class="container">
-                                        <div class="mbr-row mbr-justify-content-center">
+                                        <div class="mbr-row mbr-justify-content-center mbr-bold">
                                             <div class="mbr-col-lg-8 mbr-col-md-12">
                                                 <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Audio</h2>
                                                 <div option="bestaudio -x --audio-format mp3">
@@ -207,7 +207,7 @@
                                     <div class="container">
 
                                         <div class="mbr-row mbr-justify-content-center">
-                                            <a target="_blank" title="{{name}}" href="{{url}}">{{name}}</a>
+                                            <a target="_blank" title="{{fileName}}" href="{{url}}">{{fileName}}</a>
                                         </div>
                                         <div class="mbr-row mbr-justify-content-center">
                                            <amp-addthis width="320" height="92" data-pub-id="ra-6043f6619df39ba3" data-widget-id="jasp" data-widget-type="inline"></amp-addthis>

@@ -26,7 +26,21 @@ namespace Cutyt.Core.Classes
         /// <summary>
         /// 720p, 1080p etc.
         /// </summary>
-        public string VideoResolutionP { get; set; }
+        public string VideoResolutionP
+        {
+            get
+            {
+                string result = null;
+
+                var parts = ResolutionWidthByHeight?.Split("x", StringSplitOptions.RemoveEmptyEntries);
+
+                if (parts?.Length == 2)
+                {
+                    result = $"{parts[1]}p";
+                }
+                return result;
+            }
+        }
 
         /// <summary>
         /// 1280x720

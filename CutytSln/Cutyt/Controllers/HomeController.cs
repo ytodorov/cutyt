@@ -146,7 +146,8 @@ namespace Cutyt.Controllers
             LinkViewModel result = new LinkViewModel()
             {
                 Name = fileNameFromUrl,
-                Url = encodedUrlResult
+                Url = encodedUrlResult,
+                FileName = linkviewModel.FileName
             };
 
 
@@ -174,9 +175,9 @@ namespace Cutyt.Controllers
                 info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
             }
 
-            infos = infos.GroupBy(c => c.ResolutionWidthByHeight)
+            infos = infos.GroupBy(c => c.VideoResolutionP)
                 .Select(s => s.LastOrDefault())
-                .Where(s => s.ResolutionWidthByHeight != null)
+                .Where(s => s.VideoResolutionP != null)
                 .ToList();
 
             youTubeInfoResult.Infos = infos;

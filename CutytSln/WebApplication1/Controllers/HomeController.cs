@@ -103,15 +103,15 @@ namespace WebApplication1.Controllers
                 //info.Resolution = currentRow.Substring(24, resolutionLength).Trim(',').Trim();
 
                 var resolutionParts = info.Resolution?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                if (resolutionParts?.Length == 3)
-                {
-                    var resolutionInP = resolutionParts[1]?.Trim();
+                //if (resolutionParts?.Length == 3)
+                //{
+                //    var resolutionInP = resolutionParts[1]?.Trim();
 
-                    if (!resolutionInP.Contains("audio", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        info.VideoResolutionP = resolutionInP;
-                    }
-                }
+                //    if (!resolutionInP.Contains("audio", StringComparison.InvariantCultureIgnoreCase))
+                //    {
+                //        info.VideoResolutionP = resolutionInP;
+                //    }
+                //}
 
                 if (!resolutionParts[0].Contains("audio", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -264,13 +264,20 @@ namespace WebApplication1.Controllers
 
                         newFiles = newFiles.Where(f => f.Contains($"{V}{selectedOptionWithoutPlus}", StringComparison.InvariantCultureIgnoreCase)).ToArray();
                         var newFile = newFiles.OrderBy(s => s.Length).FirstOrDefault();
+                        string newFileNonMkv = newFile;
+                        if (newFile.EndsWith(".mkv", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            newFileNonMkv = newFile.Replace(".mkv", ".mp4");
+                            ConvertFromMkvToMp4(newFile, newFileNonMkv);
+                        }
 
-                        string name = Path.GetFileName(newFile);
+                        string name = Path.GetFileName(newFileNonMkv);
 
                         LinkViewModel linkViewModel = new LinkViewModel()
                         {
                             Name = name,
-                            Url = $"{serverAddressOfServices}{name}"
+                            Url = $"{serverAddressOfServices}{name}",
+                            FileName = fileNameWithoutExtensions.Replace($"-{V}", string.Empty),
                         };
                         return Json(linkViewModel);
                     }
@@ -280,7 +287,8 @@ namespace WebApplication1.Controllers
                     LinkViewModel errorViewModel = new LinkViewModel()
                     {
                         Name = "error",
-                        Url = $"{serverAddressOfServices}error.txt"
+                        Url = $"{serverAddressOfServices}error.txt",
+                        FileName = fileNameWithoutExtensions,
                     };
 
                     return Json(errorViewModel);
@@ -298,6 +306,32 @@ namespace WebApplication1.Controllers
         private void P_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             var data = e.Data;
+        }
+
+        private void ConvertFromMkvToMp4(string source, string destination)
+        {
+            // ffmpeg -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4
+
+            string filename = string.Empty;
+
+            var programFullPath = @"E:\Files\ffmpeg.exe";
+
+            Process p = new Process();
+            p.StartInfo.FileName = programFullPath;
+            p.StartInfo.Arguments = $" -i {source} -c copy {destination}";// $" -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4";
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+
+            p.StartInfo.WorkingDirectory = @"E:\Files";
+
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.ErrorDialog = false;
+
+            p.Start();
+
+            string result = p.StandardOutput.ReadToEnd().Trim();
+            string error = p.StandardError.ReadToEnd().Trim();
         }
 
         private string GetFileNameFromArgs(string ytUrl, string selectedOptions)
@@ -320,7 +354,6 @@ namespace WebApplication1.Controllers
             p.StartInfo.ErrorDialog = false;
 
             p.Start();
-            //p.WaitForExit((int)TimeSpan.FromHours(1).TotalMilliseconds);
 
             string result = p.StandardOutput.ReadToEnd().Trim();
 
