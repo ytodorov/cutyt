@@ -128,8 +128,14 @@ namespace Cutyt.Controllers
             // PROBLEMS with bestvideo%2Bbestaudio - youtube-dl is stuck and does not quit on time. This was due from wrong exe files.
             // best - use single file -> mp4
             var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
+
+            var outputFileName = $"{v}{selectedOptionWithoutPlus}";
+            if (selectedOptionWithoutPlus.Contains("--audio-format"))
+            {
+                outputFileName = $"{v}{selectedOption.Split(" ").Last()}";
+            }
             var encodedUrl = $"{serverAddressOfServices}home/exec?args=-f {HttpUtility.UrlEncode(selectedOption)}" +
-                $" --no-part \"{url}\" --output \"{v}{selectedOptionWithoutPlus}.%(ext)s\" -k -v&ytUrl={url}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}";
+                $" --no-part \"{url}\" --output \"{outputFileName}.%(ext)s\" -k -v&ytUrl={url}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}";
             var json = await httpClient.GetStringAsync(encodedUrl); // %2B = +
 
             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
@@ -139,19 +145,20 @@ namespace Cutyt.Controllers
 
             var linkviewModel = JsonSerializer.Deserialize<LinkViewModel>(json, jsonSerializerOptions);
 
-            var fileNameFromUrl = linkviewModel.Url.Substring(linkviewModel.Url.LastIndexOf("/") + 1);
 
-            var encodedUrlResult = $"{serverAddressOfServices}{HttpUtility.UrlEncode(fileNameFromUrl)}";
+            //var fileNameFromUrl = linkviewModel.Url.Substring(linkviewModel.Url.LastIndexOf("/") + 1);
 
-            LinkViewModel result = new LinkViewModel()
-            {
-                Name = fileNameFromUrl,
-                Url = encodedUrlResult,
-                FileName = linkviewModel.FileName
-            };
+            //var encodedUrlResult = $"{serverAddressOfServices}{HttpUtility.UrlEncode(fileNameFromUrl)}";
+
+            //LinkViewModel result = new LinkViewModel()
+            //{
+            //    Name = fileNameFromUrl,
+            //    Url = encodedUrlResult,
+            //    FileName = linkviewModel.FileName
+            //};
 
 
-            return Json(result);
+            return Json(linkviewModel);
         }
 
         [HttpPost]

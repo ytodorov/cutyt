@@ -1,4 +1,5 @@
-﻿using Cutyt.Core.Classes;
+﻿using Cutyt.Core;
+using Cutyt.Core.Classes;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Mvc;
@@ -172,19 +173,46 @@ namespace WebApplication1.Controllers
             return Json(list);
         }
 
-        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "", string V = "", string selectedOption = "")
+        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "", string v = "", string selectedOption = "")
         {
             try
             {
+                string filePathResult = string.Empty;
+                if (selectedOption.Contains("--audio-format"))
+                {
+                    selectedOption = selectedOption.Split(" ").Last();
+                    filePathResult = YoutubeDlHelper.DownloadCustomAudio(v, selectedOption);
+                }
+                else
+                {
+                    filePathResult = YoutubeDlHelper.MergeAudioAndVideoToMp4(v, selectedOption);
+                }
+
+
                 var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
                 var programFullPath = @"E:\Files\youtube-dl.exe";
 
-                var fileNameFromArgs = GetFileNameFromArgs(ytUrl, selectedOption);
+                string physicalFileName = Path.GetFileName(filePathResult);
+
+                var fileNameFromArgs = GetFileNameFromArgs(ytUrl);
                 var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
+                var fileNameWithoutDashV = fileNameWithoutExtensions.Replace($"-{v}", string.Empty);
+
+                LinkViewModel testLVM = new LinkViewModel()
+                {
+                    Name = fileNameFromArgs,
+                    Url = $"{serverAddressOfServices}{physicalFileName}",
+                    FileName = fileNameFromArgs,
+                    DisplayName = fileNameWithoutDashV,
+                };
+
+                return Json(testLVM);
+
+
                 var allFiles = Directory.GetFiles(@"E:\Files");
 
                 var existingFiles = allFiles
-                    .Where(f => f.Contains($"{V}", StringComparison.InvariantCultureIgnoreCase) && f.Contains($"{selectedOptionWithoutPlus}", StringComparison.InvariantCultureIgnoreCase)
+                    .Where(f => f.Contains($"{v}", StringComparison.InvariantCultureIgnoreCase) && f.Contains($"{selectedOptionWithoutPlus}", StringComparison.InvariantCultureIgnoreCase)
                     && !f.EndsWith(".part", StringComparison.InvariantCultureIgnoreCase)
                     && !f.EndsWith(".ytdl", StringComparison.InvariantCultureIgnoreCase))
                     .ToList();
@@ -262,7 +290,7 @@ namespace WebApplication1.Controllers
                     {
                         var newFiles = Directory.GetFiles(@"E:\Files");
 
-                        newFiles = newFiles.Where(f => f.Contains($"{V}{selectedOptionWithoutPlus}", StringComparison.InvariantCultureIgnoreCase)).ToArray();
+                        newFiles = newFiles.Where(f => f.Contains($"{v}{selectedOptionWithoutPlus}", StringComparison.InvariantCultureIgnoreCase)).ToArray();
                         var newFile = newFiles.OrderBy(s => s.Length).FirstOrDefault();
                         string newFileNonMkv = newFile;
                         if (newFile.EndsWith(".mkv", StringComparison.InvariantCultureIgnoreCase))
@@ -277,7 +305,7 @@ namespace WebApplication1.Controllers
                         {
                             Name = name,
                             Url = $"{serverAddressOfServices}{name}",
-                            FileName = fileNameWithoutExtensions.Replace($"-{V}", string.Empty),
+                            FileName = fileNameWithoutExtensions.Replace($"-{v}", string.Empty),
                         };
                         return Json(linkViewModel);
                     }
@@ -334,7 +362,7 @@ namespace WebApplication1.Controllers
             string error = p.StandardError.ReadToEnd().Trim();
         }
 
-        private string GetFileNameFromArgs(string ytUrl, string selectedOptions)
+        private string GetFileNameFromArgs(string ytUrl)
         {
             string filename = string.Empty;
             // youtube-dl -f bestvideo+bestaudio "https://www.youtube.com/watch?v=LXb3EKWsInQ&t=156s" -k
@@ -357,11 +385,6 @@ namespace WebApplication1.Controllers
 
             string result = p.StandardOutput.ReadToEnd().Trim();
 
-            //var extension = Path.GetExtension(result);
-            //var fileNameWithoutExtension = Path.GetFileName(result);
-
-            //string fileNameWithSelectedOption = $"{fileNameWithoutExtension}.{selectedOptions}{extension}";
-            //return fileNameWithSelectedOption;
             return result;
 
         }

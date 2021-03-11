@@ -19,5 +19,7 @@ namespace Cutyt.Core.Classes
         public string FileNameWithVideoFormatCode { get; set; }
 
         public string FormatCode { get; set; }
+
+        public string DisplayName { get; set; }
     }
 }

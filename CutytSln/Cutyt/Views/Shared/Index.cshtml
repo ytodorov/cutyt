@@ -92,7 +92,7 @@
         <div class="container">
             <div class="mbr-row mbr-justify-content-center">
                 <div class="mbr-col-lg-12  mbr-col-md-12 " data-form-type="formoid">
-                    <form class="mbr-form user-invalid" method="post" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({ 'youTubeInfoResult': event.response.youTubeInfoResult })" novalidate="">
+                    <form class="mbr-form user-invalid" method="post" action-xhr="/home/getyoutubev" on="submit-success: AMP.setState({ 'youTubeInfoResult': event.response.youTubeInfoResult, selectedOption: event.response.youTubeInfoResult.lastInfo.formatCode })" novalidate="">
 
                         <div class="fieldset">
                             <input type="text" name="ytUrl" placeholder="Enter YouTube URL here" value="@(!string.IsNullOrEmpty(Model?.V) ? $"https://www.youtube.com/watch?v={Model?.V}" : "")" />
@@ -139,31 +139,40 @@
                                     <div class="container">
                                         <div class="mbr-row mbr-justify-content-center mbr-bold">
                                             <div class="mbr-col-lg-8 mbr-col-md-12">
-                                                <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Video</h2>
+                                                <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Audio & Video</h2>
+                                                <div option="bestaudio -x --audio-format mp3">
+                                                    <input type="radio" name="info" id="mp3" value="bestaudio -x --audio-format mp3" style="width:auto;margin-bottom:5px; margin-top:5px;" />
+                                                    <label for="mp3">MP3 - Audio only</label>
+                                                </div>
+                                                <div option="bestaudio -x --audio-format aac">
+                                                    <input type="radio" name="info" id="aac" value="bestaudio -x --audio-format aac" style="width:auto;margin-bottom:5px; margin-top:5px;" />
+                                                    <label for="aac">AAC - Audio only</label>
+                                                </div>
+                                                <div option="bestaudio -x --audio-format vorbis">
+                                                    <input type="radio" name="info" id="vorbis" value="bestaudio -x --audio-format vorbis" style="width:auto;margin-bottom:5px; margin-top:5px;" />
+                                                    <label for="vorbis">Vorbis - Audio only</label>
+                                                </div>
+                                                <div option="bestaudio -x --audio-format m4a">
+                                                    <input type="radio" name="info" id="m4a" value="bestaudio -x --audio-format m4a" style="width:auto;margin-bottom:5px; margin-top:5px;" />
+                                                    <label for="m4a">M4A - Audio only</label>
+                                                </div>
+                                                <div option="bestaudio -x --audio-format opus">
+                                                    <input type="radio" name="info" id="opus" value="bestaudio -x --audio-format opus" style="width:auto;margin-bottom:5px; margin-top:5px;" />
+                                                    <label for="opus">Opus - Audio only</label>
+                                                </div>
+                                                <div option="bestaudio -x --audio-format wav">
+                                                    <input type="radio" name="info" id="wav" value="bestaudio -x --audio-format wav" style="width:auto;margin-bottom:5px; margin-top:5px;" />
+                                                    <label for="wav">WAV - Audio only</label>
+                                                </div>
                                                 {{#youTubeInfoResult.infos}}
                                                 <div option="{{downloadSwitchAudioAndVideo}}" selected>
                                                     <input type="radio" name="info" id="{{downloadSwitchAudioAndVideo}}" value="{{downloadSwitchAudioAndVideo}}" style="width:auto;margin-bottom:5px; margin-top:5px;" checked="checked" />
-                                                    <label for="{{downloadSwitchAudioAndVideo}}">{{videoResolutionP}} ({{size}})</label>
+                                                    <label for="{{downloadSwitchAudioAndVideo}}">{{videoResolutionP}} - MP4 Video {{sizeInUI}}</label>
                                                 </div>
                                                 {{/youTubeInfoResult.infos}}
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="container">
-                                        <div class="mbr-row mbr-justify-content-center mbr-bold">
-                                            <div class="mbr-col-lg-8 mbr-col-md-12">
-                                                <h2 class="mbr-fonts-style mbr-section-title mbr-bold align-center display-4">Audio</h2>
-                                                <div option="bestaudio -x --audio-format mp3">
-                                                    <input type="radio" name="info" id="mp3" value="bestaudio -x --audio-format mp3" style="width:auto;margin-bottom:5px; margin-top:5px;" />
-                                                    <label for="mp3">MP3</label>
-                                                </div>
-                                                <div option="bestaudio -x --audio-format aac">
-                                                    <input type="radio" name="info" id="aac" value="bestaudio -x --audio-format aac" style="width:auto;margin-bottom:5px; margin-top:5px;" />
-                                                    <label for="aac">AAC</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </div>                                    
                                 </amp-selector>
 
                             </template>
@@ -207,7 +216,7 @@
                                     <div class="container">
 
                                         <div class="mbr-row mbr-justify-content-center">
-                                            <a target="_blank" title="{{fileName}}" href="{{url}}">{{fileName}}</a>
+                                            <a target="_blank" title="{{displayName}}" href="{{url}}">{{displayName}}</a>
                                         </div>
                                         <div class="mbr-row mbr-justify-content-center">
                                            <amp-addthis width="320" height="92" data-pub-id="ra-6043f6619df39ba3" data-widget-id="jasp" data-widget-type="inline"></amp-addthis>

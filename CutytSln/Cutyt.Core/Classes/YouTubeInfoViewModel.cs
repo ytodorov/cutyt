@@ -19,6 +19,24 @@ namespace Cutyt.Core.Classes
 
         public string Size { get; set; }
 
+        public string SizeInUI
+        {
+            get
+            {
+                var result = string.Empty;
+                if (Size?.Length > 0)
+                {
+                    var firstLetter = Size[0];
+                    if (int.TryParse(firstLetter.ToString(), out int dummy))
+                    {
+                        result = $"({Size})";
+                    }
+                }
+
+                return result;
+            }
+        }
+
         public string TextWithoutCode { get; set; }
 
         public string DownloadSwitchAudioAndVideo { get; set; }
