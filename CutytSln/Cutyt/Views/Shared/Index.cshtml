@@ -124,10 +124,11 @@
                         </div>
                         <div submit-success="">
                             <template type="amp-mustache">
-                                <amp-youtube data-videoid="{{youTubeInfoResult.v}}" [class]="{{youTubeInfoResult.v}} != '-1' ? 'show' : 'hide'" class="hide"
+                                <amp-youtube data-videoid="{{youTubeInfoResult.v}}" [class]="'{{youTubeInfoResult.v}}' != '-1' ? 'show' : 'hide'" class="hide"
                                              layout="fixed-height"
                                              width="auto"
                                              height="270"></amp-youtube>
+                                @*<input type="range" id="volume" name="volume" min="0" max="10" on="change:AMP.setState({start: event.value})">*@
                                 @*<amp-vimeo data-videoid="{{youTubeInfoResult.vimeoId}}" [class]="{{youTubeInfoResult.vimeoId}} != '-1' ? 'show' : 'hide'" class="hide"
                                     layout="fixed-height"
                                     width="auto"
@@ -173,7 +174,7 @@
                                                 {{/youTubeInfoResult.infos}}
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                 </amp-selector>
 
                             </template>
@@ -220,7 +221,7 @@
                                             <a target="_blank" title="{{displayName}}" href="{{url}}">{{displayName}}</a>
                                         </div>
                                         <div class="mbr-row mbr-justify-content-center">
-                                           <amp-addthis width="320" height="92" data-pub-id="ra-6043f6619df39ba3" data-widget-id="jasp" data-widget-type="inline"></amp-addthis>
+                                            <amp-addthis width="320" height="92" data-pub-id="ra-6043f6619df39ba3" data-widget-id="jasp" data-widget-type="inline"></amp-addthis>
                                         </div>
                                     </div>
                                 </template>
@@ -231,6 +232,27 @@
                                 </template>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features1 cid-qTgUKsQcnH" id="features2-v">
+        <div class="container">
+            <div class="mbr-row mbr-justify-content-center">
+                <div class="card mbr-col-sm-12 mbr-col-md-12 mbr-col-lg-12">
+                    <div class="card-wrapper">
+                        <div class="card-img">
+                            <span class="mbr-iconfont fa-youtube fa" style="color: rebeccapurple;"></span>
+                        </div>
+                        <div class="card-box">
+                            <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">EASY TO USE</h4>
+
+                            <p class="mbr-text mbr-fonts-style align-center display-5">
+                                Just prepend the YouTube URL with <span class="text-success mbr-bold">ct</span> and you will redirected to cutyt.com.<br /> Example:<br /> https://www.youtube.com/watch?v=TxbE79-1OSI<br /> will be<br /> https://www.<span class="text-success mbr-bold">ct</span>youtube.com/watch?v=TxbE79-1OSI
+                            </p>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -248,7 +270,7 @@
                             <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">NO ADS</h4>
 
                             <p class="mbr-text mbr-fonts-style align-center display-5">
-                                Tired of ads? With our service no advertisements will be shown while you are enjoing you favorite video or audio
+                                Tired of ads? With our service no advertisements will be shown while you are enjoing you favorite video or audio.
                             </p>
 
                         </div>
@@ -265,7 +287,7 @@
                             <h4 class="box-title mbr-fonts-style align-center mbr-bold display-7">NO BUFFER</h4>
 
                             <p class="mbr-text mbr-fonts-style align-center display-5">
-                               Slow connection can make you video stop while buffering. This is no longer the case when you download your file with Cutyt.
+                                Slow connection can make you video stop while buffering. This is no longer the case when you download your file with Cutyt.
                             </p>
 
                         </div>
