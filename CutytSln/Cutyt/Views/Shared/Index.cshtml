@@ -2,7 +2,8 @@
 @{
     Layout = null;
     string title = "Cut YouTube";
-    string description = "Trim, Convert and Download YouTube videos.";
+    string titleLong = "Cut YouTube - Get YouTube Audio and Video Files for Free";
+    string description = "Trim, Convert and Download YouTube videos";
 
     string sitename = "https://www.cutyt.com/";
     string author = "https://www.cutyt.com/";
@@ -24,8 +25,8 @@
     <meta property="fb:app:id" content="773558706918738" />
     <meta property="fb:app_id" content="773558706918738" />
 
-    <meta name="description" content="@description">
-    <title>@title</title>
+    <meta name="description" content="@($"{titleLong}. {description}.")">
+    <title>@titleLong</title>
     <script async src="https://cdn.ampproject.org/v0.js"></script>
     <script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"></script>
     <script custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js" async></script>
