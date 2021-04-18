@@ -42,6 +42,11 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        public IActionResult Kmp()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
