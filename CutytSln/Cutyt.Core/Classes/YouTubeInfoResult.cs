@@ -12,6 +12,10 @@ namespace Cutyt.Core.Classes
 
         public string VimeoId { get; set; }
 
+        public double Start { get; set; }
+
+        public double End { get; set; }
+
         public List<YouTubeInfoViewModel> Infos { get; set; }
 
         public YouTubeInfoViewModel LastInfo

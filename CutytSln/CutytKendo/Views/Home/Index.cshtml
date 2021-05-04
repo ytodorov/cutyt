@@ -1,0 +1,131 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="demo-section k-content mb-2">
+    @(Html.Kendo().TextBox()
+        .Name("textboxUrl")
+        .Placeholder("Enter YouTube URL here")
+        .Label(label => label
+            .Content("Enter YouTube URL here")
+            .Floating(true)
+        )
+        .HtmlAttributes(new { style = "width: 100%" })
+    )
+
+    <style>
+        .k-floating-label-container {
+            width: 100%;
+        }
+
+        div.humidity {
+            width: 100%;
+        }
+    </style>
+</div>
+<p class="text-center">
+    @(Html.Kendo().Button()
+        .Name("PrimaryButton1")
+        .HtmlAttributes(new { @class = "k-primary" })
+        .Content("Preview")
+        .Events(ev => ev.Click("onClick")))
+</p>
+
+
+<p class="text-center">
+    @(Html.Kendo().MediaPlayer()
+        .Name("MediaPlayer")
+        .AutoPlay(true)
+        .Media(m => m
+            .Title("Build HIPAA-Compliant Healthcare Apps Fast")
+            .Source("https://www.youtube.com/watch?v=dyvxivS5EcI")
+        )
+        .HtmlAttributes(new { style = "height:360px" })
+    )
+</p>
+
+<p class="text-center">
+    @(Html.Kendo().RangeSlider()
+                  .Name("rangeslider")
+                  .Min(0)
+                  .Max(100)
+                  .SmallStep(0.1)
+                  .LargeStep(10)
+                  .Events(events => events
+                      .Slide("rangeSliderSlide")
+                      .Change("rangeSliderChange"))
+                  .HtmlAttributes(new { @class = "humidity" }))
+</p>
+<p class="text-center">
+
+
+    @*@(Html.Kendo().RadioGroup()
+            .Name("radiogroup")
+            .Items(i =>
+            {
+                i.Add().Label("Phone (SMS)").Value("1");
+                i.Add().Label("E-mail").Value("2");
+                i.Add().Label("None").Value("3");
+            })
+            .Value("1")
+        )*@
+
+    <div id="divUrlDetails"></div>
+</p>
+
+<div class="row">
+    <div class="col-12">
+
+    </div>
+</div>
+@section scripts {
+    <script>
+        function onClick(e) {
+            var mediaPlayer = $("#MediaPlayer").data("kendoMediaPlayer");
+            var url = $("#textboxUrl").val();
+
+            mediaPlayer.media({
+                //title: "Responsive Website Delivers for Reeves Import Motorcars",
+                //poster: "http://img.youtube.com/vi/DYsiJRmIQZw/1.jpg",
+                source: url
+            });
+
+            $.ajax({
+                url: '/Home/GetUrlDetails?url=' + url,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html'
+            })
+                .success(function (result) {
+                    $('#divUrlDetails').html(result);
+                })
+                .error(function (xhr, status) {
+                    alert(status);
+                })  
+        }
+
+        function rangeSliderSlide(e) {
+            var mediaPlayer = $("#MediaPlayer").data("kendoMediaPlayer");
+
+            var split = e.value.toString().split(",")
+            var start = parseFloat(split[0]);
+            var end = parseFloat(split[1]);
+
+            mediaPlayer.seek(start * 1000);
+            mediaPlayer.pause();
+
+        }
+
+        function rangeSliderChange(e) {
+            var mediaPlayer = $("#MediaPlayer").data("kendoMediaPlayer");
+
+            var split = e.value.toString().split(",")
+            var start = parseFloat(split[0]);
+            var end = parseFloat(split[1]);
+
+            mediaPlayer.seek(start * 1000);
+            mediaPlayer.pause();
+        }
+
+    </script>
+}
