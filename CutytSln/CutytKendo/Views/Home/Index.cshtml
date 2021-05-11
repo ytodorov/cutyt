@@ -27,35 +27,13 @@
     @(Html.Kendo().Button()
         .Name("PrimaryButton1")
         .HtmlAttributes(new { @class = "k-primary" })
-        .Content("Preview")
+        .Content("Go")
         .Events(ev => ev.Click("onClick")))
 </p>
 
 
-<p class="text-center">
-    @(Html.Kendo().MediaPlayer()
-        .Name("MediaPlayer")
-        .AutoPlay(true)
-        .Media(m => m
-            .Title("Build HIPAA-Compliant Healthcare Apps Fast")
-            .Source("https://www.youtube.com/watch?v=dyvxivS5EcI")
-        )
-        .HtmlAttributes(new { style = "height:360px" })
-    )
-</p>
 
-<p class="text-center">
-    @(Html.Kendo().RangeSlider()
-                  .Name("rangeslider")
-                  .Min(0)
-                  .Max(100)
-                  .SmallStep(0.1)
-                  .LargeStep(10)
-                  .Events(events => events
-                      .Slide("rangeSliderSlide")
-                      .Change("rangeSliderChange"))
-                  .HtmlAttributes(new { @class = "humidity" }))
-</p>
+
 <p class="text-center">
 
 
@@ -74,17 +52,74 @@
 </p>
 
 <div class="row">
-    <div class="col-12">
-
+    <div class="col-md-6">
+        <p class="text-center">
+            <span id="spanStartFrame">Start frame</span>
+            </p>
+        <p class="text-center">
+            @(Html.Kendo().MediaPlayer()
+        .Name("MediaPlayerStart")
+        .AutoPlay(true)
+        .Volume(0)
+        .Media(m => m
+            .Title("Build HIPAA-Compliant Healthcare Apps Fast")
+            .Source("https://www.youtube.com/watch?v=dyvxivS5EcI")
+        )
+        .HtmlAttributes(new { style = "height:360px" })
+    )
+        </p>
+    </div>
+    <div class="col-md-6">
+        <p class="text-center">
+            <span id="spanEndFrame">End frame</span>
+        </p>
+        <p class="text-center">
+            @(Html.Kendo().MediaPlayer()
+        .Name("MediaPlayerEnd")
+        .AutoPlay(true)
+        .Volume(0)
+        .Media(m => m
+            .Title("Build HIPAA-Compliant Healthcare Apps Fast")
+            .Source("https://www.youtube.com/watch?v=dyvxivS5EcI")
+        )
+        .HtmlAttributes(new { style = "height:360px" })
+    )
+        </p>
     </div>
 </div>
+
+<p class="text-center">
+    @(Html.Kendo().RangeSlider()
+                  .Name("rangeslider")
+                  .Min(0)
+                  .Max(100)
+                  .SmallStep(0.1)
+                  .LargeStep(10)
+                  .Events(events => events
+                      .Slide("rangeSliderSlide")
+                      .Change("rangeSliderChange"))
+                  .HtmlAttributes(new { @class = "humidity" }))
+</p>
 @section scripts {
     <script>
+        $(window).resize(function () {
+            var slider = $("#rangeslider").getKendoRangeSlider();
+            slider.resize();
+        });
+
         function onClick(e) {
-            var mediaPlayer = $("#MediaPlayer").data("kendoMediaPlayer");
+            var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
+            var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
+
             var url = $("#textboxUrl").val();
 
-            mediaPlayer.media({
+            mediaPlayerStart.media({
+                //title: "Responsive Website Delivers for Reeves Import Motorcars",
+                //poster: "http://img.youtube.com/vi/DYsiJRmIQZw/1.jpg",
+                source: url
+            });
+
+            mediaPlayerEnd.media({
                 //title: "Responsive Website Delivers for Reeves Import Motorcars",
                 //poster: "http://img.youtube.com/vi/DYsiJRmIQZw/1.jpg",
                 source: url
@@ -101,30 +136,35 @@
                 })
                 .error(function (xhr, status) {
                     alert(status);
-                })  
+                })
         }
-
-        function rangeSliderSlide(e) {
-            var mediaPlayer = $("#MediaPlayer").data("kendoMediaPlayer");
+        function setValues(e) {
+            var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
+            var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
 
             var split = e.value.toString().split(",")
             var start = parseFloat(split[0]);
             var end = parseFloat(split[1]);
 
-            mediaPlayer.seek(start * 1000);
-            mediaPlayer.pause();
+            mediaPlayerStart.seek(start * 1000);
+            mediaPlayerStart.pause();
+
+            mediaPlayerEnd.seek(end * 1000);
+            mediaPlayerEnd.pause();
+
+            $("#spanStartFrame").text("Start frame " + start);
+
+            $("#spanEndFrame").text("End frame " + end);
+
+        }
+
+        function rangeSliderSlide(e) {
+            setValues(e);
 
         }
 
         function rangeSliderChange(e) {
-            var mediaPlayer = $("#MediaPlayer").data("kendoMediaPlayer");
-
-            var split = e.value.toString().split(",")
-            var start = parseFloat(split[0]);
-            var end = parseFloat(split[1]);
-
-            mediaPlayer.seek(start * 1000);
-            mediaPlayer.pause();
+            setValues(e);
         }
 
     </script>
