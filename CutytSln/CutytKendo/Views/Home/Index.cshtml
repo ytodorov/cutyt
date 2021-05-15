@@ -10,6 +10,7 @@
             .Content("Enter YouTube URL here")
             .Floating(true)
         )
+        .Value("https://www.youtube.com/watch?v=cUAZHrmlTts")
         .HtmlAttributes(new { style = "width: 100%" })
     )
 
@@ -19,7 +20,7 @@
         }
 
         div.humidity {
-            width: 100%;
+            width: 99%;
         }
     </style>
 </div>
@@ -27,30 +28,9 @@
     @(Html.Kendo().Button()
         .Name("PrimaryButton1")
         .HtmlAttributes(new { @class = "k-primary" })
-        .Content("Go")
+        .Content("Display")
         .Events(ev => ev.Click("onClick")))
 </p>
-
-
-
-
-<p class="text-center">
-
-
-    @*@(Html.Kendo().RadioGroup()
-            .Name("radiogroup")
-            .Items(i =>
-            {
-                i.Add().Label("Phone (SMS)").Value("1");
-                i.Add().Label("E-mail").Value("2");
-                i.Add().Label("None").Value("3");
-            })
-            .Value("1")
-        )*@
-
-    <div id="divUrlDetails"></div>
-</p>
-
 <div class="row">
     <div class="col-md-6">
         <p class="text-center">
@@ -62,9 +42,11 @@
         .AutoPlay(true)
         .Volume(0)
         .Media(m => m
-            .Title("Build HIPAA-Compliant Healthcare Apps Fast")
-            .Source("https://www.youtube.com/watch?v=dyvxivS5EcI")
+            .Title("Count up timer 10 minutes")
+            .Source("https://www.youtube.com/watch?v=cUAZHrmlTts")
         )
+        .FullScreen(false)
+        .Navigatable(false)
         .HtmlAttributes(new { style = "height:360px" })
     )
         </p>
@@ -79,9 +61,12 @@
         .AutoPlay(true)
         .Volume(0)
         .Media(m => m
-            .Title("Build HIPAA-Compliant Healthcare Apps Fast")
-            .Source("https://www.youtube.com/watch?v=dyvxivS5EcI")
+            .Title("Count up timer 10 minutes")
+            .Source("https://www.youtube.com/watch?v=cUAZHrmlTts")
         )
+        .FullScreen(false)
+        .Navigatable(false)
+
         .HtmlAttributes(new { style = "height:360px" })
     )
         </p>
@@ -100,6 +85,11 @@
                       .Change("rangeSliderChange"))
                   .HtmlAttributes(new { @class = "humidity" }))
 </p>
+
+<p class="text-center">
+    <div id="divUrlDetails"></div>
+</p>
+
 @section scripts {
     <script>
         $(window).resize(function () {
@@ -112,6 +102,7 @@
             var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
 
             var url = $("#textboxUrl").val();
+            localStorage.setItem("url", url);
 
             mediaPlayerStart.media({
                 //title: "Responsive Website Delivers for Reeves Import Motorcars",

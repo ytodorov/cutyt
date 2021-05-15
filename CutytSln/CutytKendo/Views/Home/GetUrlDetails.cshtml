@@ -1,10 +1,62 @@
-﻿@(Html.Kendo().RadioGroup()
+﻿@model List<YouTubeInfoViewModel>
+@(Html.Kendo().RadioGroup()
             .Name("radiogroup")
+            .LabelPosition(RadioGroupLabelPosition.After)
+            .Layout(RadioGroupLayout.Horizontal)
             .Items(i =>
             {
-                i.Add().Label("Phone (SMS)").Value("1");
-                i.Add().Label("E-mail").Value("2");
-                i.Add().Label("None").Value("3");
+                foreach (var info in Model)
+                {
+                    i.Add().Label(info.VideoResolutionP).Value(info.DownloadSwitchAudioAndVideo);
+                }
             })
             .Value("1")
         )
+
+<script>
+    function onBtnDownloadClick(e) {
+
+        var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
+
+        var ytUrl = mediaPlayerStart.media().source;
+        var radioGroup = $("#radiogroup").getKendoRadioGroup();
+        var selectedValue = radioGroup.value();
+
+        var slider = $("#rangeslider").getKendoRangeSlider();
+        var value = slider.value();
+        var split = value.toString().split(",")
+        var start = parseFloat(split[0]);
+        var end = parseFloat(split[1]);
+
+        var btnDownload = $("#btnDownload");
+        btnDownload.hide();
+
+        $.ajax({
+            url: '/Home/GetDownloadLink?ytUrl=' + ytUrl + '&selectedOption=' + selectedValue + '&start=' + start + '&end=' + end,
+            contentType: 'application/html; charset=utf-8',
+            type: 'GET',
+            dataType: 'html'
+        })
+            .success(function (result) {
+                btnDownload.show();
+                $('#divDownloadLink').html(result);
+            })
+            .error(function (xhr, status) {
+                btnDownload.show();
+                alert(status);
+            })
+    }
+</script>
+
+<p class="text-center">
+    @(Html.Kendo().Button()
+        .Name("btnDownload")
+        .HtmlAttributes(new { @class = "k-primary" })
+        .Content("Get Download link")
+        .Events(ev => ev.Click("onBtnDownloadClick")))
+</p>
+
+<div id="divDownloadLink">
+
+</div>
+

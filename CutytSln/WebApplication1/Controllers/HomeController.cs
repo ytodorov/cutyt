@@ -178,7 +178,7 @@ namespace WebApplication1.Controllers
             return Json(list);
         }
 
-        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "", string v = "", string selectedOption = "")
+        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "", string v = "", string selectedOption = "", string start = "", string end = "")
         {
             try
             {
@@ -193,9 +193,10 @@ namespace WebApplication1.Controllers
                     filePathResult = YoutubeDlHelper.MergeAudioAndVideoToMp4(v, selectedOption);
                 }
 
+                filePathResult = YoutubeDlHelper.CutFile(filePathResult, start, end);
 
                 var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
-                var programFullPath = @"E:\Files\youtube-dl.exe";
+                //var programFullPath = @"E:\Files\youtube-dl.exe";
 
                 string physicalFileName = Path.GetFileName(filePathResult);
 
@@ -213,120 +214,6 @@ namespace WebApplication1.Controllers
 
                 return Json(testLVM);
 
-
-                var allFiles = Directory.GetFiles(@"E:\Files");
-
-                var existingFiles = allFiles
-                    .Where(f => f.Contains($"{v}", StringComparison.InvariantCultureIgnoreCase) && f.Contains($"{selectedOptionWithoutPlus}", StringComparison.InvariantCultureIgnoreCase)
-                    && !f.EndsWith(".part", StringComparison.InvariantCultureIgnoreCase)
-                    && !f.EndsWith(".ytdl", StringComparison.InvariantCultureIgnoreCase))
-                    .ToList();
-                var existingFile = existingFiles.OrderBy(s =>s.Length).FirstOrDefault();
-                if (!string.IsNullOrEmpty(existingFile))
-                {
-                    var existingFileName = Path.GetFileName(existingFile);
-                    LinkViewModel linkViewModel = new LinkViewModel()
-                    {
-                        Name = existingFileName,
-                        Url = $"http://cutyt.westeurope.cloudapp.azure.com/{existingFileName}"
-                    };
-                    return Json(linkViewModel);
-                }
-
-
-                if (!string.IsNullOrEmpty(programFullPath))
-                {
-
-                    Process p = new Process();
-                    p.StartInfo.FileName = programFullPath;
-                    p.StartInfo.Arguments = args;
-                    p.StartInfo.RedirectStandardOutput = true;
-                    p.StartInfo.RedirectStandardError = true;
-                    p.StartInfo.UseShellExecute = false;
-
-                    p.StartInfo.WorkingDirectory = @"E:\Files";
-
-                    p.StartInfo.CreateNoWindow = true;
-                    p.StartInfo.ErrorDialog = false;
-
-                    p.Start();
-                    //p.WaitForExit((int)TimeSpan.FromSeconds(5).TotalMilliseconds);
-
-                    string result = p.StandardOutput.ReadToEnd();
-                    string error = p.StandardError.ReadToEnd();
-
-                    string finalFileName = string.Empty;
-
-                    var resultRows = result.Split($"\n", StringSplitOptions.RemoveEmptyEntries);
-
-                    var lastResultRow = resultRows.Last(s => !string.IsNullOrWhiteSpace(s));
-
-                    if (lastResultRow.Contains(" has already been downloaded and merged", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        finalFileName = lastResultRow.Replace(" has already been downloaded and merged", string.Empty).Replace("[download] ", string.Empty).Trim('"').Trim();
-                    }
-                    else if (lastResultRow.Contains("Merging formats into"))
-                    {
-                        finalFileName = lastResultRow.Replace("[ffmpeg] Merging formats into ", string.Empty).Trim('"').Trim();
-
-                    }
-
-
-                    EventTelemetry et = new EventTelemetry()
-                    {
-                        Name = "result",
-                    };
-                    et.Properties.Add("text", result);
-
-                    telemetryClient.TrackEvent(et);
-                   
-                    if (error.Contains("error", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        EventTelemetry etError = new EventTelemetry()
-                        {
-                            Name = "error",
-                        };
-                        etError.Properties.Add("text", error);
-
-                        telemetryClient.TrackEvent(etError);
-                    }
-
-                    if (error?.Contains("error", StringComparison.InvariantCultureIgnoreCase) != true)
-                    {
-                        var newFiles = Directory.GetFiles(@"E:\Files");
-
-                        newFiles = newFiles.Where(f => f.Contains($"{v}{selectedOptionWithoutPlus}", StringComparison.InvariantCultureIgnoreCase)).ToArray();
-                        var newFile = newFiles.OrderBy(s => s.Length).FirstOrDefault();
-                        string newFileNonMkv = newFile;
-                        if (newFile.EndsWith(".mkv", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            newFileNonMkv = newFile.Replace(".mkv", ".mp4");
-                            ConvertFromMkvToMp4(newFile, newFileNonMkv);
-                        }
-
-                        string name = Path.GetFileName(newFileNonMkv);
-
-                        LinkViewModel linkViewModel = new LinkViewModel()
-                        {
-                            Name = name,
-                            Url = $"{serverAddressOfServices}{name}",
-                            FileName = fileNameWithoutExtensions.Replace($"-{v}", string.Empty),
-                        };
-                        return Json(linkViewModel);
-                    }
-
-                    System.IO.File.WriteAllText(@"E:\Files\error.txt", error);
-
-                    LinkViewModel errorViewModel = new LinkViewModel()
-                    {
-                        Name = "error",
-                        Url = $"{serverAddressOfServices}error.txt",
-                        FileName = fileNameWithoutExtensions,
-                    };
-
-                    return Json(errorViewModel);
-                }
-                return new JsonResult("No such program " + program);
             }
             catch (Exception ex)
             {

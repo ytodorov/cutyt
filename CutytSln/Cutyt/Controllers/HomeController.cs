@@ -1,4 +1,5 @@
-﻿using Cutyt.Core.Classes;
+﻿using Cutyt.Core;
+using Cutyt.Core.Classes;
 using Cutyt.Core.Enums;
 using Cutyt.Core.ViewModels;
 using Cutyt.Models;
@@ -46,6 +47,7 @@ namespace Cutyt.Controllers
             this.httpClientFactory = httpClientFactory;
             this.hostEnvironment = hostEnvironment;
             this.cache = cache;
+
 
             if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -145,19 +147,6 @@ namespace Cutyt.Controllers
 
             var linkviewModel = JsonSerializer.Deserialize<LinkViewModel>(json, jsonSerializerOptions);
 
-
-            //var fileNameFromUrl = linkviewModel.Url.Substring(linkviewModel.Url.LastIndexOf("/") + 1);
-
-            //var encodedUrlResult = $"{serverAddressOfServices}{HttpUtility.UrlEncode(fileNameFromUrl)}";
-
-            //LinkViewModel result = new LinkViewModel()
-            //{
-            //    Name = fileNameFromUrl,
-            //    Url = encodedUrlResult,
-            //    FileName = linkviewModel.FileName
-            //};
-
-
             return Json(linkviewModel);
         }
 
@@ -166,7 +155,7 @@ namespace Cutyt.Controllers
         {
             var parsedQSTest = HttpUtility.ParseQueryString(ytUrl);
 
-            ytUrl = GetFullUrlFromYouTube(ytUrl);
+            ytUrl = Helpers.GetFullUrlFromYouTube(ytUrl, httpClientFactory.CreateClient());
             YouTubeInfoResult youTubeInfoResult = new YouTubeInfoResult();
             SetVideoIdPart(ytUrl, youTubeInfoResult);
             var parts = ytUrl?.Split(new string[] { "/watch?" }, StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -175,7 +164,7 @@ namespace Cutyt.Controllers
             var httpClient = httpClientFactory.CreateClient();
             httpClient.Timeout = TimeSpan.FromMinutes(5);
 
-            var infos = httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={ytUrl}").Result;
+            List<YouTubeInfoViewModel> infos = httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={ytUrl}").Result;
 
             foreach (var info in infos)
             {
@@ -235,19 +224,6 @@ namespace Cutyt.Controllers
             }
         }
 
-        private string GetFullUrlFromYouTube(string url)
-        {
-            if (url?.ToLowerInvariant()?.Contains("youtu.be", StringComparison.InvariantCultureIgnoreCase) == true)
-            {
-                var client = httpClientFactory.CreateClient();
-                var response = client.GetAsync(url).Result;
-                var fullUrl = response?.RequestMessage?.RequestUri?.ToString();
-                return fullUrl;
-            }
-            else
-            {
-                return url;
-            }
-        }
+        
     }
 }

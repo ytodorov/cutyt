@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cutyt.Core;
+using Cutyt.Core.Classes;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -6,7 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace CutytKendo.Controllers
 {
@@ -33,7 +38,8 @@ namespace CutytKendo.Controllers
             this.hostEnvironment = hostEnvironment;
             this.cache = cache;
 
-            if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase))
+            var mn = Environment.MachineName;
+            if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase) || !mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase))
             {
                 serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
                 cutYtBaseAddress = "https://www.cutyt.com/";
@@ -64,11 +70,77 @@ namespace CutytKendo.Controllers
             return View();
         }
 
-        public IActionResult GetUrlDetails(string url)
+        public async Task<IActionResult> GetUrlDetails(string url)
         {
             ViewData["Message"] = "Your contact page.";
 
-            return PartialView();
+            var fullUrl = Helpers.GetFullUrlFromYouTube(url, httpClientFactory.CreateClient());
+            List<YouTubeInfoViewModel> infos = await httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={fullUrl}");
+
+            foreach (var info in infos)
+            {
+                info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
+            }
+
+            infos = infos.GroupBy(c => c.VideoResolutionP)
+                .Select(s => s.LastOrDefault())
+                .Where(s => s.VideoResolutionP != null)
+                .ToList();
+
+            return PartialView(infos);
+        }
+
+        //public IActionResult GetDownloadLink(string url)
+        //{
+        //    return PartialView((object)DateTime.Now.ToString());
+        //}
+
+        public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, string start, string end)
+        {
+            selectedOption = selectedOption?.Replace(" ", "+");
+            Uri uri = new Uri(ytUrl);
+            var parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
+            v = parsedQSTest["v"];
+
+            if (string.IsNullOrEmpty(selectedOption))
+            {
+                selectedOption = "best";
+            }
+
+            string url = string.Empty;
+            if (v != "-1")
+            {
+
+                url = $"https://www.youtube.com/watch?v={v}";
+            }
+            if (vimeoId != "-1" && vimeoId != null)
+            {
+                url = $"https://vimeo.com/{vimeoId}";
+            }
+
+            // PROBLEMS with bestvideo%2Bbestaudio - youtube-dl is stuck and does not quit on time. This was due from wrong exe files.
+            // best - use single file -> mp4
+            var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
+
+            var outputFileName = $"{v}{selectedOptionWithoutPlus}";
+            if (selectedOptionWithoutPlus.Contains("--audio-format"))
+            {
+                outputFileName = $"{v}{selectedOption.Replace("+", string.Empty).Split(" ").Last()}";
+            }
+
+            var encodedUrl = $"{serverAddressOfServices}home/exec?args=-f {HttpUtility.UrlEncode(selectedOption)}" +
+                $" --no-part \"{url}\" --output \"{outputFileName}.%(ext)s\" -k -v&ytUrl={url}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}" +
+                $"&start={start}&end={end}";
+            var json = await httpClient.GetStringAsync(encodedUrl); // %2B = +
+
+            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            LinkViewModel linkviewModel = JsonSerializer.Deserialize<LinkViewModel>(json, jsonSerializerOptions);
+
+            return PartialView(linkviewModel);
         }
 
         public IActionResult Error()
