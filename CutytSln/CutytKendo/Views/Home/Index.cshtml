@@ -73,18 +73,7 @@
     </div>
 </div>
 
-<p class="text-center">
-    @(Html.Kendo().RangeSlider()
-                  .Name("rangeslider")
-                  .Min(0)
-                  .Max(100)
-                  .SmallStep(0.1)
-                  .LargeStep(10)
-                  .Events(events => events
-                      .Slide("rangeSliderSlide")
-                      .Change("rangeSliderChange"))
-                  .HtmlAttributes(new { @class = "humidity" }))
-</p>
+
 
 <p class="text-center">
     <div id="divUrlDetails"></div>
@@ -94,7 +83,9 @@
     <script>
         $(window).resize(function () {
             var slider = $("#rangeslider").getKendoRangeSlider();
-            slider.resize();
+            if (slider) {
+                slider.resize();
+            }
         });
 
         function onClick(e) {
@@ -129,34 +120,7 @@
                     alert(status);
                 })
         }
-        function setValues(e) {
-            var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
-            var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
-
-            var split = e.value.toString().split(",")
-            var start = parseFloat(split[0]);
-            var end = parseFloat(split[1]);
-
-            mediaPlayerStart.seek(start * 1000);
-            mediaPlayerStart.pause();
-
-            mediaPlayerEnd.seek(end * 1000);
-            mediaPlayerEnd.pause();
-
-            $("#spanStartFrame").text("Start frame " + start);
-
-            $("#spanEndFrame").text("End frame " + end);
-
-        }
-
-        function rangeSliderSlide(e) {
-            setValues(e);
-
-        }
-
-        function rangeSliderChange(e) {
-            setValues(e);
-        }
+        
 
     </script>
 }

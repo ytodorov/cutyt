@@ -76,7 +76,12 @@ namespace CutytKendo.Controllers
 
             var fullUrl = Helpers.GetFullUrlFromYouTube(url, httpClientFactory.CreateClient());
             List<YouTubeInfoViewModel> infos = await httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={fullUrl}");
+            string duration = await httpClient.GetFromJsonAsync<string>($"{serverAddressOfServices}home/GetYoutubeDuration?url={fullUrl}");
 
+
+            var durationInSeconds = YoutubeDlHelper.GetTotalSecondsFromString(duration);
+
+            
             foreach (var info in infos)
             {
                 info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
@@ -87,13 +92,15 @@ namespace CutytKendo.Controllers
                 .Where(s => s.VideoResolutionP != null)
                 .ToList();
 
-            return PartialView(infos);
-        }
+            YouTubeAllInfoViewModel allVM = new YouTubeAllInfoViewModel()
+            { 
+                DurationInSeconds = durationInSeconds,
+                Infos = infos
+            };
 
-        //public IActionResult GetDownloadLink(string url)
-        //{
-        //    return PartialView((object)DateTime.Now.ToString());
-        //}
+
+            return PartialView(allVM);
+        }
 
         public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, string start, string end)
         {

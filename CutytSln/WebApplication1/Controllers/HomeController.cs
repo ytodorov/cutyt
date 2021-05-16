@@ -52,7 +52,31 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        public IActionResult GetYoutubeInfo(string url = "https://www.youtube.com/watch?v=vLM-v7LeiEg")
+        public IActionResult GetYoutubeDuration(string url = "https://www.youtube.com/watch?v=vLM-v7LeiEg")
+        {
+            var programFullPath = @"E:\Files\youtube-dl.exe";
+            var args = $"{url} --get-duration";
+            Process p = new Process();
+            p.StartInfo.FileName = programFullPath;
+            p.StartInfo.Arguments = args;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+
+            p.StartInfo.WorkingDirectory = @"E:\Files";
+
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.ErrorDialog = false;
+
+            p.Start();
+            //p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
+
+            string result = p.StandardOutput.ReadToEnd();
+            string error = p.StandardError.ReadToEnd();
+
+            return Json(result);
+        }
+            public IActionResult GetYoutubeInfo(string url = "https://www.youtube.com/watch?v=vLM-v7LeiEg")
         {
             var programFullPath = @"E:\Files\youtube-dl.exe";
             var args = $"-F {url}";

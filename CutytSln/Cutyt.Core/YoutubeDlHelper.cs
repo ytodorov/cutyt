@@ -215,5 +215,26 @@ namespace Cutyt.Core
 
             return outputFileFullPath;
         }
+
+        public static int GetTotalSecondsFromString(string duration = "10:00:05")
+        {
+            var parts = duration.Split(":", StringSplitOptions.RemoveEmptyEntries);
+
+            int result = 0;
+
+            if (parts.Length == 1)
+            {
+                result = int.Parse(parts[0]);
+            }
+            else if (parts.Length == 2)
+            {
+                result = int.Parse(parts[0]) * 60 + int.Parse(parts[1]);
+            }
+            else if (parts.Length == 3)
+            {
+                result = int.Parse(parts[0]) * 3600 + int.Parse(parts[1]) * 60 + int.Parse(parts[2]);
+            }
+            return result;
+        }
     }
 }
