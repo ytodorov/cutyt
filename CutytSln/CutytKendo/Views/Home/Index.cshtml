@@ -26,7 +26,7 @@
 </div>
 <p class="text-center">
     @(Html.Kendo().Button()
-        .Name("PrimaryButton1")
+        .Name("btnDisplay")
         .HtmlAttributes(new { @class = "k-primary" })
         .Content("Display")
         .Events(ev => ev.Click("onClick")))
@@ -89,6 +89,13 @@
         });
 
         function onClick(e) {
+
+            var btnDisplay = $("#btnDisplay");
+            btnDisplay.hide();
+
+            var divUrlDetails = $("#divUrlDetails");
+            divUrlDetails.html('');
+
             var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
             var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
 
@@ -115,9 +122,13 @@
             })
                 .success(function (result) {
                     $('#divUrlDetails').html(result);
+
+                    btnDisplay.show();
                 })
                 .error(function (xhr, status) {
                     alert(status);
+
+                    btnDisplay.show();
                 })
         }
         

@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
@@ -206,6 +207,7 @@ namespace WebApplication1.Controllers
         {
             try
             {
+                selectedOption = HttpUtility.UrlDecode(selectedOption);
                 string filePathResult = string.Empty;
                 if (selectedOption.Contains("--audio-format"))
                 {
@@ -214,7 +216,8 @@ namespace WebApplication1.Controllers
                 }
                 else
                 {
-                    filePathResult = YoutubeDlHelper.MergeAudioAndVideoToMp4(v, selectedOption);
+                    var selectedVideoOption = selectedOption.Split(" ").FirstOrDefault();
+                    filePathResult = YoutubeDlHelper.MergeAudioAndVideoToMp4(v, selectedVideoOption);
                 }
 
                 filePathResult = YoutubeDlHelper.CutFile(filePathResult, start, end);

@@ -104,7 +104,7 @@ namespace CutytKendo.Controllers
 
         public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, string start, string end)
         {
-            selectedOption = selectedOption?.Replace(" ", "+");
+            //selectedOption = selectedOption?.Replace(" ", "+");
             Uri uri = new Uri(ytUrl);
             var parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
             v = parsedQSTest["v"];
@@ -132,7 +132,7 @@ namespace CutytKendo.Controllers
             var outputFileName = $"{v}{selectedOptionWithoutPlus}";
             if (selectedOptionWithoutPlus.Contains("--audio-format"))
             {
-                outputFileName = $"{v}{selectedOption.Replace("+", string.Empty).Split(" ").Last()}";
+                outputFileName = $"{v}{selectedOption.Split(" ").Last()}";
             }
 
             var encodedUrl = $"{serverAddressOfServices}home/exec?args=-f {HttpUtility.UrlEncode(selectedOption)}" +

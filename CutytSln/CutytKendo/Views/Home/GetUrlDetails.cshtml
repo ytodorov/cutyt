@@ -46,6 +46,9 @@
         var btnDownload = $("#btnDownload");
         btnDownload.hide();
 
+        var divDownloadLink = $("#divDownloadLink");
+        divDownloadLink.html('');
+
         $.ajax({
             url: '/Home/GetDownloadLink?ytUrl=' + ytUrl + '&selectedOption=' + selectedValue + '&start=' + start + '&end=' + end,
             contentType: 'application/html; charset=utf-8',
@@ -82,12 +85,20 @@
             .Layout(RadioGroupLayout.Horizontal)
             .Items(i =>
             {
+                i.Add().Label("MP3").Value("bestaudio -x --audio-format mp3").Encoded(true);
+                i.Add().Label("AAC").Value("bestaudio -x --audio-format aac").Encoded(true); ;
+                i.Add().Label("Vorbis").Value("bestaudio -x --audio-format vorbis").Encoded(true); ;
+                i.Add().Label("M4A").Value("bestaudio -x --audio-format m4a").Encoded(true); ;
+                i.Add().Label("Opus").Value("bestaudio -x --audio-format opus").Encoded(true); ;
+                i.Add().Label("WAV").Value("bestaudio -x --audio-format wav").Encoded(true); ;
+
+
                 foreach (var info in Model.Infos)
                 {
                     i.Add().Label(info.VideoResolutionP).Value(info.DownloadSwitchAudioAndVideo);
                 }
             })
-            .Value(Model.Infos.FirstOrDefault().DownloadSwitchAudioAndVideo)
+            .Value("bestaudio -x --audio-format mp3")
         )
 </p>
 
