@@ -1,19 +1,28 @@
-﻿@{
-    string title = "Cut YouTube";
-    string titleLong = "Cut YouTube - Get YouTube Audio and Video Files for Free";
-    string description = "Trim, Convert and Download YouTube videos";
-
-    string sitename = "https://www.cutyt.com/";
-    string author = "https://www.cutyt.com/";
-    string canonicalUrl = "https://www.cutyt.com/";
-    string imageUrl = "https://www.cutyt.com/android-chrome-512x512.png";
-}
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CutytKendo</title>
+    <meta title="@SiteConstants.Title" />
+    <meta property="og:image" content="@SiteConstants.ImageUrl" />
+    <meta property="og:title" content="@SiteConstants.Title" />
+    <meta property="og:description" content="@SiteConstants.Description" />
+    <meta property="og:url" content="@SiteConstants.CanonicalUrl" />
+    <meta property="og:site_name" content="@SiteConstants.SiteName" />
+    <meta property="og:author" content="@SiteConstants.Author" />
+    <meta property="og:type" content="website" />
+    <meta property="fb:app:id" content="773558706918738" />
+    <meta property="fb:app_id" content="773558706918738" />
+
+    <meta name="description" content="@($"{SiteConstants.TitleLong}. {SiteConstants.Description}.")">
+    <title>@SiteConstants.TitleLong</title>
+
+    <link rel="canonical" href="@SiteConstants.CanonicalUrl" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
@@ -71,9 +80,9 @@
     <script src="https://kendo.cdn.telerik.com/2021.1.330/js/kendo.aspnetmvc.min.js"></script>
 </head>
 <body class="k-content">
-    <nav class="navbar navbar-dark bg-dark">
+    @*<nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid d-flex justify-content-between p-0">
-            <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">@(title)</a>
+            <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">@(SiteConstants.Title)</a>
             <button id="configure" class="k-rpanel-toggle k-button k-primary btn-toggle">
                 <span class="k-icon k-i-menu"></span>
             </button>
@@ -89,7 +98,20 @@
                         })
             )
         </kendo-responsivepanel>
-    </div>
+    </div>*@
+
+    <header>
+        <section>
+            <div class="text-center d-flex align-items-center">
+                <div class="container-fluid">
+                    <div>
+                        <h1>@(SiteConstants.Title.ToUpperInvariant())</h1>
+                        <h2>@SiteConstants.Description</h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </header>
 
     <main>
         <div class="container-fluid">
@@ -100,8 +122,9 @@
     <footer class="footer text-center d-flex align-items-center">
         <div class="container-fluid">
             <p class="text-muted">
-                &#169; @DateTime.Now.Year <a href="@canonicalUrl" title="@canonicalUrl">cutyt.com</a>. All Rights Reserved. Follow us: <a target="_blank" title="https://www.facebook.com/Cutyt-162865322145097" href="https://www.facebook.com/Cutyt-162865322145097">
-                    <span class="mbr-iconfont-c fa-facebook-f fa"></span>
+                &#169; @DateTime.Now.Year <a href="@SiteConstants.CanonicalUrl" title="@SiteConstants.Title">cutyt.com</a>. All Rights Reserved. Follow us: <a target="_blank" title="https://www.facebook.com/Cutyt-162865322145097" href="https://www.facebook.com/Cutyt-162865322145097">
+                <span class="mbr-iconfont-c fa-facebook-f fa"></span>
+                </a>
             </p>
         </div>
     </footer>

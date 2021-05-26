@@ -1,0 +1,217 @@
+﻿<div class="demo-section k-content mb-2">
+    @(Html.Kendo().TextBox()
+        .Name("textboxUrl")
+        .Placeholder("Paste YouTube URL here")
+        //.Label(label => label
+        //    .Content("Enter YouTube URL here")
+        //    .Floating(true)
+        //)
+        //.Value("https://www.youtube.com/watch?v=cUAZHrmlTts")
+        .HtmlAttributes(new { style = "width: 100%" })
+    )
+
+    <style>
+        .k-floating-label-container {
+            width: 100%;
+        }
+
+        div.humidity {
+            width: 99%;
+        }
+    </style>
+</div>
+<p class="text-center">
+    @(Html.Kendo().Button()
+        .Name("btnDisplay")
+        .HtmlAttributes(new { @class = "k-primary" })
+        .Content("Start")
+        .Events(ev => ev.Click("onClick")))
+</p>
+<div class="row" id="divMediaPlayers" style="display: none">
+    <div class="col-md-6">
+        <p class="text-center">
+            <span id="spanStartFrame">Start frame</span>
+        </p>
+        <p class="text-center">
+            @(Html.Kendo().MediaPlayer()
+        .Name("MediaPlayerStart")
+        .AutoPlay(true)
+        .Volume(0)
+        //.Media(m => m
+        //    .Title("Count up timer 10 minutes")
+        //    .Source("https://www.youtube.com/watch?v=cUAZHrmlTts")
+        //)
+        .FullScreen(false)
+        .Navigatable(false)
+        .HtmlAttributes(new { style = "height:360px" })
+    )
+        </p>
+    </div>
+    <div class="col-md-6">
+        <p class="text-center">
+            <span id="spanEndFrame">End frame</span>
+        </p>
+        <p class="text-center">
+            @(Html.Kendo().MediaPlayer()
+        .Name("MediaPlayerEnd")
+        .AutoPlay(true)
+        .Volume(0)
+        //.Media(m => m
+        //    .Title("Count up timer 10 minutes")
+        //    .Source("https://www.youtube.com/watch?v=cUAZHrmlTts")
+        //)
+        .FullScreen(false)
+        .Navigatable(false)
+
+        .HtmlAttributes(new { style = "height:360px" })
+    )
+        </p>
+    </div>
+</div>
+
+
+
+<p class="text-center">
+    <div id="divUrlDetails"></div>
+</p>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="text-center display-4">
+            <span class="fa-youtube fa" style="color: #009df3;"></span>
+        </div>
+        <h3 class="text-center font-weight-bold">EASY TO USE</h3>
+        <p class="text-center">
+            Just prepend the YouTube URL with <span class="text-success font-weight-bold">ct</span> and you will redirected to <a href="https://www.cutyt.com/" target="_blank">cutyt.com</a>
+        </p>
+        <p class="text-center">
+            Example: <a href="https://www.youtube.com/watch?v=TxbE79-1OSI" rel="nofollow" target="_blank">https://www.youtube.com/watch?v=TxbE79-1OSI</a>
+        </p>
+        <p class="text-center">
+            will become
+        </p>
+        <p class="text-center">
+            <a href="https://www.ctyoutube.com/watch?v=TxbE79-1OSI" target="_blank" rel="nofollow">https://www.<span class="text-success font-weight-bold">ct</span>youtube.com/watch?v=TxbE79-1OSI</a>
+        </p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="text-center display-4">
+            <span class=" fa-bullhorn fa" style="color: #009df3;"></span>
+        </div>
+        <h3 class="text-center font-weight-bold">NO ADS</h3>
+        <p>Tired of ads? With our service no advertisements will be shown while you are enjoing you favorite video or audio.</p>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="text-center display-4">
+            <span class=" fa-bolt fa" style="color: #009df3;"></span>
+        </div>
+        <h3 class="text-center font-weight-bold">NO BUFFER</h3>
+        <p>Slow connection can make you video stop while buffering. This is no longer the case when you download your file with Cutyt.</p>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="text-center display-4">
+            <span class=" fa-cloud-download  fa" style="color: #009df3;"></span>
+        </div>
+        <h3 class="text-center font-weight-bold">SAVE BANDWIDTH</h3>
+        <p>When you are wathcing high resolution videos like 1080p or 4K you are downloading huge ammoung of data every time. With Cutyt you are downloading only once.</p>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="text-center display-4">
+            <span class=" fa-windows fa" style="color: #009df3;"></span>
+        </div>
+        <h3 class="text-center font-weight-bold">WORKS OFFLINE</h3>
+        <p>Once you download the file no internet connection will be required to watch or listen it again.</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="text-center display-4">
+            <span class="fa-dollar fa" style="color: #009df3;"></span>
+        </div>
+        <h3 class="text-center font-weight-bold">FREE SERVICE</h3>
+        <p>Our service is always free. No registration required. Download youtube videos without having to pay anything.</p>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="text-center display-4">
+            <span class="fa-download fa" style="color: #009df3;"></span>
+        </div>
+        <h3 class="text-center font-weight-bold">UNLIMITED DOWNLOADS</h3>
+        <p>Download youtube videos as much as you like! No limitations for the number of downloads. Unrestricted file sizes.</p>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="text-center display-4">
+            <span class="fa-user-secret fa" style="color: #009df3;"></span>
+        </div>
+        <h3 class="text-center font-weight-bold">SECURE DOWNLOADS</h3>
+        <p>We use HTTPS for secure connections. We do not collect any personal data. We do not use cookies, but third party services may use them.</p>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="text-center display-4">
+            <span class="fa fa-exchange" style="color: #009df3;"></span>
+        </div>
+        <h3 class="text-center font-weight-bold">RUNS EVERYWHERE</h3>
+        <p>Our responsive and ultra fast website can be used on every platform that is out there. Windows, Linux, Mac, Android, iOS - we support everything.</p>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(window).resize(function () {
+            var slider = $("#rangeslider").getKendoRangeSlider();
+            if (slider) {
+                slider.resize();
+            }
+        });
+
+        function onClick(e) {
+
+            var btnDisplay = $("#btnDisplay");
+            btnDisplay.hide();
+
+            var divUrlDetails = $("#divUrlDetails");
+            divUrlDetails.html('');
+
+            var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
+            var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
+
+            $("#divMediaPlayers").show();
+
+            var url = $("#textboxUrl").val();
+            localStorage.setItem("url", url);
+
+            mediaPlayerStart.media({
+                //title: "Responsive Website Delivers for Reeves Import Motorcars",
+                //poster: "http://img.youtube.com/vi/DYsiJRmIQZw/1.jpg",
+                source: url
+            });
+
+            mediaPlayerEnd.media({
+                //title: "Responsive Website Delivers for Reeves Import Motorcars",
+                //poster: "http://img.youtube.com/vi/DYsiJRmIQZw/1.jpg",
+                source: url
+            });
+
+            $.ajax({
+                url: '/Home/GetUrlDetails?url=' + url,
+                contentType: 'application/html; charset=utf-8',
+                type: 'GET',
+                dataType: 'html'
+            })
+                .success(function (result) {
+                    $('#divUrlDetails').html(result);
+
+                    btnDisplay.show();
+                })
+                .error(function (xhr, status) {
+                    alert(status);
+
+                    btnDisplay.show();
+                })
+        }
+
+
+    </script>
+}

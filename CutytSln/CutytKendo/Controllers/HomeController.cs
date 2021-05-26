@@ -150,6 +150,13 @@ namespace CutytKendo.Controllers
             return PartialView(linkviewModel);
         }
 
+        [Route("/youtube")]
+        public IActionResult Youtube(string v)
+        {
+            var view = View("Index", "");
+            return view;
+        }
+
         public IActionResult Error()
         {
             return View();

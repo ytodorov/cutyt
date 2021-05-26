@@ -93,8 +93,10 @@ namespace WebApplication1.Controllers
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.ErrorDialog = false;
 
-            p.Start();
-            //p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
+            
+           
+            p.Start(); 
+            p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
 
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
