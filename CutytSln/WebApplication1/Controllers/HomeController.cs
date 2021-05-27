@@ -136,15 +136,6 @@ namespace WebApplication1.Controllers
                 //info.Resolution = currentRow.Substring(24, resolutionLength).Trim(',').Trim();
 
                 var resolutionParts = info.Resolution?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                //if (resolutionParts?.Length == 3)
-                //{
-                //    var resolutionInP = resolutionParts[1]?.Trim();
-
-                //    if (!resolutionInP.Contains("audio", StringComparison.InvariantCultureIgnoreCase))
-                //    {
-                //        info.VideoResolutionP = resolutionInP;
-                //    }
-                //}
 
                 if (!resolutionParts[0].Contains("audio", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -224,6 +215,8 @@ namespace WebApplication1.Controllers
 
                 filePathResult = YoutubeDlHelper.CutFile(filePathResult, start, end);
 
+                //AddWatermark(filePathResult); cannot be played in browser. dunno why
+
                 var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
                 //var programFullPath = @"E:\Files\youtube-dl.exe";
 
@@ -281,6 +274,34 @@ namespace WebApplication1.Controllers
 
             string result = p.StandardOutput.ReadToEnd().Trim();
             string error = p.StandardError.ReadToEnd().Trim();
+        }
+
+        private void AddWatermark(string fileName)
+        {
+            var programFullPath = @"E:\Files\ffmpeg.exe";
+
+            string output = Path.Combine("E:\\Files", $"output{DateTime.Now.Ticks}{System.IO.Path.GetExtension(fileName)}");
+
+            Process p = new Process();
+            p.StartInfo.FileName = programFullPath;
+            p.StartInfo.Arguments = $"-i {fileName} -i logo.png -filter_complex \"overlay=main_w-overlay_w-5:main_h-overlay_h-5\" -codec:a copy {output}";// $" -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4";
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+
+            p.StartInfo.WorkingDirectory = @"E:\Files";
+
+            p.StartInfo.CreateNoWindow = true;
+            p.StartInfo.ErrorDialog = false;
+
+            p.Start();
+
+            string result = p.StandardOutput.ReadToEnd().Trim();
+            string error = p.StandardError.ReadToEnd().Trim();
+
+            System.IO.File.Delete(fileName);
+
+            System.IO.File.Move(output, fileName, true);
         }
 
         private string GetFileNameFromArgs(string ytUrl)
