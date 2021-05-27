@@ -22,9 +22,15 @@
 </div>
 <p class="text-center">
     @(Html.Kendo().Button()
-        .Name("btnDisplay")
-        .HtmlAttributes(new { @class = "k-primary" })
-        .Content("Start")
+        .Name("btnStart")
+        //.HtmlAttributes(new { @class = "k-primary" })
+        .Content(@<text>
+                    @(Html.Kendo().Loader()
+                           .Name("btnStartLoader")
+                           .Visible(false)
+                    )
+                    Start
+        </text>)
         .Events(ev => ev.Click("onClick")))
 </p>
 <div class="row" id="divMediaPlayers" style="display: none">
@@ -82,7 +88,7 @@
         </div>
         <h3 class="text-center font-weight-bold">EASY TO USE</h3>
         <p class="text-center">
-            Just prepend the YouTube URL with <span class="text-success font-weight-bold">ct</span> and you will redirected to <a href="https://www.cutyt.com/" target="_blank">cutyt.com</a>
+            Just prepend the YouTube URL with <span class="text-success font-weight-bold">ct</span> and you will be redirected to <a href="https://www.cutyt.com/" target="_blank">cutyt.com</a>
         </p>
         <p class="text-center">
             Example: <a href="https://www.youtube.com/watch?v=TxbE79-1OSI" rel="nofollow" target="_blank">https://www.youtube.com/watch?v=TxbE79-1OSI</a>
@@ -168,8 +174,11 @@
 
         function onClick(e) {
 
-            var btnDisplay = $("#btnDisplay");
-            btnDisplay.hide();
+            var loader = $("#btnStartLoader").data("kendoLoader");
+            loader.show();
+
+            var btnStart = $("#btnStart").data("kendoButton");
+            btnStart.enable(false);
 
             var divUrlDetails = $("#divUrlDetails");
             divUrlDetails.html('');
@@ -203,12 +212,16 @@
                 .success(function (result) {
                     $('#divUrlDetails').html(result);
 
-                    btnDisplay.show();
+                    btnStart.enable(true);
+
+                    loader.hide();
                 })
                 .error(function (xhr, status) {
                     alert(status);
 
-                    btnDisplay.show();
+                    btnStart.enable(true);
+
+                    loader.hide();
                 })
         }
 

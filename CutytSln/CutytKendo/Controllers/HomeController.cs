@@ -108,6 +108,10 @@ namespace CutytKendo.Controllers
             Uri uri = new Uri(ytUrl);
             var parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
             v = parsedQSTest["v"];
+            if (string.IsNullOrEmpty(v))
+            {
+                v = ytUrl.Replace("https://youtu.be/", string.Empty);
+            }
 
             if (string.IsNullOrEmpty(selectedOption))
             {

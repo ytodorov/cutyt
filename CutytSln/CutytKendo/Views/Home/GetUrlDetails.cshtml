@@ -31,6 +31,9 @@
 
     function onBtnDownloadClick(e) {
 
+        var loader = $("#btnDownloadLoader").data("kendoLoader");
+        loader.show();
+
         var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
 
         var ytUrl = mediaPlayerStart.media().source;
@@ -43,8 +46,8 @@
         var start = parseFloat(split[0]);
         var end = parseFloat(split[1]);
 
-        var btnDownload = $("#btnDownload");
-        btnDownload.hide();
+        var btnDownload = $("#btnDownload").data("kendoButton");;
+        btnDownload.enable(false);
 
         var divDownloadLink = $("#divDownloadLink");
         divDownloadLink.html('');
@@ -56,16 +59,19 @@
             dataType: 'html'
         })
             .success(function (result) {
-                btnDownload.show();
+                btnDownload.enable(true);
+                loader.hide();
                 $('#divDownloadLink').html(result);
             })
             .error(function (xhr, status) {
-                btnDownload.show();
+                btnDownload.enable(true);
+                loader.hide();
                 alert(status);
             })
     }
 </script>
 
+<h4 class="text-center">Move the slider to select START and END time</h4>
 <p class="text-center">
     @(Html.Kendo().RangeSlider()
                   .Name("rangeslider")
@@ -106,7 +112,13 @@
     @(Html.Kendo().Button()
         .Name("btnDownload")
         .HtmlAttributes(new { @class = "k-primary" })
-        .Content("Get Download link")
+         .Content(@<text>
+                    @(Html.Kendo().Loader()
+                           .Name("btnDownloadLoader")
+                           .Visible(false)
+                    )
+                    Get Download link
+        </text>)
         .Events(ev => ev.Click("onBtnDownloadClick")))
 </p>
 
