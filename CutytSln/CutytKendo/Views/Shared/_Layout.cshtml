@@ -81,6 +81,16 @@
     <script src="https://kendo.cdn.telerik.com/2021.1.330/js/kendo.data.min.js"></script>
 
     <script src="https://kendo.cdn.telerik.com/2021.1.330/js/kendo.aspnetmvc.min.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PK6JDTVPMV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-PK6JDTVPMV');
+    </script>
 </head>
 <body class="k-content">
     @*<nav class="navbar navbar-dark bg-dark">
@@ -107,9 +117,11 @@
         <section>
             <div class="text-center d-flex align-items-center">
                 <div class="container-fluid">
-                    <div>
-                        <h1>@(SiteConstants.Title.ToUpperInvariant())</h1>
-                        <h2>@SiteConstants.Description</h2>
+                    <div class="jumbotron">
+                        <div>
+                            <h1>@(SiteConstants.Title.ToUpperInvariant())</h1>
+                            <h2>@SiteConstants.Description</h2>
+                        </div>
                     </div>
                 </div>
             </div>

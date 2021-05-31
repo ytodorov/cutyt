@@ -154,16 +154,21 @@ namespace CutytKendo.Controllers
             return PartialView(linkviewModel);
         }
 
-        [Route("/youtube")]
-        public IActionResult Youtube(string v)
+        [Route("/watch")]
+        public IActionResult Watch(string v)
         {
-            var view = View("Index", "");
+            var view = View("Index", v);
             return view;
         }
 
         public IActionResult Error()
         {
             return View();
+        }
+
+        public IActionResult GetEnv()
+        {
+            return Json(hostEnvironment.EnvironmentName);
         }
     }
 }
