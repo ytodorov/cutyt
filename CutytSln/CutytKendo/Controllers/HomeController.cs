@@ -157,7 +157,7 @@ namespace CutytKendo.Controllers
         [Route("/watch")]
         public IActionResult Watch(string v)
         {
-            var view = View("Index", v);
+            var view = View("Index", $"https://www.youtube.com/watch?v={v}");
             return view;
         }
 
