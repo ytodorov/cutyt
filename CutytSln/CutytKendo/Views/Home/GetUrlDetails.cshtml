@@ -52,6 +52,9 @@
         var divDownloadLink = $("#divDownloadLink");
         divDownloadLink.html('');
 
+        var pGenerateLink = $("#pGenerateLink");
+        pGenerateLink.show();
+
         $.ajax({
             url: '/Home/GetDownloadLink?ytUrl=' + ytUrl + '&selectedOption=' + selectedValue + '&start=' + start + '&end=' + end,
             contentType: 'application/html; charset=utf-8',
@@ -61,11 +64,15 @@
             .success(function (result) {
                 btnDownload.enable(true);
                 loader.hide();
+                pGenerateLink.hide();
+
                 $('#divDownloadLink').html(result);
             })
             .error(function (xhr, status) {
                 btnDownload.enable(true);
                 loader.hide();
+                pGenerateLink.hide();
+
                 alert(status);
             })
     }
@@ -122,6 +129,21 @@
         .Events(ev => ev.Click("onBtnDownloadClick")))
 </p>
 
+<div class="text-center" style="display:none" id="pGenerateLink">
+    @(Html.Kendo().Loader()
+            .Name("loader3")
+            .Type(LoaderType.InfiniteSpinner)
+            .Size(LoaderSize.Small)
+            .ThemeColor(LoaderThemeColor.Success)
+        )
+    Please wait while we generate download link ...
+    @(Html.Kendo().Loader()
+            .Name("loader4")
+            .Type(LoaderType.InfiniteSpinner)
+            .Size(LoaderSize.Small)
+            .ThemeColor(LoaderThemeColor.Success)
+        )
+</div>
 <div id="divDownloadLink">
 
 </div>

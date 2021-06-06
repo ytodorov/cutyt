@@ -1,5 +1,7 @@
 ﻿using Cutyt.Core;
 using Cutyt.Core.Classes;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Mvc;
@@ -194,6 +196,29 @@ namespace WebApplication1.Controllers
 
 
             return Json(list);
+        }
+
+        public IActionResult DetailProducts_Read([DataSourceRequest] DataSourceRequest request)
+        {
+            var files = Directory.GetFiles(@"E:\Files").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
+
+            files = files.Where(f => !f.EndsWith(".dll") && !f.EndsWith(".exe") && !f.EndsWith(".part") && !f.EndsWith(".ytdl") && !f.Contains("-frag", StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+            List<LinkViewModel> list = new List<LinkViewModel>();
+
+            foreach (var file in files)
+            {
+                var name = Path.GetFileName(file);
+                LinkViewModel linkViewModel = new LinkViewModel()
+                {
+                    Name = name,
+                    Url = $"{serverAddressOfServices}{name}"
+                };
+
+                list.Add(linkViewModel);
+            }
+
+            return Json(list.ToDataSourceResult(request));
         }
 
         public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "", string v = "", string selectedOption = "", string start = "", string end = "")

@@ -29,13 +29,35 @@
         .Content(@<text>
                     @(Html.Kendo().Loader()
                            .Name("btnStartLoader")
+                           .Type(LoaderType.InfiniteSpinner)
+                           .Size(LoaderSize.Small)
+                           .ThemeColor(LoaderThemeColor.Success)
                            .Visible(false)
                     )
                     Start
         </text>)
         .Events(ev => ev.Click("onClick")))
     </p>
+    <div class="text-center" style="display:none" id="pStartButtonInfo">
+        @(Html.Kendo().Loader()
+            .Name("loader1")
+            .Type(LoaderType.InfiniteSpinner)
+            .Size(LoaderSize.Small)
+            .ThemeColor(LoaderThemeColor.Success)
+        )
+        Wait while we display all download options ...
+        @(Html.Kendo().Loader()
+            .Name("loader2")
+            .Type(LoaderType.InfiniteSpinner)
+            .Size(LoaderSize.Small)
+            .ThemeColor(LoaderThemeColor.Success)
+        )
+    </div>
 </div>
+<p class="text-center">
+    <div id="divUrlDetails"></div>
+</p>
+
 <div class="row" id="divMediaPlayers" style="display: none">
     <div class="col-md-6">
         <p class="text-center">
@@ -77,12 +99,6 @@
         </p>
     </div>
 </div>
-
-
-
-<p class="text-center">
-    <div id="divUrlDetails"></div>
-</p>
 
 <div class="row">
     <div class="col-md-12">
@@ -188,6 +204,17 @@
             var loader = $("#btnStartLoader").data("kendoLoader");
             loader.show();
 
+            var pStartButtonInfo = $("#pStartButtonInfo");
+            pStartButtonInfo.show();
+
+            var spanStartFrame = $("#spanStartFrame");
+            var spanEndFrame = $("#spanEndFrame");
+
+            spanStartFrame.text("Start Frame");
+            spanEndFrame.text("End Frame");
+
+
+
             var btnStart = $("#btnStart").data("kendoButton");
             btnStart.enable(false);
 
@@ -226,6 +253,8 @@
                     btnStart.enable(true);
 
                     loader.hide();
+
+                    pStartButtonInfo.hide();
                 })
                 .error(function (xhr, status) {
                     alert(status);
@@ -233,6 +262,9 @@
                     btnStart.enable(true);
 
                     loader.hide();
+
+                    pStartButtonInfo.hide();
+
                 })
         }
 
