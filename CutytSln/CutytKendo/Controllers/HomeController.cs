@@ -81,7 +81,7 @@ namespace CutytKendo.Controllers
             }
             else
             {
-                if (!resul.ToString().Contains("youtube", StringComparison.CurrentCultureIgnoreCase) ||
+                if (!resul.ToString().Contains("youtube", StringComparison.CurrentCultureIgnoreCase) &&
                     !resul.ToString().Contains("youtu.be", StringComparison.CurrentCultureIgnoreCase))
                 {
                     var res = Content($"'{url}' must be valid YouTube url!");
