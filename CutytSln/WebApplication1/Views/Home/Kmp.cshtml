@@ -71,7 +71,6 @@
                 };
 
                 function timeChanged(e) {
-                    debugger;
                 }
 
                 $("#playButton").click(function () {
@@ -131,7 +130,6 @@
                     var start = parseFloat(split[0]);
                     var end = parseFloat(split[1]);
 
-                    debugger;
                     mediaPlayer.seek(start * 1000);
                     const params = new URLSearchParams(window.location.search);
                     params.set('start', start)

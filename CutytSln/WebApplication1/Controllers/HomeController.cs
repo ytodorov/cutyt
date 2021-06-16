@@ -77,6 +77,11 @@ namespace WebApplication1.Controllers
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
 
+            if (!string.IsNullOrEmpty(error))
+            {
+                telemetryClient.TrackException(new Exception(error));
+            }
+
             return Json(result);
         }
             public IActionResult GetYoutubeInfo(string url = "https://www.youtube.com/watch?v=vLM-v7LeiEg")
@@ -102,6 +107,11 @@ namespace WebApplication1.Controllers
 
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                telemetryClient.TrackException(new Exception(error));
+            }
 
             var rows = result.Split($"\n");
 
@@ -230,15 +240,15 @@ namespace WebApplication1.Controllers
                 if (selectedOption.Contains("--audio-format"))
                 {
                     selectedOption = selectedOption.Split(" ").Last();
-                    filePathResult = YoutubeDlHelper.DownloadCustomAudio(v, selectedOption);
+                    filePathResult = YoutubeDlHelper.DownloadCustomAudio(v, selectedOption, telemetryClient);
                 }
                 else
                 {
                     var selectedVideoOption = selectedOption.Split(" ").FirstOrDefault();
-                    filePathResult = YoutubeDlHelper.MergeAudioAndVideoToMp4(v, selectedVideoOption);
+                    filePathResult = YoutubeDlHelper.MergeAudioAndVideoToMp4(v, selectedVideoOption, telemetryClient);
                 }
 
-                filePathResult = YoutubeDlHelper.CutFile(filePathResult, start, end);
+                filePathResult = YoutubeDlHelper.CutFile(filePathResult, start, end, telemetryClient);
 
                 //AddWatermark(filePathResult); cannot be played in browser. dunno why
 
@@ -275,59 +285,61 @@ namespace WebApplication1.Controllers
             var data = e.Data;
         }
 
-        private void ConvertFromMkvToMp4(string source, string destination)
-        {
-            // ffmpeg -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4
+        //private void ConvertFromMkvToMp4(string source, string destination)
+        //{
+        //    // ffmpeg -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4
 
-            string filename = string.Empty;
+        //    string filename = string.Empty;
 
-            var programFullPath = @"E:\Files\ffmpeg.exe";
+        //    var programFullPath = @"E:\Files\ffmpeg.exe";
 
-            Process p = new Process();
-            p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = $" -i {source} -c copy {destination}";// $" -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4";
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
+        //    Process p = new Process();
+        //    p.StartInfo.FileName = programFullPath;
+        //    p.StartInfo.Arguments = $" -i {source} -c copy {destination}";// $" -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4";
+        //    p.StartInfo.RedirectStandardOutput = true;
+        //    p.StartInfo.RedirectStandardError = true;
+        //    p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.WorkingDirectory = @"E:\Files";
+        //    p.StartInfo.WorkingDirectory = @"E:\Files";
 
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.ErrorDialog = false;
+        //    p.StartInfo.CreateNoWindow = true;
+        //    p.StartInfo.ErrorDialog = false;
 
-            p.Start();
+        //    p.Start();
 
-            string result = p.StandardOutput.ReadToEnd().Trim();
-            string error = p.StandardError.ReadToEnd().Trim();
-        }
+        //    string result = p.StandardOutput.ReadToEnd().Trim();
+        //    string error = p.StandardError.ReadToEnd().Trim();
 
-        private void AddWatermark(string fileName)
-        {
-            var programFullPath = @"E:\Files\ffmpeg.exe";
 
-            string output = Path.Combine("E:\\Files", $"output{DateTime.Now.Ticks}{System.IO.Path.GetExtension(fileName)}");
+        //}
 
-            Process p = new Process();
-            p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = $"-i {fileName} -i logo.png -filter_complex \"overlay=main_w-overlay_w-5:main_h-overlay_h-5\" -codec:a copy {output}";// $" -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4";
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
+        //private void AddWatermark(string fileName)
+        //{
+        //    var programFullPath = @"E:\Files\ffmpeg.exe";
 
-            p.StartInfo.WorkingDirectory = @"E:\Files";
+        //    string output = Path.Combine("E:\\Files", $"output{DateTime.Now.Ticks}{System.IO.Path.GetExtension(fileName)}");
 
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.ErrorDialog = false;
+        //    Process p = new Process();
+        //    p.StartInfo.FileName = programFullPath;
+        //    p.StartInfo.Arguments = $"-i {fileName} -i logo.png -filter_complex \"overlay=main_w-overlay_w-5:main_h-overlay_h-5\" -codec:a copy {output}";// $" -ss 00:01:00 -i input.mp4 -to 00:02:00 -c copy output.mp4";
+        //    p.StartInfo.RedirectStandardOutput = true;
+        //    p.StartInfo.RedirectStandardError = true;
+        //    p.StartInfo.UseShellExecute = false;
 
-            p.Start();
+        //    p.StartInfo.WorkingDirectory = @"E:\Files";
 
-            string result = p.StandardOutput.ReadToEnd().Trim();
-            string error = p.StandardError.ReadToEnd().Trim();
+        //    p.StartInfo.CreateNoWindow = true;
+        //    p.StartInfo.ErrorDialog = false;
 
-            System.IO.File.Delete(fileName);
+        //    p.Start();
 
-            System.IO.File.Move(output, fileName, true);
-        }
+        //    string result = p.StandardOutput.ReadToEnd().Trim();
+        //    string error = p.StandardError.ReadToEnd().Trim();
+
+        //    System.IO.File.Delete(fileName);
+
+        //    System.IO.File.Move(output, fileName, true);
+        //}
 
         private string GetFileNameFromArgs(string ytUrl)
         {

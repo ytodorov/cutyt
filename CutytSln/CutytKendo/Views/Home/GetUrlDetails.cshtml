@@ -15,9 +15,9 @@
         mediaPlayerEnd.seek(end * 1000);
         mediaPlayerEnd.pause();
 
-        $("#spanStartFrame").text("Start frame " + start);
+        $("#spanStartFrame").text("Start frame " + start + " s.");
 
-        $("#spanEndFrame").text("End frame " + end);
+        $("#spanEndFrame").text("End frame " + end + " s.");
     }
 
     function rangeSliderSlide(e) {
@@ -68,11 +68,12 @@
 
                 $('#divDownloadLink').html(result);
             })
-            .error(function (xhr, status) {
+            .error(function (xhr, status, obj) {
+                
                 btnDownload.enable(true);
                 loader.hide();
                 pGenerateLink.hide();
-
+                                
                 alert(status);
             })
     }

@@ -58,7 +58,7 @@ namespace Cutyt.Controllers
 
             httpClient = httpClientFactory.CreateClient();
 
-            httpClient.Timeout = TimeSpan.FromHours(1);
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
         }
 
         public IActionResult Index()

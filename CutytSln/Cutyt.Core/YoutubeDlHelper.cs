@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.ApplicationInsights;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -11,7 +12,7 @@ namespace Cutyt.Core
 {
     public static class YoutubeDlHelper
     {
-        public static string DownloadCustomAudio(string v, string audioFormat)
+        public static string DownloadCustomAudio(string v, string audioFormat, TelemetryClient telemetryClient)
         {
             var resultFileNameWithoutExtension = $"{v}_{audioFormat}";
 
@@ -42,12 +43,18 @@ namespace Cutyt.Core
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
 
+            if (!string.IsNullOrEmpty(error))
+            {
+                telemetryClient.TrackException(new Exception(error));
+            }
+
+
             fullFilePath = Directory.GetFiles(@"E:\Files").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
             return fullFilePath;
         }
 
-        public static string DownloadBestAudio(string v)
+        public static string DownloadBestAudio(string v, TelemetryClient telemetryClient)
         {
             var resultFileNameWithoutExtension = $"{v}_bestaudio";
 
@@ -78,12 +85,17 @@ namespace Cutyt.Core
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
 
+            if (!string.IsNullOrEmpty(error))
+            {
+                telemetryClient.TrackException(new Exception(error));
+            }
+
             fullFilePath = Directory.GetFiles(@"E:\Files").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
             return fullFilePath;
         }
 
-        public static string DownloadVideo(string v, string code)
+        public static string DownloadVideo(string v, string code, TelemetryClient telemetryClient)
         {
             var resultFileNameWithoutExtension = $"{v}_{code}";
 
@@ -114,12 +126,16 @@ namespace Cutyt.Core
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
 
+            if (!string.IsNullOrEmpty(error))
+            {
+                telemetryClient.TrackException(new Exception(error));
+            }
             fullFilePath = Directory.GetFiles(@"E:\Files").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
             return fullFilePath;
         }
 
-        public static string MergeAudioAndVideoToMp4(string v, string videoCode)
+        public static string MergeAudioAndVideoToMp4(string v, string videoCode, TelemetryClient telemetryClient)
         {
             var resultFileNameWithoutExtension = $"{v}_{videoCode.Replace("+", "_")}_AV";
 
@@ -130,14 +146,14 @@ namespace Cutyt.Core
                 return fullFilePath;
             }
 
-            var audioPath = DownloadBestAudio(v);
+            var audioPath = DownloadBestAudio(v, telemetryClient);
 
             if (string.IsNullOrEmpty(videoCode))
             {
                 return audioPath;
             }
 
-            var videoPath = DownloadVideo(v, videoCode);
+            var videoPath = DownloadVideo(v, videoCode, telemetryClient);
 
             var programFullPath = @"E:\Files\ffmpeg.exe";
             var args = $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {resultFileNameWithoutExtension}.mp4";
@@ -159,12 +175,17 @@ namespace Cutyt.Core
             //string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
 
+            if (!string.IsNullOrEmpty(error))
+            {
+                telemetryClient.TrackException(new Exception(error));
+            }
+
             fullFilePath = Directory.GetFiles(@"E:\Files").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
             return fullFilePath;
         }
 
-        public static string CutFile(string fileName, string start, string end)
+        public static string CutFile(string fileName, string start, string end, TelemetryClient telemetryClient)
         {
             double.TryParse(start, NumberStyles.Any, CultureInfo.InvariantCulture, out double startTime);
             double.TryParse(end, NumberStyles.Any, CultureInfo.InvariantCulture, out double endTime);
@@ -210,6 +231,11 @@ namespace Cutyt.Core
             // For some VERY STRANGE reason ffmpeg will block undefinetely on this line
             //string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                telemetryClient.TrackException(new Exception(error));
+            }
 
             outputFileFullPath = Directory.GetFiles(@"E:\Files").FirstOrDefault(f => f.Contains(outputFile));
 

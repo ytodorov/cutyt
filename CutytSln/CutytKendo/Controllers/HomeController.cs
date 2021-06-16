@@ -48,7 +48,7 @@ namespace CutytKendo.Controllers
 
             httpClient = httpClientFactory.CreateClient();
 
-            httpClient.Timeout = TimeSpan.FromHours(1);
+            httpClient.Timeout = TimeSpan.FromMinutes(5);
         }
 
         public IActionResult Index()
@@ -72,7 +72,23 @@ namespace CutytKendo.Controllers
 
         public async Task<IActionResult> GetUrlDetails(string url)
         {
-            ViewData["Message"] = "Your contact page.";
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri resul))
+            {
+                var res = Content($"'{url}' must be valid URL!");
+                res.StatusCode = 500;
+                return res;
+            }
+            else
+            {
+                if (!resul.ToString().Contains("youtube", StringComparison.CurrentCultureIgnoreCase) ||
+                    !resul.ToString().Contains("youtu.be", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var res = Content($"'{url}' must be valid YouTube url!");
+                    res.StatusCode = 500;
+                    return res;
+                }
+            }
 
             var fullUrl = Helpers.GetFullUrlFromYouTube(url, httpClientFactory.CreateClient());
             List<YouTubeInfoViewModel> infos = await httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={fullUrl}");

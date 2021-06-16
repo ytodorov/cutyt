@@ -190,6 +190,8 @@
             if (url.length > 0) {
                 onClick();
             }
+
+            $("body").show();
         });
 
         $(window).resize(function () {
@@ -221,25 +223,21 @@
             var divUrlDetails = $("#divUrlDetails");
             divUrlDetails.html('');
 
-            var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
-            var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
+            //var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
+            //var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
 
-            $("#divMediaPlayers").show();
+            //$("#divMediaPlayers").show();
 
             var url = $("#textboxUrl").val();
             localStorage.setItem("url", url);
 
-            mediaPlayerStart.media({
-                //title: "Responsive Website Delivers for Reeves Import Motorcars",
-                //poster: "http://img.youtube.com/vi/DYsiJRmIQZw/1.jpg",
-                source: url
-            });
+            //mediaPlayerStart.media({
+            //    source: url
+            //});
 
-            mediaPlayerEnd.media({
-                //title: "Responsive Website Delivers for Reeves Import Motorcars",
-                //poster: "http://img.youtube.com/vi/DYsiJRmIQZw/1.jpg",
-                source: url
-            });
+            //mediaPlayerEnd.media({
+            //    source: url
+            //});
 
             $.ajax({
                 url: '/Home/GetUrlDetails?url=' + url,
@@ -255,9 +253,26 @@
                     loader.hide();
 
                     pStartButtonInfo.hide();
+
+
+
+
+                    var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
+                    var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
+
+                    $("#divMediaPlayers").show();
+
+                    mediaPlayerStart.media({
+                        source: url
+                    });
+
+                    mediaPlayerEnd.media({
+                        source: url
+                    });
                 })
                 .error(function (xhr, status) {
-                    alert(status);
+                                        
+                    alert(xhr.responseText);
 
                     btnStart.enable(true);
 
