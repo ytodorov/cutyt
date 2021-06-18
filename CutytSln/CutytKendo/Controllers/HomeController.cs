@@ -48,7 +48,8 @@ namespace CutytKendo.Controllers
 
             httpClient = httpClientFactory.CreateClient();
 
-            httpClient.Timeout = TimeSpan.FromMinutes(5);
+            // Very important to be big interval. Big files won't be downloaded else.
+            httpClient.Timeout = TimeSpan.FromHours(2);
         }
 
         public IActionResult Index()
@@ -72,6 +73,12 @@ namespace CutytKendo.Controllers
 
         public async Task<IActionResult> GetUrlDetails(string url)
         {
+            // get the single url
+            var splits = url.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (splits.Count > 1)
+            {
+                url = splits[0];
+            }
 
             if (!Uri.TryCreate(url, UriKind.Absolute, out Uri resul))
             {
@@ -103,16 +110,23 @@ namespace CutytKendo.Controllers
                 info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
             }
 
+            // remove files bigger then 1GB
             infos = infos.GroupBy(c => c.VideoResolutionP)
                 .Select(s => s.LastOrDefault())
                 .Where(s => s.VideoResolutionP != null)
+                .Where(s => !s.Size.Contains("G", StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrWhiteSpace(s.Size))
                 .ToList();
+
+            
 
             YouTubeAllInfoViewModel allVM = new YouTubeAllInfoViewModel()
             { 
                 DurationInSeconds = durationInSeconds,
                 Infos = infos
             };
+
+            
+            
 
 
             return PartialView(allVM);

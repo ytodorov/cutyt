@@ -1,5 +1,6 @@
 ﻿using Cutyt.Core;
 using Cutyt.Core.Classes;
+using Cutyt.Core.Constants;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.ApplicationInsights;
@@ -72,10 +73,11 @@ namespace WebApplication1.Controllers
             p.StartInfo.ErrorDialog = false;
 
             p.Start();
-            //p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
-
+            
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
+
+            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
 
             if (!string.IsNullOrEmpty(error))
             {
@@ -100,13 +102,16 @@ namespace WebApplication1.Controllers
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.ErrorDialog = false;
 
-            
-           
-            p.Start(); 
-            p.WaitForExit((int)TimeSpan.FromMinutes(1).TotalMilliseconds);
 
+            EventTelemetry eventTelemetry = new EventTelemetry("Start GetYoutubeInfo");
+            eventTelemetry.Properties.Add("url", url);
+            telemetryClient.TrackEvent(eventTelemetry);
+            p.Start();
+            
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
+
+            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
 
             if (!string.IsNullOrEmpty(error))
             {
@@ -307,9 +312,11 @@ namespace WebApplication1.Controllers
 
         //    p.Start();
 
+
         //    string result = p.StandardOutput.ReadToEnd().Trim();
         //    string error = p.StandardError.ReadToEnd().Trim();
 
+        //    p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
 
         //}
 
@@ -336,6 +343,8 @@ namespace WebApplication1.Controllers
         //    string result = p.StandardOutput.ReadToEnd().Trim();
         //    string error = p.StandardError.ReadToEnd().Trim();
 
+        //    p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
+
         //    System.IO.File.Delete(fileName);
 
         //    System.IO.File.Move(output, fileName, true);
@@ -361,8 +370,11 @@ namespace WebApplication1.Controllers
             p.StartInfo.ErrorDialog = false;
 
             p.Start();
-
+            
             string result = p.StandardOutput.ReadToEnd().Trim();
+            string error = p.StandardError.ReadToEnd();
+
+            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
 
             return result;
 

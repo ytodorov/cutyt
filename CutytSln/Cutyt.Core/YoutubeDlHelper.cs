@@ -1,4 +1,5 @@
-﻿using Microsoft.ApplicationInsights;
+﻿using Cutyt.Core.Constants;
+using Microsoft.ApplicationInsights;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,6 +43,8 @@ namespace Cutyt.Core
 
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
+            
+            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
 
             if (!string.IsNullOrEmpty(error))
             {
@@ -84,6 +87,8 @@ namespace Cutyt.Core
 
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
+            
+            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
 
             if (!string.IsNullOrEmpty(error))
             {
@@ -126,6 +131,8 @@ namespace Cutyt.Core
             string result = p.StandardOutput.ReadToEnd();
             string error = p.StandardError.ReadToEnd();
 
+            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
+
             if (!string.IsNullOrEmpty(error))
             {
                 telemetryClient.TrackException(new Exception(error));
@@ -156,7 +163,7 @@ namespace Cutyt.Core
             var videoPath = DownloadVideo(v, videoCode, telemetryClient);
 
             var programFullPath = @"E:\Files\ffmpeg.exe";
-            var args = $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {resultFileNameWithoutExtension}.mp4";
+            var args = $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {resultFileNameWithoutExtension}.mp4 -y";
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
             p.StartInfo.Arguments = args;
@@ -170,15 +177,17 @@ namespace Cutyt.Core
             p.StartInfo.ErrorDialog = false;
 
             p.Start();
-
+            
             // For some VERY STRANGE reason ffmpeg will block undefinetely on this line
             //string result = p.StandardOutput.ReadToEnd();
-            string error = p.StandardError.ReadToEnd();
+            //string error = p.StandardError.ReadToEnd();
 
-            if (!string.IsNullOrEmpty(error))
-            {
-                telemetryClient.TrackException(new Exception(error));
-            }
+            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
+
+            //if (!string.IsNullOrEmpty(error))
+            //{
+            //    telemetryClient.TrackException(new Exception(error));
+            //}
 
             fullFilePath = Directory.GetFiles(@"E:\Files").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
@@ -212,7 +221,7 @@ namespace Cutyt.Core
             }
             var programFullPath = @"E:\Files\ffmpeg.exe";
             //var args = $"-ss 00:01:00 -i {inputFile} -to 00:00:02 -c copy {outputFile}";
-            var args = $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {outputFile}";
+            var args = $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {outputFile} -y";
 
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
@@ -230,12 +239,14 @@ namespace Cutyt.Core
 
             // For some VERY STRANGE reason ffmpeg will block undefinetely on this line
             //string result = p.StandardOutput.ReadToEnd();
-            string error = p.StandardError.ReadToEnd();
+            //string error = p.StandardError.ReadToEnd();
 
-            if (!string.IsNullOrEmpty(error))
-            {
-                telemetryClient.TrackException(new Exception(error));
-            }
+            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
+
+            //if (!string.IsNullOrEmpty(error))
+            //{
+            //    telemetryClient.TrackException(new Exception(error));
+            //}
 
             outputFileFullPath = Directory.GetFiles(@"E:\Files").FirstOrDefault(f => f.Contains(outputFile));
 
