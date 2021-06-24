@@ -39,7 +39,9 @@ namespace CutytKendo.Controllers
             this.cache = cache;
 
             var mn = Environment.MachineName;
-            if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase) || !mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase))
+            if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase)
+                && (!mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase) ||
+                !mn.Equals("yTodorov-nb", StringComparison.InvariantCultureIgnoreCase)))
             {
                 serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
                 cutYtBaseAddress = "https://www.cutyt.com/";

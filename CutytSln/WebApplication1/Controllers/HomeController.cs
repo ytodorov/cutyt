@@ -58,7 +58,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult GetYoutubeDuration(string url = "https://www.youtube.com/watch?v=vLM-v7LeiEg")
         {
-            var programFullPath = @"E:\Files\youtube-dl.exe";
+            var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
             var args = $"{url} --get-duration";
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
@@ -67,7 +67,7 @@ namespace WebApplication1.Controllers
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.WorkingDirectory = @"E:\Files";
+            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.ErrorDialog = false;
@@ -88,7 +88,7 @@ namespace WebApplication1.Controllers
         }
             public IActionResult GetYoutubeInfo(string url = "https://www.youtube.com/watch?v=vLM-v7LeiEg")
         {
-            var programFullPath = @"E:\Files\youtube-dl.exe";
+            var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
             var args = $"-F {url}";
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
@@ -97,7 +97,7 @@ namespace WebApplication1.Controllers
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.WorkingDirectory = @"E:\Files";
+            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.ErrorDialog = false;
@@ -191,7 +191,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult GetAllFiles()
         {
-            var files = Directory.GetFiles(@"E:\Files").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
+            var files = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
 
             files = files.Where(f => !f.EndsWith(".dll") && !f.EndsWith(".exe") && !f.EndsWith(".part") && !f.EndsWith(".ytdl") && !f.Contains("-frag", StringComparison.CurrentCultureIgnoreCase)).ToList();
 
@@ -215,7 +215,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult DetailProducts_Read([DataSourceRequest] DataSourceRequest request)
         {
-            var files = Directory.GetFiles(@"E:\Files").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
+            var files = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
 
             files = files.Where(f => !f.EndsWith(".dll") && !f.EndsWith(".exe") && !f.EndsWith(".part") && !f.EndsWith(".ytdl") && !f.Contains("-frag", StringComparison.CurrentCultureIgnoreCase)).ToList();
 
@@ -258,7 +258,7 @@ namespace WebApplication1.Controllers
                 //AddWatermark(filePathResult); cannot be played in browser. dunno why
 
                 var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
-                //var programFullPath = @"E:\Files\youtube-dl.exe";
+                //var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
 
                 string physicalFileName = Path.GetFileName(filePathResult);
 
@@ -296,7 +296,7 @@ namespace WebApplication1.Controllers
 
         //    string filename = string.Empty;
 
-        //    var programFullPath = @"E:\Files\ffmpeg.exe";
+        //    var programFullPath = $@"{AppConstants.YtWorkingDir}\ffmpeg.exe";
 
         //    Process p = new Process();
         //    p.StartInfo.FileName = programFullPath;
@@ -305,7 +305,7 @@ namespace WebApplication1.Controllers
         //    p.StartInfo.RedirectStandardError = true;
         //    p.StartInfo.UseShellExecute = false;
 
-        //    p.StartInfo.WorkingDirectory = @"E:\Files";
+        //    p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
         //    p.StartInfo.CreateNoWindow = true;
         //    p.StartInfo.ErrorDialog = false;
@@ -322,7 +322,7 @@ namespace WebApplication1.Controllers
 
         //private void AddWatermark(string fileName)
         //{
-        //    var programFullPath = @"E:\Files\ffmpeg.exe";
+        //    var programFullPath = $@"{AppConstants.YtWorkingDir}\ffmpeg.exe";
 
         //    string output = Path.Combine("E:\\Files", $"output{DateTime.Now.Ticks}{System.IO.Path.GetExtension(fileName)}");
 
@@ -333,7 +333,7 @@ namespace WebApplication1.Controllers
         //    p.StartInfo.RedirectStandardError = true;
         //    p.StartInfo.UseShellExecute = false;
 
-        //    p.StartInfo.WorkingDirectory = @"E:\Files";
+        //    p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
         //    p.StartInfo.CreateNoWindow = true;
         //    p.StartInfo.ErrorDialog = false;
@@ -355,7 +355,7 @@ namespace WebApplication1.Controllers
             string filename = string.Empty;
             // youtube-dl -f bestvideo+bestaudio "https://www.youtube.com/watch?v=LXb3EKWsInQ&t=156s" -k
 
-            var programFullPath = @"E:\Files\youtube-dl.exe";
+            var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
 
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
@@ -364,7 +364,7 @@ namespace WebApplication1.Controllers
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.WorkingDirectory = @"E:\Files";
+            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.ErrorDialog = false;
