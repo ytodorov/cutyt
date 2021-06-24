@@ -236,7 +236,8 @@ namespace WebApplication1.Controllers
             return Json(list.ToDataSourceResult(request));
         }
 
-        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M", string ytUrl = "", string v = "", string selectedOption = "", string start = "", string end = "")
+        public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M",
+            string ytUrl = "", string v = "", string selectedOption = "", string start = "", string end = "", bool shouldTrim = false)
         {
             try
             {
@@ -253,7 +254,10 @@ namespace WebApplication1.Controllers
                     filePathResult = YoutubeDlHelper.MergeAudioAndVideoToMp4(v, selectedVideoOption, telemetryClient);
                 }
 
-                filePathResult = YoutubeDlHelper.CutFile(filePathResult, start, end, telemetryClient);
+                if (shouldTrim)
+                {
+                    filePathResult = YoutubeDlHelper.CutFile(filePathResult, start, end, telemetryClient);
+                }
 
                 //AddWatermark(filePathResult); cannot be played in browser. dunno why
 
