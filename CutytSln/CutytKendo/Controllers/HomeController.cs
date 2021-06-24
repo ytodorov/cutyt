@@ -106,7 +106,7 @@ namespace CutytKendo.Controllers
 
             var durationInSeconds = YoutubeDlHelper.GetTotalSecondsFromString(duration);
 
-            
+
             foreach (var info in infos)
             {
                 info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
@@ -116,25 +116,27 @@ namespace CutytKendo.Controllers
             infos = infos.GroupBy(c => c.VideoResolutionP)
                 .Select(s => s.LastOrDefault())
                 .Where(s => s.VideoResolutionP != null)
-                .Where(s => !s.Size.Contains("G", StringComparison.InvariantCultureIgnoreCase) && !string.IsNullOrWhiteSpace(s.Size))
+                .Where(s => !s.Size.Contains("G", StringComparison.InvariantCultureIgnoreCase) &&
+                !string.IsNullOrWhiteSpace(s.Size) &&
+                !s.Size.Contains("best", StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
 
-            
+
 
             YouTubeAllInfoViewModel allVM = new YouTubeAllInfoViewModel()
-            { 
+            {
                 DurationInSeconds = durationInSeconds,
                 Infos = infos
             };
 
-            
-            
+
+
 
 
             return PartialView(allVM);
         }
 
-        public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, string start, string end)
+        public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, string start, string end, bool? shouldTrim)
         {
             //selectedOption = selectedOption?.Replace(" ", "+");
             Uri uri = new Uri(ytUrl);
@@ -172,7 +174,7 @@ namespace CutytKendo.Controllers
             }
 
             var encodedUrl = $"{serverAddressOfServices}home/exec?args=-f {HttpUtility.UrlEncode(selectedOption)}" +
-                $" --no-part \"{url}\" --output \"{outputFileName}.%(ext)s\" -k -v&ytUrl={url}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}" +
+                $" --no-part \"{url}\" --output \"{outputFileName}.%(ext)s\" -k -v&ytUrl={url}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}&shouldTrim={shouldTrim.GetValueOrDefault()}" +
                 $"&start={start}&end={end}";
             var json = await httpClient.GetStringAsync(encodedUrl); // %2B = +
 

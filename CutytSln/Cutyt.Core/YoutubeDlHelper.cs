@@ -167,8 +167,8 @@ namespace Cutyt.Core
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
             p.StartInfo.Arguments = args;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
+            //p.StartInfo.RedirectStandardOutput = true;
+            //p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
 
             p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
@@ -226,8 +226,8 @@ namespace Cutyt.Core
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
             p.StartInfo.Arguments = args;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
+            //p.StartInfo.RedirectStandardOutput = true;
+            //p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
 
             p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";

@@ -46,6 +46,9 @@
         var start = parseFloat(split[0]);
         var end = parseFloat(split[1]);
 
+        debugger;
+        var shouldTrim = start != 0 && end != slider.options.max;
+
         var btnDownload = $("#btnDownload").data("kendoButton");;
         btnDownload.enable(false);
 
@@ -56,7 +59,7 @@
         pGenerateLink.show();
 
         $.ajax({
-            url: '/Home/GetDownloadLink?ytUrl=' + ytUrl + '&selectedOption=' + selectedValue + '&start=' + start + '&end=' + end,
+            url: '/Home/GetDownloadLink?ytUrl=' + ytUrl + '&selectedOption=' + selectedValue + '&start=' + start + '&end=' + end + '&shouldTrim=' + shouldTrim,
             contentType: 'application/html; charset=utf-8',
             type: 'GET',
             dataType: 'html'
