@@ -52,7 +52,7 @@ namespace Cutyt.Core
             }
 
 
-            fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
+            fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
             return fullFilePath;
         }
