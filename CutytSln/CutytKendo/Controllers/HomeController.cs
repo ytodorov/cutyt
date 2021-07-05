@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -39,9 +40,8 @@ namespace CutytKendo.Controllers
             this.cache = cache;
 
             var mn = Environment.MachineName;
-            if (!hostEnvironment.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase)
-                && (!mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase) ||
-                !mn.Equals("yTodorov-nb", StringComparison.InvariantCultureIgnoreCase)))
+            if (!mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase) &&
+                !mn.Equals("yTodorov-nb", StringComparison.InvariantCultureIgnoreCase))
             {
                 serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
                 cutYtBaseAddress = "https://www.cutyt.com/";
@@ -75,6 +75,9 @@ namespace CutytKendo.Controllers
 
         public async Task<IActionResult> GetUrlDetails(string url)
         {
+            byte[] raw = Convert.FromBase64String(url);
+            url = Encoding.UTF8.GetString(raw);
+
             // get the single url
             var splits = url.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
             if (splits.Count > 1)
@@ -99,7 +102,15 @@ namespace CutytKendo.Controllers
                 }
             }
 
+
             var fullUrl = Helpers.GetFullUrlFromYouTube(url, httpClientFactory.CreateClient());
+
+            Uri uri = new Uri(fullUrl);
+            var parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
+            var v = parsedQSTest["v"];
+
+            fullUrl = $"https://www.youtube.com/watch?v={v}";
+
             List<YouTubeInfoViewModel> infos = await httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={fullUrl}");
             string duration = await httpClient.GetFromJsonAsync<string>($"{serverAddressOfServices}home/GetYoutubeDuration?url={fullUrl}");
 
@@ -118,7 +129,8 @@ namespace CutytKendo.Controllers
                 .Where(s => s.VideoResolutionP != null)
                 .Where(s => !s.Size.Contains("G", StringComparison.InvariantCultureIgnoreCase) &&
                 !string.IsNullOrWhiteSpace(s.Size) &&
-                !s.Size.Contains("best", StringComparison.InvariantCultureIgnoreCase))
+                !s.Size.Contains("best", StringComparison.InvariantCultureIgnoreCase) &&
+                !s.Size.Contains("video only", StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
 
 
