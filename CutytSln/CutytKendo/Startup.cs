@@ -62,7 +62,7 @@ namespace CutytKendo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();
 
             //if (env.IsDevelopment())
             //{
@@ -76,6 +76,20 @@ namespace CutytKendo
             //}
 
             //app.UseStatusCodePagesWithRedirects("/error?id={0}");
+
+            app.Use(async (ctx, next) =>
+            {
+                await next();
+
+                if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+                {
+                    //Re-execute the request so the user gets the error page
+                    string originalPath = ctx.Request.Path.Value;
+                    ctx.Items["originalPath"] = originalPath;
+                    ctx.Request.Path = "/";
+                    await next();
+                }
+            });
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/url-rewriting?view=aspnetcore-2.2
             var mn = Environment.MachineName;
