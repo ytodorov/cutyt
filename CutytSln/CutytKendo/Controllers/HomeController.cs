@@ -151,6 +151,7 @@ namespace CutytKendo.Controllers
         public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, string start, string end, bool? shouldTrim)
         {
             //selectedOption = selectedOption?.Replace(" ", "+");
+            ytUrl = Helpers.GetFullUrlFromYouTube(ytUrl, httpClientFactory.CreateClient());
             Uri uri = new Uri(ytUrl);
             var parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
             v = parsedQSTest["v"];
