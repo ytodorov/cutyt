@@ -242,8 +242,13 @@ namespace WebApplication1.Controllers
         public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M",
             string ytUrl = "", string v = "", string selectedOption = "", string start = "", string end = "", bool shouldTrim = false)
         {
+            // ???? ytUrl = https://consent.youtube.com/ml?continue=https://www.youtube.com/watch?v=_xtloJqfIrs&feature=youtu.be
             try
             {
+                if (v?.Length > 20)
+                {
+                    throw new Exception($"{v} is not valid for v in youtube URL");
+                }
                 selectedOption = HttpUtility.UrlDecode(selectedOption);
                 string filePathResult = string.Empty;
                 if (selectedOption.Contains("--audio-format"))
