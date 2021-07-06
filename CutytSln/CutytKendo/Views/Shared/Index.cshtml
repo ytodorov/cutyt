@@ -246,9 +246,10 @@
             //mediaPlayerEnd.media({
             //    source: url
             //});
-            debugger;
+            var base64 = window.btoa(url);
+            var base64Escaped = base64.replace("+", "_plus_");
             $.ajax({
-                url: '/Home/GetUrlDetails?url=' + window.btoa(url),
+                url: '/Home/GetUrlDetails?url=' + base64Escaped,
                 contentType: 'application/html; charset=utf-8',
                 type: 'GET',
                 dataType: 'html'
