@@ -247,7 +247,7 @@
             //    source: url
             //});
             var base64 = window.btoa(url);
-            var base64Escaped = base64.replace("+", "_plus_");
+            var base64Escaped = base64.replaceAll("+", "_plus_").replaceAll("=", "_equal_");
             $.ajax({
                 url: '/Home/GetUrlDetails?url=' + base64Escaped,
                 contentType: 'application/html; charset=utf-8',
@@ -278,7 +278,7 @@
                 })
                 .error(function (xhr, status) {
 
-                    alert(xhr.responseText);
+                    alert('This URL cannot be processed right now.');
 
                     btnStart.enable(true);
 

@@ -75,7 +75,7 @@ namespace CutytKendo.Controllers
 
         public async Task<IActionResult> GetUrlDetails(string url)
         {
-            url = url.Replace("_plus_", "+");
+            url = url.Replace("_plus_", "+").Replace("_equal_", "=").Trim();
             byte[] raw = Convert.FromBase64String(url);
             url = Encoding.UTF8.GetString(raw);
             
