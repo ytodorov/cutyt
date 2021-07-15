@@ -12,8 +12,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -284,7 +286,12 @@ namespace WebApplication1.Controllers
                     Url = $"{serverAddressOfServices}{physicalFileName}",
                     FileName = fileNameFromArgs,
                     DisplayName = fileNameWithoutDashV,
+                    V = v,
+                    Start = start,  
+                    End = end,
                 };
+
+
 
                 return Json(testLVM);
 
@@ -371,7 +378,7 @@ namespace WebApplication1.Controllers
 
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = $"--get-filename {ytUrl}";
+            p.StartInfo.Arguments = $"--get-filename {ytUrl} --encoding UTF8"; // Very important to use proper encoding
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
@@ -381,9 +388,14 @@ namespace WebApplication1.Controllers
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.ErrorDialog = false;
 
+            //System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            p.StartInfo.StandardOutputEncoding = Encoding.UTF8; // Very important to use proper encoding
+            p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
             p.Start();
-            
+
             string result = p.StandardOutput.ReadToEnd().Trim();
+
             string error = p.StandardError.ReadToEnd();
 
             p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);

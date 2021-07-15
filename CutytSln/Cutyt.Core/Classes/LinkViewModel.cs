@@ -21,5 +21,9 @@ namespace Cutyt.Core.Classes
         public string FormatCode { get; set; }
 
         public string DisplayName { get; set; }
+
+        public string Start { get; set; }
+
+        public string End { get; set; }
     }
 }
