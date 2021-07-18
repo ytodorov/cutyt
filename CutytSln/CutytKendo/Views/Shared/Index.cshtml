@@ -102,6 +102,14 @@
 
 <div class="row">
     <div class="col-md-12">
+        <div class="text-center">
+            <!-- Go to www.addthis.com/dashboard to customize your tools -->
+            <div class="addthis_inline_share_toolbox"></div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
         <div class="text-center display-4">
             <span class="fa-youtube fa" style="color: #009df3;"></span>
         </div>
@@ -238,9 +246,10 @@
             //mediaPlayerEnd.media({
             //    source: url
             //});
-
+            var base64 = window.btoa(url);
+            var base64Escaped = base64.replaceAll("+", "_plus_").replaceAll("=", "_equal_");
             $.ajax({
-                url: '/Home/GetUrlDetails?url=' + url,
+                url: '/Home/GetUrlDetails?url=' + base64Escaped,
                 contentType: 'application/html; charset=utf-8',
                 type: 'GET',
                 dataType: 'html'
@@ -253,9 +262,6 @@
                     loader.hide();
 
                     pStartButtonInfo.hide();
-
-
-
 
                     var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
                     var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
@@ -271,8 +277,8 @@
                     });
                 })
                 .error(function (xhr, status) {
-                                        
-                    alert(xhr.responseText);
+
+                    alert('This URL cannot be processed right now.');
 
                     btnStart.enable(true);
 

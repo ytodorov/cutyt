@@ -12,8 +12,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
@@ -58,7 +60,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult GetYoutubeDuration(string url = "https://www.youtube.com/watch?v=vLM-v7LeiEg")
         {
-            var programFullPath = @"E:\Files\youtube-dl.exe";
+            var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
             var args = $"{url} --get-duration";
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
@@ -67,7 +69,7 @@ namespace WebApplication1.Controllers
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.WorkingDirectory = @"E:\Files";
+            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.ErrorDialog = false;
@@ -88,7 +90,10 @@ namespace WebApplication1.Controllers
         }
             public IActionResult GetYoutubeInfo(string url = "https://www.youtube.com/watch?v=vLM-v7LeiEg")
         {
-            var programFullPath = @"E:\Files\youtube-dl.exe";
+            var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
+
+            
+
             var args = $"-F {url}";
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
@@ -97,7 +102,7 @@ namespace WebApplication1.Controllers
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.WorkingDirectory = @"E:\Files";
+            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.ErrorDialog = false;
@@ -191,7 +196,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult GetAllFiles()
         {
-            var files = Directory.GetFiles(@"E:\Files").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
+            var files = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
 
             files = files.Where(f => !f.EndsWith(".dll") && !f.EndsWith(".exe") && !f.EndsWith(".part") && !f.EndsWith(".ytdl") && !f.Contains("-frag", StringComparison.CurrentCultureIgnoreCase)).ToList();
 
@@ -215,7 +220,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult DetailProducts_Read([DataSourceRequest] DataSourceRequest request)
         {
-            var files = Directory.GetFiles(@"E:\Files").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
+            var files = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").OrderByDescending(s => new FileInfo(s).CreationTime).ToList();
 
             files = files.Where(f => !f.EndsWith(".dll") && !f.EndsWith(".exe") && !f.EndsWith(".part") && !f.EndsWith(".ytdl") && !f.Contains("-frag", StringComparison.CurrentCultureIgnoreCase)).ToList();
 
@@ -239,8 +244,13 @@ namespace WebApplication1.Controllers
         public IActionResult Exec(string program = "youtube-dl.exe", string args = "https://www.youtube.com/watch?v=rzfmZC3kg3M",
             string ytUrl = "", string v = "", string selectedOption = "", string start = "", string end = "", bool shouldTrim = false)
         {
+            // ???? ytUrl = https://consent.youtube.com/ml?continue=https://www.youtube.com/watch?v=_xtloJqfIrs&feature=youtu.be
             try
             {
+                if (v?.Length > 20)
+                {
+                    throw new Exception($"{v} is not valid for v in youtube URL");
+                }
                 selectedOption = HttpUtility.UrlDecode(selectedOption);
                 string filePathResult = string.Empty;
                 if (selectedOption.Contains("--audio-format"))
@@ -262,7 +272,7 @@ namespace WebApplication1.Controllers
                 //AddWatermark(filePathResult); cannot be played in browser. dunno why
 
                 var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
-                //var programFullPath = @"E:\Files\youtube-dl.exe";
+                //var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
 
                 string physicalFileName = Path.GetFileName(filePathResult);
 
@@ -276,7 +286,12 @@ namespace WebApplication1.Controllers
                     Url = $"{serverAddressOfServices}{physicalFileName}",
                     FileName = fileNameFromArgs,
                     DisplayName = fileNameWithoutDashV,
+                    V = v,
+                    Start = start,  
+                    End = end,
                 };
+
+
 
                 return Json(testLVM);
 
@@ -300,7 +315,7 @@ namespace WebApplication1.Controllers
 
         //    string filename = string.Empty;
 
-        //    var programFullPath = @"E:\Files\ffmpeg.exe";
+        //    var programFullPath = $@"{AppConstants.YtWorkingDir}\ffmpeg.exe";
 
         //    Process p = new Process();
         //    p.StartInfo.FileName = programFullPath;
@@ -309,7 +324,7 @@ namespace WebApplication1.Controllers
         //    p.StartInfo.RedirectStandardError = true;
         //    p.StartInfo.UseShellExecute = false;
 
-        //    p.StartInfo.WorkingDirectory = @"E:\Files";
+        //    p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
         //    p.StartInfo.CreateNoWindow = true;
         //    p.StartInfo.ErrorDialog = false;
@@ -326,7 +341,7 @@ namespace WebApplication1.Controllers
 
         //private void AddWatermark(string fileName)
         //{
-        //    var programFullPath = @"E:\Files\ffmpeg.exe";
+        //    var programFullPath = $@"{AppConstants.YtWorkingDir}\ffmpeg.exe";
 
         //    string output = Path.Combine("E:\\Files", $"output{DateTime.Now.Ticks}{System.IO.Path.GetExtension(fileName)}");
 
@@ -337,7 +352,7 @@ namespace WebApplication1.Controllers
         //    p.StartInfo.RedirectStandardError = true;
         //    p.StartInfo.UseShellExecute = false;
 
-        //    p.StartInfo.WorkingDirectory = @"E:\Files";
+        //    p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
         //    p.StartInfo.CreateNoWindow = true;
         //    p.StartInfo.ErrorDialog = false;
@@ -359,23 +374,28 @@ namespace WebApplication1.Controllers
             string filename = string.Empty;
             // youtube-dl -f bestvideo+bestaudio "https://www.youtube.com/watch?v=LXb3EKWsInQ&t=156s" -k
 
-            var programFullPath = @"E:\Files\youtube-dl.exe";
+            var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
 
             Process p = new Process();
             p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = $"--get-filename {ytUrl}";
+            p.StartInfo.Arguments = $"--get-filename {ytUrl} --encoding UTF8"; // Very important to use proper encoding
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.WorkingDirectory = @"E:\Files";
+            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
 
             p.StartInfo.CreateNoWindow = true;
             p.StartInfo.ErrorDialog = false;
 
+            //System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
+            p.StartInfo.StandardOutputEncoding = Encoding.UTF8; // Very important to use proper encoding
+            p.StartInfo.StandardErrorEncoding = Encoding.UTF8;
             p.Start();
-            
+
             string result = p.StandardOutput.ReadToEnd().Trim();
+
             string error = p.StandardError.ReadToEnd();
 
             p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);

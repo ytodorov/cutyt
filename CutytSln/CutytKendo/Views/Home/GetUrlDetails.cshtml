@@ -77,14 +77,16 @@
                 loader.hide();
                 pGenerateLink.hide();
                                 
-                alert(status);
+                alert('This URL cannot be processed right now.');
             })
     }
 </script>
 
-<h4 class="text-center">Move the slider to select START and END time</h4>
-<p class="text-center">
-    @(Html.Kendo().RangeSlider()
+@if (Model.Infos?.Count > 0)
+{
+    <h4 class="text-center">Move the slider to select START and END time</h4>
+    <p class="text-center">
+        @(Html.Kendo().RangeSlider()
                   .Name("rangeslider")
                   .Min(0)
                   .Max(Model.DurationInSeconds)
@@ -94,9 +96,9 @@
                       .Slide("rangeSliderSlide")
                       .Change("rangeSliderChange"))
                   .HtmlAttributes(new { @class = "humidity" }))
-</p>
-<p class="text-center">
-    @(Html.Kendo().RadioGroup()
+    </p>
+    <p class="text-center">
+        @(Html.Kendo().RadioGroup()
             .Name("radiogroup")
             .LabelPosition(RadioGroupLabelPosition.After)
             .Layout(RadioGroupLayout.Horizontal)
@@ -117,10 +119,10 @@
             })
             .Value("bestaudio -x --audio-format mp3")
         )
-</p>
+    </p>
 
-<p class="text-center">
-    @(Html.Kendo().Button()
+    <p class="text-center">
+        @(Html.Kendo().Button()
         .Name("btnDownload")
         .HtmlAttributes(new { @class = "k-primary" })
          .Content(@<text>
@@ -131,24 +133,24 @@
                     Get Download link
         </text>)
         .Events(ev => ev.Click("onBtnDownloadClick")))
-</p>
+    </p>
 
-<div class="text-center" style="display:none" id="pGenerateLink">
-    @(Html.Kendo().Loader()
+    <div class="text-center" style="display:none" id="pGenerateLink">
+        @(Html.Kendo().Loader()
             .Name("loader3")
             .Type(LoaderType.InfiniteSpinner)
             .Size(LoaderSize.Small)
             .ThemeColor(LoaderThemeColor.Success)
         )
-    Please wait while we generate download link ...
-    @(Html.Kendo().Loader()
+        Please wait while we generate download link ...
+        @(Html.Kendo().Loader()
             .Name("loader4")
             .Type(LoaderType.InfiniteSpinner)
             .Size(LoaderSize.Small)
             .ThemeColor(LoaderThemeColor.Success)
         )
-</div>
-<div id="divDownloadLink">
+    </div>
+    <div id="divDownloadLink">
 
-</div>
-
+    </div>
+}

@@ -1,3 +1,4 @@
+using Cutyt.Core.Constants;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
@@ -49,7 +50,7 @@ namespace WebApplication1
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                     Path.Combine(@"E:\Files")),
+                     Path.Combine($@"{AppConstants.YtWorkingDir}")),
                 ContentTypeProvider = provider,
                 ServeUnknownFileTypes = true,
                 

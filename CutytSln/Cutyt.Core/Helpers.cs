@@ -13,8 +13,20 @@ namespace Cutyt.Core
         {
             if (url?.ToLowerInvariant()?.Contains("youtu.be", StringComparison.InvariantCultureIgnoreCase) == true)
             {
-                var response = httpClient.GetAsync(url).Result;
-                var fullUrl = response?.RequestMessage?.RequestUri?.ToString();
+                //var response = httpClient.GetAsync(url).Result;
+                //var fullUrl = response?.RequestMessage?.RequestUri?.ToString();
+
+                // https://youtu.be/H20Nr4CXa4k
+
+                Uri uri = new Uri("https://youtu.be/H20Nr4CXa4k?s=2&se=34sdf");
+
+                var v = uri.Segments.FirstOrDefault(f => f.Length > 1);
+
+                var fullUrl = $"https://www.youtube.com/watch?v={v}";
+
+                // https://consent.youtube.com/ml?continue=https://www.youtube.com/watch?v=_xtloJqfIrs&feature=youtu.be
+                //fullUrl = fullUrl.Replace("https://consent.youtube.com/ml?continue=", string.Empty);
+                
                 return fullUrl;
             }
             else
