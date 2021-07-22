@@ -253,6 +253,9 @@ namespace WebApplication1.Controllers
                 }
                 selectedOption = HttpUtility.UrlDecode(selectedOption);
                 string filePathResult = string.Empty;
+
+                YoutubeDlHelper.FreeSpaceOnHardDiskIfNeeded();
+
                 if (selectedOption.Contains("--audio-format"))
                 {
                     selectedOption = selectedOption.Split(" ").Last();

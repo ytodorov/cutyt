@@ -13,6 +13,40 @@ namespace Cutyt.Core
 {
     public static class YoutubeDlHelper
     {
+
+        public static void FreeSpaceOnHardDiskIfNeeded()
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(AppConstants.YtWorkingDir);
+            if (directoryInfo.Exists)
+            {
+                var files = directoryInfo.GetFiles().ToList();
+
+                files = files
+                    .OrderByDescending(s => s.CreationTimeUtc)
+                    .Where(f => !f.Name.EndsWith(".exe") && !f.Name.EndsWith(".json"))
+                    .ToList();
+
+                var totalSizeInBytes = files.Sum(f => f.Length);
+
+                var totalSizeInGigabytes = (double)totalSizeInBytes / 1024 / 1024 / 1024;
+
+                if (totalSizeInGigabytes > 300)
+                {
+                    var filesToDelete = files.Skip(files.Count / 3 * 2).ToList();
+
+                    // delete the last 33%  of the files
+
+                    foreach (var fileToDelete in filesToDelete)
+                    {
+                        File.Delete(fileToDelete.FullName);
+                    }
+                }
+                    
+
+
+            }
+        }
+
         public static string DownloadCustomAudio(string v, string audioFormat, TelemetryClient telemetryClient)
         {
             var resultFileNameWithoutExtension = $"{v}_{audioFormat}";
