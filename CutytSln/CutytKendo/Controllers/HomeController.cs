@@ -78,7 +78,7 @@ namespace CutytKendo.Controllers
             
             url = url.Replace("_plus_", "+").Replace("_equal_", "=").Trim();
             byte[] raw = Convert.FromBase64String(url);
-            var escapedOriginalUrl = Encoding.UTF8.GetString(raw);
+            url = Encoding.UTF8.GetString(raw);
             
             // get the single url
             var splits = url.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -89,7 +89,7 @@ namespace CutytKendo.Controllers
 
             if (!Uri.TryCreate(url, UriKind.Absolute, out Uri result))
             {
-                var res = Content($"'{escapedOriginalUrl}' must be valid URL!");
+                var res = Content($"'{url}' must be valid URL!");
                 res.StatusCode = 500;
                 return res;
             }
@@ -98,7 +98,7 @@ namespace CutytKendo.Controllers
                 if (!result.ToString().Contains("youtube", StringComparison.CurrentCultureIgnoreCase) &&
                     !result.ToString().Contains("youtu.be", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    var res = Content($"'{escapedOriginalUrl}' must be valid YouTube url!");
+                    var res = Content($"'{url}' must be valid YouTube url!");
                     res.StatusCode = 500;
                     return res;
                 }
