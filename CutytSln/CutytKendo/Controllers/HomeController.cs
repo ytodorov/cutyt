@@ -75,9 +75,10 @@ namespace CutytKendo.Controllers
 
         public async Task<IActionResult> GetUrlDetails(string url)
         {
+            
             url = url.Replace("_plus_", "+").Replace("_equal_", "=").Trim();
             byte[] raw = Convert.FromBase64String(url);
-            url = Encoding.UTF8.GetString(raw);
+            var escapedOriginalUrl = Encoding.UTF8.GetString(raw);
             
             // get the single url
             var splits = url.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
@@ -86,18 +87,18 @@ namespace CutytKendo.Controllers
                 url = splits[0];
             }
 
-            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri resul))
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri result))
             {
-                var res = Content($"'{url}' must be valid URL!");
+                var res = Content($"'{escapedOriginalUrl}' must be valid URL!");
                 res.StatusCode = 500;
                 return res;
             }
             else
             {
-                if (!resul.ToString().Contains("youtube", StringComparison.CurrentCultureIgnoreCase) &&
-                    !resul.ToString().Contains("youtu.be", StringComparison.CurrentCultureIgnoreCase))
+                if (!result.ToString().Contains("youtube", StringComparison.CurrentCultureIgnoreCase) &&
+                    !result.ToString().Contains("youtu.be", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    var res = Content($"'{url}' must be valid YouTube url!");
+                    var res = Content($"'{escapedOriginalUrl}' must be valid YouTube url!");
                     res.StatusCode = 500;
                     return res;
                 }
