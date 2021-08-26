@@ -20,10 +20,7 @@
                     pageSizes: true,
                     buttonCount: 5
                 },
-                columns: [{
-                    template: "<div class='customer-photo'" +
-                    "style='background-image: url(../content/web/Customers/#:data.CustomerID#.jpg);'></div>" +
-                    "<div class='customer-name'>#: ContactName #</div>",
+                columns: [{                  
                     field: "ContactName",
                     title: "Contact Name",
                     width: 240
@@ -68,7 +65,7 @@
 @foreach (var f in Model.Files)
 {
     <span>test</span>
-    <a href="@($"{f.Url}&xyz={DateTime.Now.Ticks}")" target="_blank">@($"Download link -> {f.DisplayName} <- Download link")</a>
+    <a href="@($"{f.Url}")" target="_blank">@($"Download link -> {f.DisplayName} <- Download link")</a>
 <br />    
 }
 

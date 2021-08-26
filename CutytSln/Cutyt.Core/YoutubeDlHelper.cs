@@ -56,7 +56,9 @@ namespace Cutyt.Core
             {
                 return fullFilePath;
             }
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"Z:/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+
+            var dir = AppConstants.YtWorkingDir.Replace("\\", "/");
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
                         
             if (!string.IsNullOrEmpty(res.StandardError))
             {
@@ -79,7 +81,7 @@ namespace Cutyt.Core
                 return fullFilePath;
             }
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f bestaudio {v} --output \"Z:/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f bestaudio {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
 
             if (!string.IsNullOrEmpty(res.StandardError))
@@ -104,7 +106,7 @@ namespace Cutyt.Core
             }
 
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f {code} {v} --output \"Z:/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f {code} {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
             if (!string.IsNullOrEmpty(res.StandardError))
             {
@@ -175,7 +177,7 @@ namespace Cutyt.Core
                 return outputFileFullPath;
             }
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\ffmpeg.exe", $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {outputFile} -y").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\ffmpeg.exe", $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {AppConstants.YtWorkingDir}\\{outputFile} -y").Result;
 
             outputFileFullPath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(outputFile));
 

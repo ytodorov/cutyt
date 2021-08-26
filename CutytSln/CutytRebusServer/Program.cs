@@ -185,7 +185,7 @@ namespace CutytRebusServer
                     reply = new YoutubeDownloadLinkReply()
                     {
                         Name = fileNameFromArgs,
-                        Url = $"https://stcutyt.file.core.windows.net/cutyt/{physicalFileName}?sv=2018-03-28&si=cutyt-ReadList&sr=s&sig=NRNKCky0S%2Bg4zi%2B6708kg2XN9U4JzqnvEL3w7znaDc4%3D",
+                        Url = $"{serverAddressOfServices}{physicalFileName}",
                         FileName = fileNameFromArgs,
                         DisplayName = fileNameWithoutDashV,
                         V = job.V,
