@@ -1,156 +1,175 @@
 ﻿@model YouTubeAllInfoViewModel
 
 <script>
-    function setValues(e) {
-        var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
-        var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
+	function setValues(e) {
+		var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
+		var mediaPlayerEnd = $("#MediaPlayerEnd").data("kendoMediaPlayer");
 
-        var split = e.value.toString().split(",")
-        var start = parseFloat(split[0]);
-        var end = parseFloat(split[1]);
+		var split = e.value.toString().split(",")
+		var start = parseFloat(split[0]);
+		var end = parseFloat(split[1]);
 
-        mediaPlayerStart.seek(start * 1000);
-        mediaPlayerStart.pause();
+		mediaPlayerStart.seek(start * 1000);
+		mediaPlayerStart.pause();
 
-        mediaPlayerEnd.seek(end * 1000);
-        mediaPlayerEnd.pause();
+		mediaPlayerEnd.seek(end * 1000);
+		mediaPlayerEnd.pause();
 
-        $("#spanStartFrame").text("Start frame " + start + " s.");
+		$("#spanStartFrame").text("Start frame " + start + " s.");
 
-        $("#spanEndFrame").text("End frame " + end + " s.");
-    }
+		$("#spanEndFrame").text("End frame " + end + " s.");
+	}
 
-    function rangeSliderSlide(e) {
-        setValues(e);
+	function rangeSliderSlide(e) {
+		setValues(e);
 
-    }
+	}
 
-    function rangeSliderChange(e) {
-        setValues(e);
-    }
+	function rangeSliderChange(e) {
+		setValues(e);
+	}
 
-    function onBtnDownloadClick(e) {
+	function onBtnDownloadClick(e) {
 
-        var loader = $("#btnDownloadLoader").data("kendoLoader");
-        loader.show();
+		var loader = $("#btnDownloadLoader").data("kendoLoader");
+		loader.show();
 
-        var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
+		var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
 
-        var ytUrl = mediaPlayerStart.media().source;
-        var radioGroup = $("#radiogroup").getKendoRadioGroup();
-        var selectedValue = radioGroup.value();
+		var ytUrl = mediaPlayerStart.media().source;
+		var radioGroup = $("#radiogroup").getKendoRadioGroup();
+		var selectedValue = radioGroup.value();
 
-        var slider = $("#rangeslider").getKendoRangeSlider();
-        var value = slider.value();
-        var split = value.toString().split(",")
-        var start = parseFloat(split[0]);
-        var end = parseFloat(split[1]);
+		var slider = $("#rangeslider").getKendoRangeSlider();
+		var value = slider.value();
+		var split = value.toString().split(",")
+		var start = parseFloat(split[0]);
+		var end = parseFloat(split[1]);
 
-        debugger;
-        var shouldTrim = start != 0 && end != slider.options.max;
+		var shouldTrim = start != 0 && end != slider.options.max;
 
-        var btnDownload = $("#btnDownload").data("kendoButton");;
-        btnDownload.enable(false);
+		var btnDownload = $("#btnDownload").data("kendoButton");;
+		btnDownload.enable(false);
 
-        var divDownloadLink = $("#divDownloadLink");
-        divDownloadLink.html('');
+		var divDownloadLink = $("#divDownloadLink");
+		divDownloadLink.html('');
 
-        var pGenerateLink = $("#pGenerateLink");
-        pGenerateLink.show();
+		var pGenerateLink = $("#pGenerateLink");
+		pGenerateLink.show();
 
-        $.ajax({
-            url: '/Home/GetDownloadLink?ytUrl=' + ytUrl + '&selectedOption=' + selectedValue + '&start=' + start + '&end=' + end + '&shouldTrim=' + shouldTrim,
-            contentType: 'application/html; charset=utf-8',
-            type: 'GET',
-            dataType: 'html'
-        })
-            .success(function (result) {
-                btnDownload.enable(true);
-                loader.hide();
-                pGenerateLink.hide();
+		$.ajax({
+			url: '/Home/GetDownloadLink?ytUrl=' + ytUrl + '&selectedOption=' + selectedValue + '&start=' + start + '&end=' + end + '&shouldTrim=' + shouldTrim,
+			contentType: 'application/html; charset=utf-8',
+			method: 'POST',
+			data: {
+				ytUrl : ytUrl,
+				selectedOption : selectedValue,
+				start : start,
+				end : end,
+				shouldTrim : shouldTrim
+				}
+		})
+			.success(function (result) {
+				btnDownload.enable(true);
+				loader.hide();
+				pGenerateLink.hide();
 
-                $('#divDownloadLink').html(result);
-            })
-            .error(function (xhr, status, obj) {
-                
-                btnDownload.enable(true);
-                loader.hide();
-                pGenerateLink.hide();
-                                
-                alert('This URL cannot be processed right now.');
-            })
-    }
+				$('#divDownloadLink').html(result);
+			})
+			.error(function (xhr, status, obj) {
+
+				btnDownload.enable(true);
+				loader.hide();
+				pGenerateLink.hide();
+
+				alert('This URL cannot be processed right now.');
+			})
+	}
 </script>
 
 @if (Model.Infos?.Count > 0)
 {
-    <h4 class="text-center">Move the slider to select START and END time</h4>
-    <p class="text-center">
-        @(Html.Kendo().RangeSlider()
-                  .Name("rangeslider")
-                  .Min(0)
-                  .Max(Model.DurationInSeconds)
-                  .SmallStep(0.1)
-                  .LargeStep(10)
-                  .Events(events => events
-                      .Slide("rangeSliderSlide")
-                      .Change("rangeSliderChange"))
-                  .HtmlAttributes(new { @class = "humidity" }))
-    </p>
-    <p class="text-center">
-        @(Html.Kendo().RadioGroup()
-            .Name("radiogroup")
-            .LabelPosition(RadioGroupLabelPosition.After)
-            .Layout(RadioGroupLayout.Horizontal)
-            .Items(i =>
-            {
-                i.Add().Label("MP3").Value("bestaudio -x --audio-format mp3").Encoded(true);
-                i.Add().Label("AAC").Value("bestaudio -x --audio-format aac").Encoded(true); ;
-                i.Add().Label("Vorbis").Value("bestaudio -x --audio-format vorbis").Encoded(true); ;
-                i.Add().Label("M4A").Value("bestaudio -x --audio-format m4a").Encoded(true); ;
-                i.Add().Label("Opus").Value("bestaudio -x --audio-format opus").Encoded(true); ;
-                i.Add().Label("WAV").Value("bestaudio -x --audio-format wav").Encoded(true); ;
+	<h4 class="text-center">Move the slider to select START and END time</h4>
+	<p class="text-center">
+		@(Html.Kendo().RangeSlider()
+	.Name("rangeslider")
+	.Min(0)
+	.Max(Model.DurationInSeconds)
+	.SmallStep(0.1)
+	.LargeStep(10)
+	.Events(events => events
+	.Slide("rangeSliderSlide")
+	.Change("rangeSliderChange"))
+	.HtmlAttributes(new { @class = "humidity" }))
+	</p>
+	<p class="text-center">
+		@(Html.Kendo().RadioGroup()
+	.Name("radiogroup")
+	.LabelPosition(RadioGroupLabelPosition.After)
+	.Layout(RadioGroupLayout.Horizontal)
+	.Items(i =>
+	{
+	i.Add().Label("MP3").Value("bestaudio -x --audio-format mp3").Encoded(true);
+	@*i.Add().Label("AAC").Value("bestaudio -x --audio-format aac").Encoded(true); ;
+	i.Add().Label("Vorbis").Value("bestaudio -x --audio-format vorbis").Encoded(true); ;
+	i.Add().Label("M4A").Value("bestaudio -x --audio-format m4a").Encoded(true); ;
+	i.Add().Label("Opus").Value("bestaudio -x --audio-format opus").Encoded(true); ;
+	i.Add().Label("WAV").Value("bestaudio -x --audio-format wav").Encoded(true); ;*@
 
 
-                foreach (var info in Model.Infos)
-                {
-                    i.Add().Label(info.VideoResolutionP).Value(info.DownloadSwitchAudioAndVideo);
-                }
-            })
-            .Value("bestaudio -x --audio-format mp3")
-        )
-    </p>
+	foreach (var info in Model.Infos)
+	{
+	i.Add().Label(info.VideoResolutionP).Value(info.DownloadSwitchAudioAndVideo);
+	}
+	})
+	.Value("bestaudio -x --audio-format mp3")
+	)
+	</p>
 
-    <p class="text-center">
-        @(Html.Kendo().Button()
-        .Name("btnDownload")
-        .HtmlAttributes(new { @class = "k-primary" })
-         .Content(@<text>
-                    @(Html.Kendo().Loader()
-                           .Name("btnDownloadLoader")
-                           .Visible(false)
-                    )
-                    Get Download link
-        </text>)
-        .Events(ev => ev.Click("onBtnDownloadClick")))
-    </p>
+	<p class="text-center">
+		@(Html.Kendo().Button()
+	.Name("btnDownload")
+	.HtmlAttributes(new { @class = "k-primary" })
+	.Content(@<text>
+			@(Html.Kendo().Loader()
+		.Name("btnDownloadLoader")
+		.Visible(false)
+			)
+			Get Download link
+		</text>)
+	.Events(ev => ev.Click("onBtnDownloadClick")))
+	</p>
 
-    <div class="text-center" style="display:none" id="pGenerateLink">
-        @(Html.Kendo().Loader()
-            .Name("loader3")
-            .Type(LoaderType.InfiniteSpinner)
-            .Size(LoaderSize.Small)
-            .ThemeColor(LoaderThemeColor.Success)
-        )
-        Please wait while we generate download link ...
-        @(Html.Kendo().Loader()
-            .Name("loader4")
-            .Type(LoaderType.InfiniteSpinner)
-            .Size(LoaderSize.Small)
-            .ThemeColor(LoaderThemeColor.Success)
-        )
-    </div>
-    <div id="divDownloadLink">
-
-    </div>
+	<div class="text-center" style="display:none" id="pGenerateLink">
+		@(Html.Kendo().Loader()
+	.Name("loader3")
+	.Type(LoaderType.InfiniteSpinner)
+	.Size(LoaderSize.Small)
+	.ThemeColor(LoaderThemeColor.Success)
+	)
+		Please wait while we generate download link ...
+		@(Html.Kendo().Loader()
+	.Name("loader4")
+	.Type(LoaderType.InfiniteSpinner)
+	.Size(LoaderSize.Small)
+	.ThemeColor(LoaderThemeColor.Success)
+	)
+	</div>
+	<div id="divDownloadLink">
+	</div>
 }
+
+
+<div class="text-info text-center bg-light">
+	<h3>Please, if you like our service then do SHARE US</h3>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="text-center">
+				<!-- Go to www.addthis.com/dashboard to customize your tools -->
+				<div class="addthis_inline_share_toolbox"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-6043f6619df39ba3"></script>

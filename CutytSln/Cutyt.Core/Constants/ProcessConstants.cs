@@ -8,6 +8,6 @@ namespace Cutyt.Core.Constants
 {
     public static class ProcessConstants
     {
-        public static readonly int WaitForExitTotalMilliseconds = (int)TimeSpan.FromMinutes(10).TotalMilliseconds;
+        public static readonly int WaitForExitTotalMilliseconds = (int)TimeSpan.FromSeconds(20).TotalMilliseconds;
     }
 }

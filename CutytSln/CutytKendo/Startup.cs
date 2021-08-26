@@ -93,22 +93,22 @@ namespace CutytKendo
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/url-rewriting?view=aspnetcore-2.2
             var mn = Environment.MachineName;
-            if (!env.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase) || !mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase))
-            {
-                //Very problematic. !!!could lead to error: This site can't be reached
-                app.UseRewriter(new RewriteOptions()
-                //.AddRedirect("(.*)/$", "$1", (int)HttpStatusCode.MovedPermanently) // Strip trailing slash
-                //.AddRedirect("(.*[^/])$", "$1/", (int)HttpStatusCode.MovedPermanently) // Enforce trailing slash - Problems with static files - not found with ending slash
-                //.AddRedirect("^$", "/", (int)HttpStatusCode.MovedPermanently) // // Enforce trailing slash - Only for root domain
+            //if (!env.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase) || !mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    //Very problematic. !!!could lead to error: This site can't be reached
+            //    app.UseRewriter(new RewriteOptions()
+            //    //.AddRedirect("(.*)/$", "$1", (int)HttpStatusCode.MovedPermanently) // Strip trailing slash
+            //    //.AddRedirect("(.*[^/])$", "$1/", (int)HttpStatusCode.MovedPermanently) // Enforce trailing slash - Problems with static files - not found with ending slash
+            //    //.AddRedirect("^$", "/", (int)HttpStatusCode.MovedPermanently) // // Enforce trailing slash - Only for root domain
 
-                //.AddRedirect("https://cutyt.com", "https://www.cutyt.com/", (int)HttpStatusCode.MovedPermanently)
-                .AddRedirectToHttps((int)HttpStatusCode.MovedPermanently)
-                .AddRedirectToWww((int)HttpStatusCode.MovedPermanently) //Very problematic. !!!could lead to error: This site can't be reached
-                .Add(new RedirectLowerCaseRule())
-                .AddRedirect("https://www.cutyt.com", "https://www.cutyt.com/", (int)HttpStatusCode.MovedPermanently)
-                //.AddRedirect("https://www.cutyt.com/1", "https://www.cutyt.com/2", (int)HttpStatusCode.MovedPermanently)
-                );
-            }
+            //    //.AddRedirect("https://cutyt.com", "https://www.cutyt.com/", (int)HttpStatusCode.MovedPermanently)
+            //    .AddRedirectToHttps((int)HttpStatusCode.MovedPermanently)
+            //    .AddRedirectToWww((int)HttpStatusCode.MovedPermanently) //Very problematic. !!!could lead to error: This site can't be reached
+            //    .Add(new RedirectLowerCaseRule())
+            //    .AddRedirect("https://www.cutyt.com", "https://www.cutyt.com/", (int)HttpStatusCode.MovedPermanently)
+            //    //.AddRedirect("https://www.cutyt.com/1", "https://www.cutyt.com/2", (int)HttpStatusCode.MovedPermanently)
+            //    );
+            //}
 
             app.UseResponseCompression();
 

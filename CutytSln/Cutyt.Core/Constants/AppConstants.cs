@@ -11,15 +11,16 @@ namespace Cutyt.Core.Constants
     {
         public static string YtWorkingDir
         {
+            // TO DO. use Z:
             get
             {
                 if (Directory.Exists($"E:\\Files"))
                 {
-                    return "E:\\Files";
+                    return $"E:\\Files"; // Cloud - Azure Files
                 }
                 else
                 {
-                    return "C:\\Files";
+                    return $"C:\\Files"; // Cloud -  Azure Files
                 }
             }
         }

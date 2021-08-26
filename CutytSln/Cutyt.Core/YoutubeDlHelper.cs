@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static ProcessAsyncHelper;
 
 namespace Cutyt.Core
 {
@@ -41,8 +42,6 @@ namespace Cutyt.Core
                         File.Delete(fileToDelete.FullName);
                     }
                 }
-                    
-
 
             }
         }
@@ -57,34 +56,12 @@ namespace Cutyt.Core
             {
                 return fullFilePath;
             }
-
-
-            var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
-            var args = $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"{resultFileNameWithoutExtension}.%(ext)s\"";
-            Process p = new Process();
-            p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = args;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-
-            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
-
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.ErrorDialog = false;
-
-            p.Start();
-
-            string result = p.StandardOutput.ReadToEnd();
-            string error = p.StandardError.ReadToEnd();
-            
-            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
-
-            if (!string.IsNullOrEmpty(error))
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"Z:/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+                        
+            if (!string.IsNullOrEmpty(res.StandardError))
             {
-                telemetryClient.TrackException(new Exception(error));
+                telemetryClient.TrackException(new Exception(res.StandardError));
             }
-
 
             fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
@@ -102,31 +79,12 @@ namespace Cutyt.Core
                 return fullFilePath;
             }
 
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f bestaudio {v} --output \"Z:/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
-            var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
-            var args = $"-f bestaudio {v} --output \"{resultFileNameWithoutExtension}.%(ext)s\"";
-            Process p = new Process();
-            p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = args;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
 
-            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
-
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.ErrorDialog = false;
-
-            p.Start();
-
-            string result = p.StandardOutput.ReadToEnd();
-            string error = p.StandardError.ReadToEnd();
-            
-            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
-
-            if (!string.IsNullOrEmpty(error))
+            if (!string.IsNullOrEmpty(res.StandardError))
             {
-                telemetryClient.TrackException(new Exception(error));
+                telemetryClient.TrackException(new Exception(res.StandardError));
             }
 
             fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
@@ -146,30 +104,11 @@ namespace Cutyt.Core
             }
 
 
-            var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
-            var args = $"-f {code} {v} --output \"{resultFileNameWithoutExtension}.%(ext)s\"";
-            Process p = new Process();
-            p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = args;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f {code} {v} --output \"Z:/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
-            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
-
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.ErrorDialog = false;
-
-            p.Start();
-
-            string result = p.StandardOutput.ReadToEnd();
-            string error = p.StandardError.ReadToEnd();
-
-            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
-
-            if (!string.IsNullOrEmpty(error))
+            if (!string.IsNullOrEmpty(res.StandardError))
             {
-                telemetryClient.TrackException(new Exception(error));
+                telemetryClient.TrackException(new Exception(res.StandardError));
             }
             fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
@@ -196,32 +135,14 @@ namespace Cutyt.Core
 
             var videoPath = DownloadVideo(v, videoCode, telemetryClient);
 
-            var programFullPath = $@"{AppConstants.YtWorkingDir}\ffmpeg.exe";
-            var args = $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {resultFileNameWithoutExtension}.mp4 -y";
-            Process p = new Process();
-            p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = args;
-            //p.StartInfo.RedirectStandardOutput = true;
-            //p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\ffmpeg.exe",
+                $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.mp4 -y").Result;
 
-            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
-
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.ErrorDialog = false;
-
-            p.Start();
-            
-            // For some VERY STRANGE reason ffmpeg will block undefinetely on this line
-            //string result = p.StandardOutput.ReadToEnd();
-            //string error = p.StandardError.ReadToEnd();
-
-            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
-
-            //if (!string.IsNullOrEmpty(error))
-            //{
-            //    telemetryClient.TrackException(new Exception(error));
-            //}
+           
+            if (!string.IsNullOrEmpty(res.StandardError))
+            {
+                telemetryClient.TrackException(new Exception(res.StandardError));
+            }
 
             fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
@@ -253,34 +174,8 @@ namespace Cutyt.Core
             {
                 return outputFileFullPath;
             }
-            var programFullPath = $@"{AppConstants.YtWorkingDir}\ffmpeg.exe";
-            //var args = $"-ss 00:01:00 -i {inputFile} -to 00:00:02 -c copy {outputFile}";
-            var args = $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {outputFile} -y";
 
-            Process p = new Process();
-            p.StartInfo.FileName = programFullPath;
-            p.StartInfo.Arguments = args;
-            //p.StartInfo.RedirectStandardOutput = true;
-            //p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-
-            p.StartInfo.WorkingDirectory = $@"{AppConstants.YtWorkingDir}";
-
-            p.StartInfo.CreateNoWindow = true;
-            p.StartInfo.ErrorDialog = false;
-
-            p.Start();
-
-            // For some VERY STRANGE reason ffmpeg will block undefinetely on this line
-            //string result = p.StandardOutput.ReadToEnd();
-            //string error = p.StandardError.ReadToEnd();
-
-            p.WaitForExit(ProcessConstants.WaitForExitTotalMilliseconds);
-
-            //if (!string.IsNullOrEmpty(error))
-            //{
-            //    telemetryClient.TrackException(new Exception(error));
-            //}
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\ffmpeg.exe", $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {outputFile} -y").Result;
 
             outputFileFullPath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(outputFile));
 

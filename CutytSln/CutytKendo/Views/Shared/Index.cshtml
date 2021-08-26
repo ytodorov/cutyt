@@ -100,14 +100,14 @@
     </div>
 </div>
 
-<div class="row">
+@*<div class="row">
     <div class="col-md-12">
         <div class="text-center">
             <!-- Go to www.addthis.com/dashboard to customize your tools -->
             <div class="addthis_inline_share_toolbox"></div>
         </div>
     </div>
-</div>
+</div>*@
 <div class="row">
     <div class="col-md-12">
         <div class="text-center display-4">
@@ -249,10 +249,12 @@
             var base64 = window.btoa(url);
             var base64Escaped = base64.replaceAll("+", "_plus_").replaceAll("=", "_equal_");
             $.ajax({
-                url: '/Home/GetUrlDetails?url=' + base64Escaped,
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html'
+                url: '/home/geturldetails',
+                //contentType: 'application/html; charset=utf-8',
+                method: 'POST',
+                //dataType: 'html',
+                data: { url : url }
+                
             })
                 .success(function (result) {
                     $('#divUrlDetails').html(result);

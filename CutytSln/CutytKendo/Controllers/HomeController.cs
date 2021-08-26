@@ -1,9 +1,16 @@
 ﻿using Cutyt.Core;
 using Cutyt.Core.Classes;
+using Cutyt.Core.Rebus.Jobs;
+using Cutyt.Core.Rebus.Replies;
+using CutytKendoWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Rebus;
+using Rebus.Activation;
+using Rebus.Config;
+using Rebus.Routing.TypeBased;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +39,8 @@ namespace CutytKendo.Controllers
 
         HttpClient httpClient = null;
 
+        BuiltinHandlerActivator adapter = new BuiltinHandlerActivator();
+
         public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, IHostEnvironment hostEnvironment, IMemoryCache cache)
         {
             _logger = logger;
@@ -45,13 +54,19 @@ namespace CutytKendo.Controllers
             {
                 serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
                 cutYtBaseAddress = "https://www.cutyt.com/";
-
             }
 
             httpClient = httpClientFactory.CreateClient();
 
             // Very important to be big interval. Big files won't be downloaded else.
             httpClient.Timeout = TimeSpan.FromHours(2);
+
+            var rebusConfigure = Configure.With(adapter)
+               .Logging(l => l.ColoredConsole(minLevel: Rebus.Logging.LogLevel.Debug))
+               .Transport(t => t.UseAzureServiceBus("Endpoint=sb://testyo.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=wBrn2N6/rFWuv7UriFizagh0yWvyRI/cL5Q7HclN8PE=", "producer.input"))
+               .Routing(r => r.TypeBased().MapAssemblyOf<GetYoutubeDurationJob>("consumer.input"))
+               .Options(o => o.EnableSynchronousRequestReply())
+               .Start();
         }
 
         public IActionResult Index()
@@ -66,6 +81,16 @@ namespace CutytKendo.Controllers
             return View();
         }
 
+        [Route("/downloads")]
+        public async Task<IActionResult> Downloads()
+        
+        {
+            var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: TimeSpan.FromSeconds(5000));
+
+            return View(reply);
+        }
+
+        [Route("/contact")]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -73,13 +98,10 @@ namespace CutytKendo.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GetUrlDetails(string url)
+        public async Task<IActionResult> GetUrlDetails(PostDataViewModel postDataViewModel)
         {
-            
-            url = url.Replace("_plus_", "+").Replace("_equal_", "=").Trim();
-            byte[] raw = Convert.FromBase64String(url);
-            url = Encoding.UTF8.GetString(raw);
-            
+            string url = postDataViewModel.Url;
+
             // get the single url
             var splits = url.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
             if (splits.Count > 1)
@@ -113,12 +135,13 @@ namespace CutytKendo.Controllers
 
             fullUrl = $"https://www.youtube.com/watch?v={v}";
 
-            List<YouTubeInfoViewModel> infos = await httpClient.GetFromJsonAsync<List<YouTubeInfoViewModel>>($"{serverAddressOfServices}home/getyoutubeinfo?url={fullUrl}");
-            string duration = await httpClient.GetFromJsonAsync<string>($"{serverAddressOfServices}home/GetYoutubeDuration?url={fullUrl}");
+            var reply = adapter.Bus.SendRequest<YoutubeDurationReply>(new GetYoutubeDurationJob() { Url = fullUrl }, timeout: TimeSpan.FromSeconds(5000));
+            var reply2 = adapter.Bus.SendRequest<YoutubeInfosReply>(new GetYoutubeInfosJob() { Url = fullUrl }, timeout: TimeSpan.FromSeconds(5000));
 
+            Task.WaitAll(reply, reply2);
 
-            var durationInSeconds = YoutubeDlHelper.GetTotalSecondsFromString(duration);
-
+            var durationInSeconds = YoutubeDlHelper.GetTotalSecondsFromString(reply.Result.Duration);
+            var infos = reply2.Result.Infos;
 
             foreach (var info in infos)
             {
@@ -143,14 +166,10 @@ namespace CutytKendo.Controllers
                 Infos = infos
             };
 
-
-
-
-
             return PartialView(allVM);
         }
 
-        public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, string start, string end, bool? shouldTrim)
+        public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, double start, double end, bool? shouldTrim)
         {
             //selectedOption = selectedOption?.Replace(" ", "+");
             ytUrl = Helpers.GetFullUrlFromYouTube(ytUrl, httpClientFactory.CreateClient());
@@ -170,7 +189,6 @@ namespace CutytKendo.Controllers
             string url = string.Empty;
             if (v != "-1")
             {
-
                 url = $"https://www.youtube.com/watch?v={v}";
             }
             if (vimeoId != "-1" && vimeoId != null)
@@ -187,18 +205,19 @@ namespace CutytKendo.Controllers
             {
                 outputFileName = $"{v}{selectedOption.Split(" ").Last()}";
             }
-
-            var encodedUrl = $"{serverAddressOfServices}home/exec?args=-f {HttpUtility.UrlEncode(selectedOption)}" +
-                $" --no-part \"{url}\" --output \"{outputFileName}.%(ext)s\" -k -v&ytUrl={url}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}&shouldTrim={shouldTrim.GetValueOrDefault()}" +
-                $"&start={start}&end={end}";
-            var json = await httpClient.GetStringAsync(encodedUrl); // %2B = +
-
-            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions()
+                        
+            var linkviewModel = await adapter.Bus.SendRequest<YoutubeDownloadLinkReply>(new GetYoutubeDownloadLinkJob()
             {
-                PropertyNameCaseInsensitive = true
-            };
+                SelectedOption = selectedOption,
+                Url = url,
+                OutputFileName = outputFileName,
+                V = v,
+                ShouldTrim = shouldTrim.GetValueOrDefault(),
+                Start = start,
+                End = end,
 
-            LinkViewModel linkviewModel = JsonSerializer.Deserialize<LinkViewModel>(json, jsonSerializerOptions);
+            }
+            , timeout: TimeSpan.FromHours(1));
 
             return PartialView(linkviewModel);
         }
