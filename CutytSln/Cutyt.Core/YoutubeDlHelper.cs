@@ -31,7 +31,7 @@ namespace Cutyt.Core
 
                 var totalSizeInGigabytes = (double)totalSizeInBytes / 1024 / 1024 / 1024;
 
-                if (totalSizeInGigabytes > 300)
+                if (totalSizeInGigabytes > 80)
                 {
                     var filesToDelete = files.Skip(files.Count / 3 * 2).ToList();
 

@@ -87,7 +87,7 @@
 	}
 </script>
 
-@if (Model.Infos?.Count > 0)
+@if (Model.Formats?.Count > 0)
 {
 	<h4 class="text-center">Move the slider to select START and END time</h4>
 	<p class="text-center">
@@ -117,9 +117,9 @@
 	i.Add().Label("WAV").Value("bestaudio -x --audio-format wav").Encoded(true); ;*@
 
 
-	foreach (var info in Model.Infos)
+	foreach (var info in Model.Formats)
 	{
-	i.Add().Label(info.VideoResolutionP).Value(info.DownloadSwitchAudioAndVideo);
+	i.Add().Label(info.Format_Note).Value(info.DownloadSwitchAudioAndVideo);
 	}
 	})
 	.Value("bestaudio -x --audio-format mp3")
@@ -160,9 +160,7 @@
 }
 
 
-<div class="text-info text-center bg-light">
-	<h3>Please, if you like our service then do SHARE US</h3>
-
+<div class="text-info text-center">	
 	<div class="row">
 		<div class="col-md-12">
 			<div class="text-center">

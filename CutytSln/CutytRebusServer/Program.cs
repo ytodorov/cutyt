@@ -11,6 +11,7 @@ using Rebus.Logging;
 using System;
 using System.Diagnostics;
 using System.Security.Policy;
+using System.Text.Json;
 using System.Threading.Tasks;
 using static ProcessAsyncHelper;
 
@@ -32,6 +33,47 @@ namespace CutytRebusServer
 
             TelemetryClient telemetryClient = new TelemetryClient(new TelemetryConfiguration() { InstrumentationKey = "3b83045b-16b7-4d93-8cfc-7983fb8e5500" });
             using var adapter = new BuiltinHandlerActivator();
+
+            adapter.Handle<GetYouTubeUrlFullDescriptionJob>(async (bus, job) =>
+            {
+                var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "Meta");
+                if (!Directory.Exists(cachedFileDirectory))
+                {
+                    Directory.CreateDirectory(cachedFileDirectory);
+                }
+
+                var cachedFiles = Directory.GetFiles(cachedFileDirectory);
+                var cachedFile = cachedFiles.FirstOrDefault(f => f.EndsWith($"{job.Id}.json"));
+
+                var json = string.Empty;
+                if (!string.IsNullOrEmpty(cachedFile))
+                {
+                    json = File.ReadAllText(cachedFile);
+                }
+                else
+                {
+                    var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-j \"{job.Id}\"");
+
+                    json = res.StadardOutput;
+
+                    File.WriteAllText(Path.Combine(cachedFileDirectory, $"{job.Id}.json"), json);
+                }
+
+                var options = new JsonSerializerOptions
+                {
+                    AllowTrailingCommas = true,
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(json, options);
+
+                YouTubeUrlFullDescriptionReply youTubeUrlFullDescriptionReply = new YouTubeUrlFullDescriptionReply()
+                {
+                    YouTubeUrlFullDescription = youTubeUrlFullDescription
+                };
+
+                await bus.Reply(youTubeUrlFullDescriptionReply);
+            });
 
             adapter.Handle<GetDownloadedFilesJob>(async (bus, job) =>
             {
@@ -206,7 +248,7 @@ namespace CutytRebusServer
             .Logging(l => l.ColoredConsole(minLevel: LogLevel.Debug))
             
             .Transport(t => 
-            t.UseAzureServiceBus("Endpoint=sb://testyo.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=wBrn2N6/rFWuv7UriFizagh0yWvyRI/cL5Q7HclN8PE=", "consumer.input")
+            t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "consumer.input")
             .SetMessagePeekLockDuration(TimeSpan.FromMinutes(5)).AutomaticallyRenewPeekLock())
             .Start();
 

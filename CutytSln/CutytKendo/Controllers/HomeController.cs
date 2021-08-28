@@ -1,5 +1,6 @@
 ﻿using Cutyt.Core;
 using Cutyt.Core.Classes;
+using Cutyt.Core.Constants;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
 using CutytKendoWeb.Models;
@@ -63,7 +64,7 @@ namespace CutytKendo.Controllers
 
             var rebusConfigure = Configure.With(adapter)
                .Logging(l => l.ColoredConsole(minLevel: Rebus.Logging.LogLevel.Debug))
-               .Transport(t => t.UseAzureServiceBus("Endpoint=sb://testyo.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=wBrn2N6/rFWuv7UriFizagh0yWvyRI/cL5Q7HclN8PE=", "producer.input"))
+               .Transport(t => t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "producer.input"))
                .Routing(r => r.TypeBased().MapAssemblyOf<GetYoutubeDurationJob>("consumer.input"))
                .Options(o => o.EnableSynchronousRequestReply())
                .Start();
@@ -83,7 +84,7 @@ namespace CutytKendo.Controllers
 
         [Route("/downloads")]
         public async Task<IActionResult> Downloads()
-        
+
         {
             var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: TimeSpan.FromSeconds(5000));
 
@@ -135,35 +136,34 @@ namespace CutytKendo.Controllers
 
             fullUrl = $"https://www.youtube.com/watch?v={v}";
 
-            var reply = adapter.Bus.SendRequest<YoutubeDurationReply>(new GetYoutubeDurationJob() { Url = fullUrl }, timeout: TimeSpan.FromSeconds(5000));
-            var reply2 = adapter.Bus.SendRequest<YoutubeInfosReply>(new GetYoutubeInfosJob() { Url = fullUrl }, timeout: TimeSpan.FromSeconds(5000));
+            var youTubeUrlFullDescriptionReply = await adapter.Bus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: TimeSpan.FromHours(1));
 
-            Task.WaitAll(reply, reply2);
-
-            var durationInSeconds = YoutubeDlHelper.GetTotalSecondsFromString(reply.Result.Duration);
-            var infos = reply2.Result.Infos;
+            var durationInSeconds = youTubeUrlFullDescriptionReply.YouTubeUrlFullDescription.Duration;
+            var infos = youTubeUrlFullDescriptionReply.YouTubeUrlFullDescription.Formats;
 
             foreach (var info in infos)
             {
-                info.TextWithoutCode = info.TextWithoutCode.Replace(", video only", string.Empty);
+                if (info.Width != null)
+                {
+                    info.DownloadSwitchAudioAndVideo = $"{info.Format_Id}+bestaudio";
+                }
+                else
+                {
+                    info.DownloadSwitchAudioAndVideo = info.Format_Id;
+                }
             }
 
             // remove files bigger then 1GB
-            infos = infos.GroupBy(c => c.VideoResolutionP)
+            infos = infos.GroupBy(c => c.Format_Note)
                 .Select(s => s.LastOrDefault())
-                .Where(s => s.VideoResolutionP != null)
-                .Where(s => !s.Size.Contains("G", StringComparison.InvariantCultureIgnoreCase) &&
-                !string.IsNullOrWhiteSpace(s.Size) &&
-                !s.Size.Contains("best", StringComparison.InvariantCultureIgnoreCase) &&
-                !s.Size.Contains("video only", StringComparison.InvariantCultureIgnoreCase))
+                .Where(s => s.Width != null)
+                .Where(s => s.FileSize != null && s.FileSize < 1024 * 1024 * 1024) // 1 GB
                 .ToList();
-
-
 
             YouTubeAllInfoViewModel allVM = new YouTubeAllInfoViewModel()
             {
-                DurationInSeconds = durationInSeconds,
-                Infos = infos
+                DurationInSeconds = durationInSeconds.GetValueOrDefault(),
+                Formats = infos
             };
 
             return PartialView(allVM);
@@ -205,7 +205,7 @@ namespace CutytKendo.Controllers
             {
                 outputFileName = $"{v}{selectedOption.Split(" ").Last()}";
             }
-                        
+
             var linkviewModel = await adapter.Bus.SendRequest<YoutubeDownloadLinkReply>(new GetYoutubeDownloadLinkJob()
             {
                 SelectedOption = selectedOption,

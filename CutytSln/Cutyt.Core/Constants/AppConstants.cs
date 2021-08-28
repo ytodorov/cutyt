@@ -24,5 +24,21 @@ namespace Cutyt.Core.Constants
                 }
             }
         }
+
+        public static string ServiceBusConnectionString
+        {
+            // TO DO. use Z:
+            get
+            {
+                if (Environment.MachineName.Equals("YTODOROV-NB", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return $"Endpoint=sb://cutytdev.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=Ful/1J95IApsHZk5v20D05fudoJay8XBOZb5P4FDaPw="; // Cloud - Azure Files
+                }
+                else
+                {
+                    return $"Endpoint=sb://cutytprod.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=KbksWoFC5fMnLeuc6lB3BGRHLp6XipmCFwfa7ST8CDc="; // Cloud -  Azure Files
+                }
+            }
+        }
     }
 }
