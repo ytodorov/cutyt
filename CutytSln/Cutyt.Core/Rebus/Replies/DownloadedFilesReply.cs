@@ -9,6 +9,6 @@ namespace Cutyt.Core.Rebus.Replies
 {
     public class DownloadedFilesReply
     {
-        public List<DownloadFileViewModel> Files { get; set; } = new List<DownloadFileViewModel>();
+        public List<YoutubeDownloadLinkReply> Files { get; set; } = new List<YoutubeDownloadLinkReply>();
     }
 }

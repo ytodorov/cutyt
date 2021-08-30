@@ -4,6 +4,8 @@ using Cutyt.Core.Constants;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
 using CutytKendoWeb.Models;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
@@ -53,7 +55,7 @@ namespace CutytKendo.Controllers
             if (!mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase) &&
                 !mn.Equals("yTodorov-nb", StringComparison.InvariantCultureIgnoreCase))
             {
-                serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
+                serverAddressOfServices = "http://cut.westeurope.cloudapp.azure.com/";
                 cutYtBaseAddress = "https://www.cutyt.com/";
             }
 
@@ -65,8 +67,13 @@ namespace CutytKendo.Controllers
             var rebusConfigure = Configure.With(adapter)
                .Logging(l => l.ColoredConsole(minLevel: Rebus.Logging.LogLevel.Debug))
                .Transport(t => t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "producer.input"))
-               .Routing(r => r.TypeBased().MapAssemblyOf<GetYoutubeDurationJob>("consumer.input"))
-               .Options(o => o.EnableSynchronousRequestReply())
+               .Routing(r => r.TypeBased().MapAssemblyOf<GetYouTubeUrlFullDescriptionJob>("consumer.input"))
+               .Options(o =>
+               {
+                   o.EnableSynchronousRequestReply();
+                   o.SetNumberOfWorkers(15);
+                   o.SetMaxParallelism(15);
+               })
                .Start();
         }
 
@@ -86,7 +93,7 @@ namespace CutytKendo.Controllers
         public async Task<IActionResult> Downloads()
 
         {
-            var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: TimeSpan.FromSeconds(5000));
+            var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob());
 
             return View(reply);
         }
@@ -220,6 +227,14 @@ namespace CutytKendo.Controllers
             , timeout: TimeSpan.FromHours(1));
 
             return PartialView(linkviewModel);
+        }
+
+        public async Task<IActionResult> Orders_Read([DataSourceRequest] DataSourceRequest request)
+        {
+            var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob());
+
+            var dsResult = reply.Files.ToDataSourceResult(request);
+            return Json(dsResult);
         }
 
         [Route("/watch")]

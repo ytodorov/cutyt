@@ -4,6 +4,7 @@ using Cutyt.Core.Constants;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
 using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Rebus.Activation;
 using Rebus.Config;
@@ -28,7 +29,7 @@ namespace CutytRebusServer
 
             if (!Environment.MachineName.Equals("YTODOROV-NB", StringComparison.InvariantCultureIgnoreCase))
             {
-                serverAddressOfServices = "http://cutyt.westeurope.cloudapp.azure.com/";
+                serverAddressOfServices = "http://cut.westeurope.cloudapp.azure.com/";
             }
 
             TelemetryClient telemetryClient = new TelemetryClient(new TelemetryConfiguration() { InstrumentationKey = "3b83045b-16b7-4d93-8cfc-7983fb8e5500" });
@@ -36,144 +37,80 @@ namespace CutytRebusServer
 
             adapter.Handle<GetYouTubeUrlFullDescriptionJob>(async (bus, job) =>
             {
-                var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "Meta");
-                if (!Directory.Exists(cachedFileDirectory))
-                {
-                    Directory.CreateDirectory(cachedFileDirectory);
-                }
-
-                var cachedFiles = Directory.GetFiles(cachedFileDirectory);
-                var cachedFile = cachedFiles.FirstOrDefault(f => f.EndsWith($"{job.Id}.json"));
-
                 var json = string.Empty;
-                if (!string.IsNullOrEmpty(cachedFile))
+                try
                 {
-                    json = File.ReadAllText(cachedFile);
+                    var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "Meta");
+                    if (!Directory.Exists(cachedFileDirectory))
+                    {
+                        Directory.CreateDirectory(cachedFileDirectory);
+                    }
+
+                    var cachedFiles = Directory.GetFiles(cachedFileDirectory);
+                    var cachedFile = cachedFiles.FirstOrDefault(f => f.EndsWith($"{job.Id}.json"));
+
+                    if (!string.IsNullOrEmpty(cachedFile))
+                    {
+                        json = File.ReadAllText(cachedFile);
+                    }
+                    else
+                    {
+                        var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-j \"{job.Id}\"");
+
+                        json = res.StadardOutput;
+
+                        File.WriteAllText(Path.Combine(cachedFileDirectory, $"{job.Id}.json"), json);
+                    }
+
+                    var options = new JsonSerializerOptions
+                    {
+                        AllowTrailingCommas = true,
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                    var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(json, options);
+
+                    YouTubeUrlFullDescriptionReply youTubeUrlFullDescriptionReply = new YouTubeUrlFullDescriptionReply()
+                    {
+                        YouTubeUrlFullDescription = youTubeUrlFullDescription
+                    };
+
+                    await bus.Reply(youTubeUrlFullDescriptionReply);
                 }
-                else
+                catch (Exception ex)
                 {
-                    var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-j \"{job.Id}\"");
 
-                    json = res.StadardOutput;
+                    ExceptionTelemetry exceptionTelemetry = new ExceptionTelemetry(ex);
+                    exceptionTelemetry.Exception = ex;
+                    var jobAsJson = JsonSerializer.Serialize(job, new JsonSerializerOptions() { WriteIndented = true });
+                    exceptionTelemetry.Properties.Add("job", jobAsJson);
+                    exceptionTelemetry.Properties.Add("json", json);
 
-                    File.WriteAllText(Path.Combine(cachedFileDirectory, $"{job.Id}.json"), json);
+                    telemetryClient.TrackException(exceptionTelemetry);
                 }
-
-                var options = new JsonSerializerOptions
-                {
-                    AllowTrailingCommas = true,
-                    PropertyNameCaseInsensitive = true
-                };
-
-                var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(json, options);
-
-                YouTubeUrlFullDescriptionReply youTubeUrlFullDescriptionReply = new YouTubeUrlFullDescriptionReply()
-                {
-                    YouTubeUrlFullDescription = youTubeUrlFullDescription
-                };
-
-                await bus.Reply(youTubeUrlFullDescriptionReply);
             });
 
             adapter.Handle<GetDownloadedFilesJob>(async (bus, job) =>
             {
-                DownloadedFilesReply downloadedFilesReply = new DownloadedFilesReply();
-
-                var filesOnAzureShare = Directory.GetFiles("Z:");
-
-                foreach (var fullPhysicalFileName in filesOnAzureShare)
+                try
                 {
-                    var displayName = Path.GetFileName(fullPhysicalFileName);
-                    downloadedFilesReply.Files.Add(new DownloadFileViewModel()
-                    {
-                        DisplayName = displayName,
-                        Url = $"https://stcutyt.file.core.windows.net/cutyt/{displayName}?sv=2018-03-28&si=cutyt-ReadList&sr=s&sig=NRNKCky0S%2Bg4zi%2B6708kg2XN9U4JzqnvEL3w7znaDc4%3D",
-                    });
+                    DownloadedFilesReply downloadedFilesReply = new DownloadedFilesReply();
 
+                    var filesMetaInfos = YoutubeDlHelper.GetDownloadedFilesMetaInfo();
+
+                    downloadedFilesReply.Files.AddRange(filesMetaInfos);
+
+                    await bus.Reply(downloadedFilesReply);
                 }
-
-                await bus.Reply(downloadedFilesReply);
-            });
-
-            adapter.Handle<GetYoutubeDurationJob>(async (bus, job) =>
-            {
-                var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-v -e \"{job.Url}\" --get-duration");
-
-                var rows = res.StadardOutput.Split('\r');
-                YoutubeDurationReply reply = new YoutubeDurationReply()
+                catch (Exception ex)
                 {
-                    Title = rows[0],
-                    Duration = rows[1]
-                };
+                    ExceptionTelemetry exceptionTelemetry = new ExceptionTelemetry(ex);
+                    exceptionTelemetry.Exception = ex;
+                    var jobAsJson = JsonSerializer.Serialize(job, new JsonSerializerOptions() { WriteIndented = true });
+                    exceptionTelemetry.Properties.Add("job", jobAsJson);
 
-                await bus.Reply(reply);
-            });
-
-            adapter.Handle<GetYoutubeInfosJob>(async (bus, job) =>
-            {
-                ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-F \"{job.Url}\"");
-
-                var rows = res.StadardOutput.Split($"\n");
-
-                List<YouTubeInfoViewModel> infos = new List<YouTubeInfoViewModel>();
-
-                var startIndex = rows.ToList().IndexOf(rows.FirstOrDefault(f => f.StartsWith("format")));
-                for (int i = startIndex + 1; i < rows.Length - 1; i++)
-                {
-                    YouTubeInfoViewModel info = new YouTubeInfoViewModel();
-
-                    var currentRow = rows[i];
-
-                    var rowparts = currentRow.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                    info.FormatCode = rowparts[0];
-                    info.Extension = rowparts[1];
-
-                    info.TextWithoutCode = currentRow.Replace(rowparts[0], string.Empty).Trim();
-
-                    int infoLength = currentRow.LastIndexOf(",") - currentRow.IndexOf(",");
-
-                    if (currentRow.Contains("audio only", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        info.Resolution = $"{rowparts[2]} {rowparts[3]}";
-                    }
-                    else
-                    {
-                        info.Resolution = rowparts[2];
-                    }
-                    int resolutionLength = currentRow.IndexOf(",") - 24;
-
-                    var resolutionParts = info.Resolution?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-
-                    if (!resolutionParts[0].Contains("audio", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        info.ResolutionWidthByHeight = resolutionParts[0];
-                    }
-
-                    info.Note = currentRow.Substring(currentRow.IndexOf(",") + 1, infoLength).Trim(',').Trim();
-
-                    info.Size = currentRow.Substring(currentRow.LastIndexOf(",") + 1).Trim();
-
-                    infos.Add(info);
+                    telemetryClient.TrackException(exceptionTelemetry);
                 }
-
-                foreach (var info in infos)
-                {
-                    if (info.TextWithoutCode.Contains("video only"))
-                    {
-                        info.DownloadSwitchAudioAndVideo = $"{info.FormatCode}+bestaudio";
-                    }
-                    else
-                    {
-                        info.DownloadSwitchAudioAndVideo = info.FormatCode;
-                    }
-                }
-
-                YoutubeInfosReply reply = new YoutubeInfosReply()
-                {
-                    Infos = infos
-                };
-
-                await bus.Reply(reply);
             });
 
             adapter.Handle<GetYoutubeDownloadLinkJob>(async (bus, job) =>
@@ -222,10 +159,11 @@ namespace CutytRebusServer
                     var fileNameFromArgs = res.StadardOutput;
 
                     var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
-                    var fileNameWithoutDashV = fileNameWithoutExtensions.Replace($"-{job.V}", string.Empty);
+                    var fileNameWithoutDashV = fileNameWithoutExtensions.Replace($" [{job.V}]", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 
                     reply = new YoutubeDownloadLinkReply()
                     {
+                        Id = job.V,
                         Name = fileNameFromArgs,
                         Url = $"{serverAddressOfServices}{physicalFileName}",
                         FileName = fileNameFromArgs,
@@ -233,23 +171,39 @@ namespace CutytRebusServer
                         V = job.V,
                         Start = job.Start.ToString(),
                         End = job.End.ToString(),
+                        FileOnDiskNameWithoutExtension = Path.GetFileNameWithoutExtension(physicalFileName),
+                        FileOnDiskExtension = Path.GetExtension(physicalFileName),
+                        FileOnDiskNameWithExtension = Path.GetFileName(physicalFileName),   
+
                     };
 
+                    YoutubeDlHelper.SaveDownloadedFilesMetaInfo(reply);
+
+                    await bus.Reply(reply);
                 }
                 catch (Exception ex)
                 {
-                    telemetryClient.TrackException(ex);
-                }
+                    ExceptionTelemetry exceptionTelemetry = new ExceptionTelemetry(ex);
+                    exceptionTelemetry.Exception = ex;
+                    var jobAsJson = JsonSerializer.Serialize(job, new JsonSerializerOptions() { WriteIndented = true });
+                    exceptionTelemetry.Properties.Add("job", jobAsJson);
 
-                await bus.Reply(reply);
+                    telemetryClient.TrackException(exceptionTelemetry);
+                }
             });
 
             Configure.With(adapter)
             .Logging(l => l.ColoredConsole(minLevel: LogLevel.Debug))
-            
-            .Transport(t => 
+
+            .Transport(t =>
             t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "consumer.input")
             .SetMessagePeekLockDuration(TimeSpan.FromMinutes(5)).AutomaticallyRenewPeekLock())
+            //https://github.com/rebus-org/Rebus/wiki/Workers-and-parallelism#defaults
+             .Options(o =>
+             {
+                 o.SetNumberOfWorkers(15);
+                 o.SetMaxParallelism(15);
+             })
             .Start();
 
             Console.WriteLine("Press X button to quit");

@@ -1,4 +1,5 @@
 ﻿using Cutyt.Core.Constants;
+using Cutyt.Core.Rebus.Replies;
 using Microsoft.ApplicationInsights;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using static ProcessAsyncHelper;
 
@@ -59,7 +61,7 @@ namespace Cutyt.Core
 
             var dir = AppConstants.YtWorkingDir.Replace("\\", "/");
             ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
-                        
+
             if (!string.IsNullOrEmpty(res.StandardError))
             {
                 telemetryClient.TrackException(new Exception(res.StandardError));
@@ -140,7 +142,7 @@ namespace Cutyt.Core
             ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\ffmpeg.exe",
                 $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.mp4 -y").Result;
 
-           
+
             if (!string.IsNullOrEmpty(res.StandardError))
             {
                 telemetryClient.TrackException(new Exception(res.StandardError));
@@ -165,7 +167,7 @@ namespace Cutyt.Core
             var startParam = $"{startTimeSpan.Hours.ToString("00")}:{startTimeSpan.Minutes.ToString("00")}:{startTimeSpan.Seconds.ToString("00")}.{startTimeSpan.Milliseconds.ToString("0")}";
             var durationParam = $"{durationTimeSpan.Hours.ToString("00")}:{durationTimeSpan.Minutes.ToString("00")}:{durationTimeSpan.Seconds.ToString("00")}.{durationTimeSpan.Milliseconds.ToString("0")}";
 
-            var inputFile =  Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(fileName));
+            var inputFile = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(fileName));
             var inputFileWithoutExtension = Path.GetFileNameWithoutExtension(inputFile);
             var ext = Path.GetExtension(inputFile);
             string outputFile = $"{inputFileWithoutExtension}_{start}_{end}{ext}";
@@ -204,5 +206,52 @@ namespace Cutyt.Core
             }
             return result;
         }
+
+        public static void SaveDownloadedFilesMetaInfo(YoutubeDownloadLinkReply reply)
+        {
+            var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "DownloadedFilesInfo");
+            if (!Directory.Exists(cachedFileDirectory))
+            {
+                Directory.CreateDirectory(cachedFileDirectory);
+            }
+
+            string filePath = Path.Combine(cachedFileDirectory, "downloadedFiles.json");
+
+            if (!File.Exists(filePath))
+            {
+                File.WriteAllText(filePath, "[]");
+            }
+
+            var json = File.ReadAllText(filePath);
+            var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
+
+            existingReplies.Add(reply);
+
+            var newJson = JsonSerializer.Serialize(existingReplies, new JsonSerializerOptions() { WriteIndented = true });
+
+            File.WriteAllText(filePath, newJson);
+        }
+
+        public static List<YoutubeDownloadLinkReply> GetDownloadedFilesMetaInfo()
+        {
+            var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "DownloadedFilesInfo");
+            if (!Directory.Exists(cachedFileDirectory))
+            {
+                Directory.CreateDirectory(cachedFileDirectory);
+            }
+
+            string filePath = Path.Combine(cachedFileDirectory, "downloadedFiles.json");
+
+            if (!File.Exists(filePath))
+            {
+                File.WriteAllText(filePath, "{}");
+            }
+
+            var json = File.ReadAllText(filePath);
+            var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
+
+            return existingReplies;
+        }
+
     }
 }

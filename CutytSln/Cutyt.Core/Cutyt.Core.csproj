@@ -6,6 +6,10 @@
 
   <ItemGroup>
     <Compile Remove="Classes\LinkViewModel.cs" />
+    <Compile Remove="Rebus\Jobs\GetYoutubeDurationJob.cs" />
+    <Compile Remove="Rebus\Jobs\GetYoutubeInfosJob.cs" />
+    <Compile Remove="Rebus\Replies\YoutubeDurationReply.cs" />
+    <Compile Remove="Rebus\Replies\YoutubeInfosReply.cs" />
   </ItemGroup>
 
   <ItemGroup>

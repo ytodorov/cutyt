@@ -11,5 +11,7 @@ namespace Cutyt.Core.Classes
         public string Url { get; set; }
 
         public string DisplayName { get; set; }
+
+        public int MyProperty { get; set; }
     }
 }

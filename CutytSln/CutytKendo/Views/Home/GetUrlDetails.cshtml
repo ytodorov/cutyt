@@ -44,7 +44,9 @@
 		var value = slider.value();
 		var split = value.toString().split(",")
 		var start = parseFloat(split[0]);
+		start = Math.round((start + Number.EPSILON) * 100) / 100
 		var end = parseFloat(split[1]);
+		end = Math.round((end + Number.EPSILON) * 100) / 100
 
 		var shouldTrim = start != 0 && end != slider.options.max;
 
@@ -147,7 +149,7 @@
 	.Size(LoaderSize.Small)
 	.ThemeColor(LoaderThemeColor.Success)
 	)
-		Please wait while we generate download link ...
+		You can wait while we generate download link OR you can visit our <a href="/downloads" target="_blank">Download page</a> later to save your file
 		@(Html.Kendo().Loader()
 	.Name("loader4")
 	.Type(LoaderType.InfiniteSpinner)
