@@ -227,6 +227,19 @@ namespace Cutyt.Core
 
             existingReplies.Add(reply);
 
+            var existingFiles = Directory.GetFiles(AppConstants.YtWorkingDir);
+
+            var copyOfExistingReplies = new List<YoutubeDownloadLinkReply>();
+            copyOfExistingReplies.AddRange(existingReplies);
+
+            foreach (var rep in copyOfExistingReplies)
+            {
+                if (!existingFiles.Any(f => f.Contains(rep.V, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    existingReplies.Remove(rep);
+                }
+            }
+
             var newJson = JsonSerializer.Serialize(existingReplies, new JsonSerializerOptions() { WriteIndented = true });
 
             File.WriteAllText(filePath, newJson);

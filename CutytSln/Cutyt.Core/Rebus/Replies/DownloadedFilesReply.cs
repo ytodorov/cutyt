@@ -9,6 +9,7 @@ namespace Cutyt.Core.Rebus.Replies
 {
     public class DownloadedFilesReply
     {
-        public List<YoutubeDownloadLinkReply> Files { get; set; } = new List<YoutubeDownloadLinkReply>();
+        //public List<YoutubeDownloadLinkReply> Files { get; set; } = new List<YoutubeDownloadLinkReply>();
+        public string UrlToDownloadJsonMetaInfo { get; set; }
     }
 }

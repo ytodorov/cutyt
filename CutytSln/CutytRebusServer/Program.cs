@@ -96,9 +96,10 @@ namespace CutytRebusServer
                 {
                     DownloadedFilesReply downloadedFilesReply = new DownloadedFilesReply();
 
-                    var filesMetaInfos = YoutubeDlHelper.GetDownloadedFilesMetaInfo();
+                    downloadedFilesReply.UrlToDownloadJsonMetaInfo = $"{serverAddressOfServices}/DownloadedFilesInfo/downloadedFiles.json";
+                    //var filesMetaInfos = YoutubeDlHelper.GetDownloadedFilesMetaInfo();
 
-                    downloadedFilesReply.Files.AddRange(filesMetaInfos);
+                    //downloadedFilesReply.Files.AddRange(filesMetaInfos);
 
                     await bus.Reply(downloadedFilesReply);
                 }
@@ -174,6 +175,7 @@ namespace CutytRebusServer
                         FileOnDiskNameWithoutExtension = Path.GetFileNameWithoutExtension(physicalFileName),
                         FileOnDiskExtension = Path.GetExtension(physicalFileName),
                         FileOnDiskNameWithExtension = Path.GetFileName(physicalFileName),   
+                        DownloadedOn = DateTime.UtcNow,
 
                     };
 
@@ -196,7 +198,7 @@ namespace CutytRebusServer
             .Logging(l => l.ColoredConsole(minLevel: LogLevel.Debug))
 
             .Transport(t =>
-            t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "consumer.input")
+            t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "consumer.input").SetMessagePayloadSizeLimit(25600000)
             .SetMessagePeekLockDuration(TimeSpan.FromMinutes(5)).AutomaticallyRenewPeekLock())
             //https://github.com/rebus-org/Rebus/wiki/Workers-and-parallelism#defaults
              .Options(o =>

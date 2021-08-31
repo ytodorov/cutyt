@@ -34,5 +34,7 @@ namespace Cutyt.Core.Rebus.Replies
         public string FileOnDiskExtension { get; set; }
 
         public string FileOnDiskNameWithoutExtension { get; set; }
+
+        public DateTime DownloadedOn { get; set; }
     }
 }

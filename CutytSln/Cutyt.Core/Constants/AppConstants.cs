@@ -40,5 +40,7 @@ namespace Cutyt.Core.Constants
                 }
             }
         }
+
+        public static TimeSpan RebusTimeout { get; } = TimeSpan.FromHours(10);
     }
 }

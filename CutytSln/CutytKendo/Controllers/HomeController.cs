@@ -93,9 +93,11 @@ namespace CutytKendo.Controllers
         public async Task<IActionResult> Downloads()
 
         {
-            var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob());
+            //var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: AppConstants.RebusTimeout);
 
-            return View(reply);
+            //return View(reply);
+
+            return View();
         }
 
         [Route("/contact")]
@@ -143,7 +145,7 @@ namespace CutytKendo.Controllers
 
             fullUrl = $"https://www.youtube.com/watch?v={v}";
 
-            var youTubeUrlFullDescriptionReply = await adapter.Bus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: TimeSpan.FromHours(1));
+            var youTubeUrlFullDescriptionReply = await adapter.Bus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: AppConstants.RebusTimeout);
 
             var durationInSeconds = youTubeUrlFullDescriptionReply.YouTubeUrlFullDescription.Duration;
             var infos = youTubeUrlFullDescriptionReply.YouTubeUrlFullDescription.Formats;
@@ -224,16 +226,19 @@ namespace CutytKendo.Controllers
                 End = end,
 
             }
-            , timeout: TimeSpan.FromHours(1));
+            , timeout: AppConstants.RebusTimeout);
 
             return PartialView(linkviewModel);
         }
 
         public async Task<IActionResult> Orders_Read([DataSourceRequest] DataSourceRequest request)
         {
-            var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob());
+            var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: AppConstants.RebusTimeout);
 
-            var dsResult = reply.Files.ToDataSourceResult(request);
+            var json = await httpClient.GetStringAsync(reply.UrlToDownloadJsonMetaInfo);
+            var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
+            existingReplies = existingReplies.OrderByDescending(s => s.DownloadedOn).ToList();
+            var dsResult = existingReplies.ToDataSourceResult(request);
             return Json(dsResult);
         }
 

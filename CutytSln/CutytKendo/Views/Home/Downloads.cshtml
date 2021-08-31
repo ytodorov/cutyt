@@ -5,10 +5,11 @@
                                 columns.Bound(p => p.DisplayName).Title("Name");
                                 columns.Bound(p => p.FileOnDiskExtension).Title("Type");
                                 columns.Template("<a target='_blank' href=' #= Url #'>Download</a>").Title("Download");
+                                columns.Template(template: "#= kendo.toString(kendo.parseDate(DownloadedOn), 'yyyy/MM/dd hh:mm') #").Title("Downloaded on");
                                 
                             })
                             .Pageable()
-                            .Sortable()
+                            //.Sortable()
                             //.Scrollable()
                             //.HtmlAttributes(new { style = "height:550px;" })
                             
