@@ -19,11 +19,13 @@ using static ProcessAsyncHelper;
 namespace CutytRebusServer
 {
     class Program
-    {
+    {        
         const string ConnectionString = "server=.\\SQLDEVELOPER2019; database=rebussamples; trusted_connection=true";
 
         static void Main()
         {
+            var currentProcess = Process.GetCurrentProcess();
+            currentProcess.PriorityClass = ProcessPriorityClass.AboveNormal;
             string serverAddressOfServices = "http://localhost:14954/";
             //var computerNameDanchoHome = "YTODOROV-NB";
 

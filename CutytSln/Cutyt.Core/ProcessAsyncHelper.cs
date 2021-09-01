@@ -33,6 +33,7 @@ public static class ProcessAsyncHelper
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
             
+            
             var outputBuilder = new StringBuilder();
             var outputCloseEvent = new TaskCompletionSource<bool>();
 
@@ -70,6 +71,8 @@ public static class ProcessAsyncHelper
             try
             {
                 isStarted = process.Start();
+                process.PriorityClass = ProcessPriorityClass.BelowNormal;
+
             }
             catch (Exception error)
             {
