@@ -233,9 +233,10 @@ namespace CutytKendo.Controllers
 
         public async Task<IActionResult> Orders_Read([DataSourceRequest] DataSourceRequest request)
         {
-            var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: AppConstants.RebusTimeout);
+            //var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: AppConstants.RebusTimeout);
 
-            var json = await httpClient.GetStringAsync(reply.UrlToDownloadJsonMetaInfo);
+            var url = $"{serverAddressOfServices}/DownloadedFilesInfo/downloadedFiles.json";
+            var json = await httpClient.GetStringAsync(url);
             var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
             existingReplies = existingReplies.OrderByDescending(s => s.DownloadedOn).ToList();
             var dsResult = existingReplies.ToDataSourceResult(request);
