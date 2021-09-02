@@ -164,6 +164,7 @@ namespace CutytRebusServer
                     var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
                     var fileNameWithoutDashV = fileNameWithoutExtensions.Replace($" [{job.V}]", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 
+                    var size = new FileInfo(filePathResult).Length;
                     reply = new YoutubeDownloadLinkReply()
                     {
                         Id = job.V,
@@ -178,6 +179,7 @@ namespace CutytRebusServer
                         FileOnDiskExtension = Path.GetExtension(physicalFileName),
                         FileOnDiskNameWithExtension = Path.GetFileName(physicalFileName),   
                         DownloadedOn = DateTime.UtcNow,
+                        FileOnDiskSize = size,
 
                     };
 

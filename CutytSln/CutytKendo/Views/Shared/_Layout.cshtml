@@ -134,9 +134,19 @@
             </kendo-responsivepanel>
         </div>*@
         <nav>
+            @(Html.Kendo().Menu()
+      .Name("Menu")
+      .Items(items =>
+      {
+          items.Add().Text("Home").Url("/");
+
+          items.Add().Text("Downloads").Url("/downloads").Selected(this.Context.Request.Path.Value.Contains("Downloads", StringComparison.InvariantCultureIgnoreCase));
+      })
+        )
+		</nav>
+        @*<nav>
                 @(Html.Kendo().Breadcrumb()
             .Name("breadcrumb")
-             @*.BindToLocation(true)*@
                 .Navigational(true)
             .Items(items =>
             {
@@ -158,18 +168,9 @@
                         .Icon("download")
                         .ShowIcon(true);
                         }
-               @* items.Add()
-                        .Type(BreadcrumbItemType.Item)
-                        .Href("/breadcrumb")
-                        .Text("Breadcrumb")
-                        .ShowText(true);
-                    items.Add()
-                        .Type(BreadcrumbItemType.Item)
-                        .Href("/index")
-                        .Text("Basic Usage")
-                        .ShowText(true);*@
+              
             })
-    )
+    )*@
         </nav>
         
     <header>

@@ -231,7 +231,8 @@ namespace CutytKendo.Controllers
             return PartialView(linkviewModel);
         }
 
-        public async Task<IActionResult> Orders_Read([DataSourceRequest] DataSourceRequest request)
+        [Route("/getfiles")]
+        public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
             //var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: AppConstants.RebusTimeout);
 

@@ -36,5 +36,16 @@ namespace Cutyt.Core.Rebus.Replies
         public string FileOnDiskNameWithoutExtension { get; set; }
 
         public DateTime DownloadedOn { get; set; }
+
+        public long FileOnDiskSize { get; set; }
+
+        public double FileOnDiskSizeInMegabytes
+        {
+            get
+            {
+                var size = Math.Round((double)FileOnDiskSize / 1014 / 1024, 2);
+                return size;
+            }
+        }
     }
 }
