@@ -251,6 +251,12 @@ namespace CutytKendo.Controllers
             return view;
         }
 
+        [Route("/privacy")]
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
         public IActionResult Error()
         {
             return View();

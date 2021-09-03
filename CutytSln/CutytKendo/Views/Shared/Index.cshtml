@@ -201,6 +201,12 @@
             }
 
             $("body").show();
+
+            $('#textboxUrl').keypress(function (e) {
+              if (e.which == 13) {
+                $('#btnStart').click();
+              }
+            });
         });
 
         $(window).resize(function () {
@@ -208,10 +214,12 @@
             if (slider) {
                 slider.resize();
             }
+
+
         });
 
         function onClick(e) {
-
+                        
             var loader = $("#btnStartLoader").data("kendoLoader");
             loader.show();
 

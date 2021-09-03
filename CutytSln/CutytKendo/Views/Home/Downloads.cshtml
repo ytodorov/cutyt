@@ -10,17 +10,21 @@
                                 columns.Bound(p => p.End).Title("End");
                                 columns.Bound(p => p.FileOnDiskSizeInMegabytes).Title("Size in MBs");
 
-                                
+
                             })
+                             .ToolBar(t => t.Search())
                             .Pageable()
                             //.Sortable()
                             //.Scrollable()
                             //.HtmlAttributes(new { style = "height:550px;" })
-                            
+
                             .DataSource(dataSource => dataSource
                                 .Ajax()
-                                //.PageSize(20)
+                                .PageSize(20)
                                 .ServerOperation(false)
                                 .Read(read => read.Url("/getfiles"))
                              )
         )
+
+
+

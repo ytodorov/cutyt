@@ -180,7 +180,6 @@ namespace CutytRebusServer
                         FileOnDiskNameWithExtension = Path.GetFileName(physicalFileName),   
                         DownloadedOn = DateTime.UtcNow,
                         FileOnDiskSize = size,
-
                     };
 
                     YoutubeDlHelper.SaveDownloadedFilesMetaInfo(reply);

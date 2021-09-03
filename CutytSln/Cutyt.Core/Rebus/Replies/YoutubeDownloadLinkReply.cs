@@ -29,6 +29,8 @@ namespace Cutyt.Core.Rebus.Replies
 
         public string End { get; set; }
 
+        public string Ip { get; set; }
+
         public string FileOnDiskNameWithExtension { get; set; }
 
         public string FileOnDiskExtension { get; set; }

@@ -141,6 +141,8 @@
           items.Add().Text("Home").Url("/");
 
           items.Add().Text("Downloads").Url("/downloads").Selected(this.Context.Request.Path.Value.Contains("Downloads", StringComparison.InvariantCultureIgnoreCase));
+
+          items.Add().Text("Privacy").Url("/privacy");
       })
         )
 		</nav>
