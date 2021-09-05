@@ -8,7 +8,10 @@ namespace Cutyt.Core.Classes
 {
     public class YouTubeFormat
     {
-        public long? Fps { get; set; }
+        /// <summary>
+        /// 30.0
+        /// </summary>
+        public double? Fps { get; set; }
 
         public string Container { get; set; }
 

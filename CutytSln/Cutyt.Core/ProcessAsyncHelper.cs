@@ -71,7 +71,10 @@ public static class ProcessAsyncHelper
             try
             {
                 isStarted = process.Start();
-                process.PriorityClass = ProcessPriorityClass.BelowNormal;
+                if (!process.HasExited && command.Contains("ffmpeg", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    process.PriorityClass = ProcessPriorityClass.BelowNormal;
+                }
 
             }
             catch (Exception error)
