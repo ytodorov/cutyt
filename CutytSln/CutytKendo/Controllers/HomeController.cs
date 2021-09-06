@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Rebus;
 using Rebus.Activation;
+using Rebus.Bus;
 using Rebus.Config;
 using Rebus.Routing.TypeBased;
 using System;
@@ -42,9 +43,16 @@ namespace CutytKendo.Controllers
 
         HttpClient httpClient = null;
 
-        BuiltinHandlerActivator adapter = new BuiltinHandlerActivator();
+        //BuiltinHandlerActivator adapter = new BuiltinHandlerActivator();
 
-        public HomeController(ILogger<HomeController> logger, IHttpClientFactory httpClientFactory, IHostEnvironment hostEnvironment, IMemoryCache cache)
+        IBus rebusBus;
+
+        public HomeController(
+            ILogger<HomeController> logger,
+            IHttpClientFactory httpClientFactory,
+            IHostEnvironment hostEnvironment,
+            IMemoryCache cache,
+            IBus bus)
         {
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
@@ -63,18 +71,18 @@ namespace CutytKendo.Controllers
 
             // Very important to be big interval. Big files won't be downloaded else.
             httpClient.Timeout = TimeSpan.FromHours(2);
-
-            var rebusConfigure = Configure.With(adapter)
-               .Logging(l => l.ColoredConsole(minLevel: Rebus.Logging.LogLevel.Debug))
-               .Transport(t => t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "producer.input"))
-               .Routing(r => r.TypeBased().MapAssemblyOf<GetYouTubeUrlFullDescriptionJob>("consumer.input"))
-               .Options(o =>
-               {
-                   o.EnableSynchronousRequestReply();
-                   o.SetNumberOfWorkers(15);
-                   o.SetMaxParallelism(15);
-               })
-               .Start();
+            rebusBus = bus;
+            //var rebusConfigure = Configure.With(adapter)
+            //   .Logging(l => l.ColoredConsole(minLevel: Rebus.Logging.LogLevel.Debug))
+            //   .Transport(t => t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "producer.input"))
+            //   .Routing(r => r.TypeBased().MapAssemblyOf<GetYouTubeUrlFullDescriptionJob>("consumer.input"))
+            //   .Options(o =>
+            //   {
+            //       o.EnableSynchronousRequestReply();
+            //       o.SetNumberOfWorkers(15);
+            //       o.SetMaxParallelism(15);
+            //   })
+            //   .Start();
         }
 
         public IActionResult Index()
@@ -90,13 +98,9 @@ namespace CutytKendo.Controllers
         }
 
         [Route("/downloads")]
-        public async Task<IActionResult> Downloads()
+        public IActionResult Downloads()
 
         {
-            //var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: AppConstants.RebusTimeout);
-
-            //return View(reply);
-
             return View();
         }
 
@@ -145,7 +149,7 @@ namespace CutytKendo.Controllers
 
             fullUrl = $"https://www.youtube.com/watch?v={v}";
 
-            var youTubeUrlFullDescriptionReply = await adapter.Bus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: AppConstants.RebusTimeout);
+            var youTubeUrlFullDescriptionReply = await rebusBus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: AppConstants.RebusTimeout);
 
             var durationInSeconds = youTubeUrlFullDescriptionReply.YouTubeUrlFullDescription.Duration;
             var infos = youTubeUrlFullDescriptionReply.YouTubeUrlFullDescription.Formats;
@@ -215,7 +219,7 @@ namespace CutytKendo.Controllers
                 outputFileName = $"{v}{selectedOption.Split(" ").Last()}";
             }
 
-            var linkviewModel = await adapter.Bus.SendRequest<YoutubeDownloadLinkReply>(new GetYoutubeDownloadLinkJob()
+            var linkviewModel = await rebusBus.SendRequest<YoutubeDownloadLinkReply>(new GetYoutubeDownloadLinkJob()
             {
                 SelectedOption = selectedOption,
                 Url = url,

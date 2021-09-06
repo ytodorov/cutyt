@@ -1,4 +1,6 @@
-﻿using Cutyt.Core.Infrastructure;
+﻿using Cutyt.Core.Constants;
+using Cutyt.Core.Infrastructure;
+using Cutyt.Core.Rebus.Jobs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
+using Rebus.Config;
+using Rebus.Routing.TypeBased;
+using Rebus.ServiceProvider;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,6 +72,18 @@ namespace CutytKendo
             services.AddKendo();
 
             services.AddHttpClient();
+
+            // Configure and register Rebus
+            services.AddRebus(configure => configure
+                .Logging(l => l.ColoredConsole(minLevel: Rebus.Logging.LogLevel.Debug))
+               .Transport(t => t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "producer.input"))
+               .Routing(r => r.TypeBased().MapAssemblyOf<GetYouTubeUrlFullDescriptionJob>("consumer.input"))
+               .Options(o =>
+               {
+                   o.EnableSynchronousRequestReply();
+                   o.SetNumberOfWorkers(15);
+                   o.SetMaxParallelism(15);
+               }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -148,6 +165,8 @@ namespace CutytKendo
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.ApplicationServices.UseRebus();
         }
 
         private void CheckSameSite(HttpContext httpContext, CookieOptions options)
