@@ -149,11 +149,11 @@ namespace Cutyt.Core
             ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\ffmpeg.exe",
                 $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.mp4 -y").Result;
 
-
-            if (!string.IsNullOrEmpty(res.StandardError))
-            {
-                telemetryClient.TrackException(new Exception(res.StandardError));
-            }
+            //ffmpeg - does not log meaningfull values.
+            //if (!string.IsNullOrEmpty(res.StandardError))
+            //{
+            //    telemetryClient.TrackException(new Exception(res.StandardError));
+            //}
 
             fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
@@ -380,9 +380,12 @@ namespace Cutyt.Core
                     YoutubeDlHelper.SaveDownloadedFilesMetaInfo(reply);
                     break;
                 }
-                catch(Exception ex)
+                catch(IOException ex)
                 {
-                    telemetryClient.TrackException(ex);
+                    if (i == 9)
+                    {
+                        telemetryClient.TrackException(ex);
+                    }
                     Thread.Sleep(1000);
                 }
             }

@@ -1,6 +1,10 @@
 ﻿using Cutyt.Core.Constants;
+using Cutyt.Core.Extensions;
 using Cutyt.Core.Infrastructure;
 using Cutyt.Core.Rebus.Jobs;
+using CutytKendoWeb;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -36,8 +40,7 @@ namespace CutytKendo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            // The following line enables Application Insights telemetry collection.
+            services.AddSingleton<ITelemetryInitializer, RequestBodyInitializer>();
             services.AddApplicationInsightsTelemetry();
 
             services.AddResponseCompression(options =>
@@ -61,33 +64,18 @@ namespace CutytKendo
                     CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
             });
 
-            // Add framework services.
             services
                 .AddControllersWithViews()
-                // Maintain property names during serialization. See:
-                // https://github.com/aspnet/Announcements/issues/194
                 .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-            // Add Kendo UI services to the services container
             services.AddKendo();
 
             services.AddHttpClient();
 
-            // Configure and register Rebus
-            //services.AddRebus(configure => configure
-            //    .Logging(l => l.ColoredConsole(minLevel: Rebus.Logging.LogLevel.Debug))
-            //   .Transport(t => t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "producer.input"))
-            //   .Routing(r => r.TypeBased().MapAssemblyOf<GetYouTubeUrlFullDescriptionJob>("consumer.input"))
-            //   .Options(o =>
-            //   {
-            //       o.EnableSynchronousRequestReply();
-            //       o.SetNumberOfWorkers(15);
-            //       o.SetMaxParallelism(15);
-            //   }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TelemetryClient applicationInsightsClient)
         {
             //app.UseDeveloperExceptionPage();
 
@@ -103,6 +91,14 @@ namespace CutytKendo
             //}
 
             //app.UseStatusCodePagesWithRedirects("/error?id={0}");
+
+            applicationInsightsClient.TrackEvent("Application Started");
+            app.Use(async (ctx, next) =>
+            {
+                string body = await ctx.Request.GetRawBodyAsync();
+                ctx.Items.Add("_custom_http_body", body);
+                await next();
+            });
 
             app.Use(async (ctx, next) =>
             {

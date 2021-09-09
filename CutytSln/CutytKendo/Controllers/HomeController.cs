@@ -39,13 +39,9 @@ namespace CutytKendo.Controllers
 
         private IWebHostEnvironment hostEnvironment;
 
-        private string serverAddressOfServices = "http://localhost:14954/";
-
         private string cutYtBaseAddress = "https://localhost:44347/";
 
         HttpClient httpClient = null;
-
-        //BuiltinHandlerActivator adapter = new BuiltinHandlerActivator();
 
         TelemetryClient telemetryClient;
 
@@ -66,7 +62,6 @@ namespace CutytKendo.Controllers
             if (!mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase) &&
                 !mn.Equals("yTodorov-nb", StringComparison.InvariantCultureIgnoreCase))
             {
-                serverAddressOfServices = "http://cut.westeurope.cloudapp.azure.com/";
                 cutYtBaseAddress = "https://www.cutyt.com/";
             }
 
@@ -76,18 +71,6 @@ namespace CutytKendo.Controllers
             httpClient.Timeout = TimeSpan.FromHours(2);
 
             AppConstants.YtWorkingDir = Path.Combine(hostEnvironment.WebRootPath, "downloads");
-
-            //var rebusConfigure = Configure.With(adapter)
-            //   .Logging(l => l.ColoredConsole(minLevel: Rebus.Logging.LogLevel.Debug))
-            //   .Transport(t => t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "producer.input"))
-            //   .Routing(r => r.TypeBased().MapAssemblyOf<GetYouTubeUrlFullDescriptionJob>("consumer.input"))
-            //   .Options(o =>
-            //   {
-            //       o.EnableSynchronousRequestReply();
-            //       o.SetNumberOfWorkers(15);
-            //       o.SetMaxParallelism(15);
-            //   })
-            //   .Start();
         }
 
         public IActionResult Index()
@@ -331,11 +314,15 @@ namespace CutytKendo.Controllers
         public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
             var url = $"{AppConstants.YtWorkingDir}\\DownloadedFilesInfo\\downloadedFiles.json";
-            var json = await System.IO.File.ReadAllTextAsync(url); //await httpClient.GetStringAsync(url);
-            var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
-            existingReplies = existingReplies.OrderByDescending(s => s.DownloadedOn).ToList();
-            var dsResult = existingReplies.ToDataSourceResult(request);
-            return Json(dsResult);
+            if (System.IO.File.Exists(url))
+            {
+                var json = await System.IO.File.ReadAllTextAsync(url); //await httpClient.GetStringAsync(url);
+                var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
+                existingReplies = existingReplies.OrderByDescending(s => s.DownloadedOn).ToList();
+                var dsResult = existingReplies.ToDataSourceResult(request);
+                return Json(dsResult);
+            }
+            return Json(new List<YoutubeDownloadLinkReply>().ToDataSourceResult(request));
         }
 
         [Route("/watch")]

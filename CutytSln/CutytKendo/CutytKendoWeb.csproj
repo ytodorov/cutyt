@@ -65,4 +65,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Downloads\" />
+  </ItemGroup>
+
 </Project>
