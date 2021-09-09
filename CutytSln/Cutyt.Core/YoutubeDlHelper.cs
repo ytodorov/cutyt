@@ -1,4 +1,6 @@
-﻿using Cutyt.Core.Constants;
+﻿using Cutyt.Core.Classes;
+using Cutyt.Core.Constants;
+using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
 using Microsoft.ApplicationInsights;
 using System;
@@ -60,7 +62,7 @@ namespace Cutyt.Core
             }
 
             var dir = AppConstants.YtWorkingDir.Replace("\\", "/");
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
             if (!string.IsNullOrEmpty(res.StandardError))
             {
@@ -83,7 +85,7 @@ namespace Cutyt.Core
                 return fullFilePath;
             }
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f bestaudio {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"-f bestaudio {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
 
             if (!string.IsNullOrEmpty(res.StandardError))
@@ -108,7 +110,7 @@ namespace Cutyt.Core
             }
 
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\youtube-dl.exe", $"-f {code} {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"-f {code} {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
             if (!string.IsNullOrEmpty(res.StandardError))
             {
@@ -122,6 +124,11 @@ namespace Cutyt.Core
         public static string MergeAudioAndVideoToMp4(string v, string videoCode, TelemetryClient telemetryClient)
         {
             var resultFileNameWithoutExtension = $"{v}_{videoCode.Replace("+", "_")}_AV";
+
+            if (!Directory.Exists(AppConstants.YtWorkingDir))
+            {
+                Directory.CreateDirectory(AppConstants.YtWorkingDir);
+            }
 
             var fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
@@ -139,7 +146,7 @@ namespace Cutyt.Core
 
             var videoPath = DownloadVideo(v, videoCode, telemetryClient);
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\ffmpeg.exe",
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\ffmpeg.exe",
                 $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.mp4 -y").Result;
 
 
@@ -179,7 +186,7 @@ namespace Cutyt.Core
                 return outputFileFullPath;
             }
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\ffmpeg.exe", $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {AppConstants.YtWorkingDir}\\{outputFile} -y").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\ffmpeg.exe", $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {AppConstants.YtWorkingDir}\\{outputFile} -y").Result;
 
             outputFileFullPath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(outputFile));
 
@@ -245,26 +252,144 @@ namespace Cutyt.Core
             File.WriteAllText(filePath, newJson);
         }
 
-        public static List<YoutubeDownloadLinkReply> GetDownloadedFilesMetaInfo()
+        //public static List<YoutubeDownloadLinkReply> GetDownloadedFilesMetaInfo()
+        //{
+        //    var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "DownloadedFilesInfo");
+        //    if (!Directory.Exists(cachedFileDirectory))
+        //    {
+        //        Directory.CreateDirectory(cachedFileDirectory);
+        //    }
+
+        //    string filePath = Path.Combine(cachedFileDirectory, "downloadedFiles.json");
+
+        //    if (!File.Exists(filePath))
+        //    {
+        //        File.WriteAllText(filePath, "{}");
+        //    }
+
+        //    var json = File.ReadAllText(filePath);
+        //    var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
+
+        //    return existingReplies;
+        //}
+
+        public static async Task<YouTubeUrlFullDescription> GetYouTubeUrlFullDescription(string Id)
         {
-            var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "DownloadedFilesInfo");
+            var json = string.Empty;
+            var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "Meta");
             if (!Directory.Exists(cachedFileDirectory))
             {
                 Directory.CreateDirectory(cachedFileDirectory);
             }
 
-            string filePath = Path.Combine(cachedFileDirectory, "downloadedFiles.json");
+            var cachedFiles = Directory.GetFiles(cachedFileDirectory);
+            var cachedFile = cachedFiles.FirstOrDefault(f => f.EndsWith($"{Id}.json"));
 
-            if (!File.Exists(filePath))
+            if (!string.IsNullOrEmpty(cachedFile))
             {
-                File.WriteAllText(filePath, "{}");
+                json = File.ReadAllText(cachedFile);
+            }
+            else
+            {
+                var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"-j \"{Id}\"");
+
+                json = res.StadardOutput;
+
+                File.WriteAllText(Path.Combine(cachedFileDirectory, $"{Id}.json"), json);
             }
 
-            var json = File.ReadAllText(filePath);
-            var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                PropertyNameCaseInsensitive = true
+            };
 
-            return existingReplies;
+            var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(json, options);
+
+            return youTubeUrlFullDescription;
         }
 
+        public static async Task<YoutubeDownloadLinkReply> GetYoutubeDownloadLinkReply(GetYoutubeDownloadLinkJob job, TelemetryClient telemetryClient, string hostBaseUrl)
+        {
+            YoutubeDownloadLinkReply reply = new YoutubeDownloadLinkReply();
+
+            if (job.V?.Length > 20)
+            {
+                throw new Exception($"{job.V} is not valid for v in youtube URL");
+            }
+
+            var selectedOption = job.SelectedOption;
+
+            string filePathResult = string.Empty;
+
+            YoutubeDlHelper.FreeSpaceOnHardDiskIfNeeded();
+
+            if (selectedOption.Contains("--audio-format"))
+            {
+                selectedOption = selectedOption.Split(" ").Last();
+                filePathResult = YoutubeDlHelper.DownloadCustomAudio(job.V, selectedOption, telemetryClient);
+            }
+            else
+            {
+                var selectedVideoOption = selectedOption.Split(" ").FirstOrDefault();
+                filePathResult = YoutubeDlHelper.MergeAudioAndVideoToMp4(job.V, selectedVideoOption, telemetryClient);
+            }
+
+            if (job.ShouldTrim.GetValueOrDefault())
+            {
+                filePathResult = YoutubeDlHelper.CutFile(filePathResult, job.Start.ToString(), job.End.ToString(), telemetryClient);
+            }
+
+            //AddWatermark(filePathResult); cannot be played in browser. dunno why
+
+            var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
+            //var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
+
+            string physicalFileName = Path.GetFileName(filePathResult);
+
+            //var fileNameFromArgs = GetFileNameFromArgs(ytUrl);
+
+            ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"--get-filename {job.Url} --encoding UTF8");
+            var fileNameFromArgs = res.StadardOutput;
+
+            var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
+            var fileNameWithoutDashV = fileNameWithoutExtensions.Replace($" [{job.V}]", string.Empty, StringComparison.InvariantCultureIgnoreCase);
+
+            var size = new FileInfo(filePathResult).Length;
+            reply = new YoutubeDownloadLinkReply()
+            {
+                Id = job.V,
+                Name = fileNameFromArgs,
+                Url = $"{hostBaseUrl}{physicalFileName}",
+                FileName = fileNameFromArgs,
+                DisplayName = fileNameWithoutDashV,
+                V = job.V,
+                Start = job.Start.ToString(),
+                End = job.End.ToString(),
+                FileOnDiskNameWithoutExtension = Path.GetFileNameWithoutExtension(physicalFileName),
+                FileOnDiskExtension = Path.GetExtension(physicalFileName),
+                FileOnDiskNameWithExtension = Path.GetFileName(physicalFileName),
+                DownloadedOn = DateTime.UtcNow,
+                FileOnDiskSize = size,
+            };
+
+            for (int i = 0; i < 10; i++)
+            {
+                try
+                {
+                    YoutubeDlHelper.SaveDownloadedFilesMetaInfo(reply);
+                    break;
+                }
+                catch(Exception ex)
+                {
+                    telemetryClient.TrackException(ex);
+                    Thread.Sleep(1000);
+                }
+            }
+            
+
+            return reply;
+
+        }
     }
 }

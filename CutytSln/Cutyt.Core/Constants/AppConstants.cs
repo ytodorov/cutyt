@@ -9,21 +9,7 @@ namespace Cutyt.Core.Constants
 {
     public static class AppConstants
     {
-        public static string YtWorkingDir
-        {
-            // TO DO. use Z:
-            get
-            {
-                if (Directory.Exists($"E:\\Files"))
-                {
-                    return $"E:\\Files"; // Cloud - Azure Files
-                }
-                else
-                {
-                    return $"C:\\Files"; // Cloud -  Azure Files
-                }
-            }
-        }
+        public static string YtWorkingDir { get; set; }
 
         public static string ServiceBusConnectionString
         {

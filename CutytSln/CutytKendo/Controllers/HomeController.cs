@@ -6,6 +6,7 @@ using Cutyt.Core.Rebus.Replies;
 using CutytKendoWeb.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
@@ -24,6 +25,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
+using static ProcessAsyncHelper;
 
 namespace CutytKendo.Controllers
 {
@@ -35,29 +37,30 @@ namespace CutytKendo.Controllers
 
         private readonly IMemoryCache cache;
 
-        private IHostEnvironment hostEnvironment;
+        private IWebHostEnvironment hostEnvironment;
 
         private string serverAddressOfServices = "http://localhost:14954/";
 
-        private string cutYtBaseAddress = "https://localhost:44309/";
+        private string cutYtBaseAddress = "https://localhost:44347/";
 
         HttpClient httpClient = null;
 
         //BuiltinHandlerActivator adapter = new BuiltinHandlerActivator();
 
-        IBus rebusBus;
+        TelemetryClient telemetryClient;
 
         public HomeController(
             ILogger<HomeController> logger,
             IHttpClientFactory httpClientFactory,
-            IHostEnvironment hostEnvironment,
-            IMemoryCache cache,
-            IBus bus)
+            IWebHostEnvironment hostEnvironment,
+            IMemoryCache cache,          
+            TelemetryClient telemetryClient)
         {
             _logger = logger;
             this.httpClientFactory = httpClientFactory;
             this.hostEnvironment = hostEnvironment;
             this.cache = cache;
+            this.telemetryClient = telemetryClient;
 
             var mn = Environment.MachineName;
             if (!mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase) &&
@@ -71,7 +74,9 @@ namespace CutytKendo.Controllers
 
             // Very important to be big interval. Big files won't be downloaded else.
             httpClient.Timeout = TimeSpan.FromHours(2);
-            rebusBus = bus;
+
+            AppConstants.YtWorkingDir = Path.Combine(hostEnvironment.WebRootPath, "downloads");
+
             //var rebusConfigure = Configure.With(adapter)
             //   .Logging(l => l.ColoredConsole(minLevel: Rebus.Logging.LogLevel.Debug))
             //   .Transport(t => t.UseAzureServiceBus(AppConstants.ServiceBusConnectionString, "producer.input"))
@@ -149,10 +154,12 @@ namespace CutytKendo.Controllers
 
             fullUrl = $"https://www.youtube.com/watch?v={v}";
 
-            var youTubeUrlFullDescriptionReply = await rebusBus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: AppConstants.RebusTimeout);
 
-            var durationInSeconds = youTubeUrlFullDescriptionReply.YouTubeUrlFullDescription.Duration;
-            var infos = youTubeUrlFullDescriptionReply.YouTubeUrlFullDescription.Formats;
+            //var youTubeUrlFullDescriptionReply = await rebusBus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: AppConstants.RebusTimeout);
+
+            YouTubeUrlFullDescription youTubeUrlFullDescription = await YoutubeDlHelper.GetYouTubeUrlFullDescription(v);
+            var durationInSeconds = youTubeUrlFullDescription.Duration;
+            var infos = youTubeUrlFullDescription.Formats;
 
             foreach (var info in infos)
             {
@@ -180,6 +187,77 @@ namespace CutytKendo.Controllers
             };
 
             return PartialView(allVM);
+        }
+
+        [Route("/geturldetails2")]
+        public async Task<IActionResult> GetUrlDetails2(string url)
+        {
+            // get the single url
+            var splits = url.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
+            if (splits.Count > 1)
+            {
+                url = splits[0];
+            }
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out Uri result))
+            {
+                var res = Content($"'{url}' must be valid URL!");
+                res.StatusCode = 500;
+                return res;
+            }
+            else
+            {
+                if (!result.ToString().Contains("youtube", StringComparison.CurrentCultureIgnoreCase) &&
+                    !result.ToString().Contains("youtu.be", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    var res = Content($"'{url}' must be valid YouTube url!");
+                    res.StatusCode = 500;
+                    return res;
+                }
+            }
+
+
+            var fullUrl = Helpers.GetFullUrlFromYouTube(url, httpClientFactory.CreateClient());
+
+            Uri uri = new Uri(fullUrl);
+            var parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
+            var v = parsedQSTest["v"];
+
+            fullUrl = $"https://www.youtube.com/watch?v={v}";
+
+
+            //var youTubeUrlFullDescriptionReply = await rebusBus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: AppConstants.RebusTimeout);
+
+            YouTubeUrlFullDescription youTubeUrlFullDescription = await YoutubeDlHelper.GetYouTubeUrlFullDescription(v);
+            var durationInSeconds = youTubeUrlFullDescription.Duration;
+            var infos = youTubeUrlFullDescription.Formats;
+
+            foreach (var info in infos)
+            {
+                if (info.Width != null)
+                {
+                    info.DownloadSwitchAudioAndVideo = $"{info.Format_Id}+bestaudio";
+                }
+                else
+                {
+                    info.DownloadSwitchAudioAndVideo = info.Format_Id;
+                }
+            }
+
+            // remove files bigger then 1GB
+            infos = infos.GroupBy(c => c.Format_Note)
+                .Select(s => s.LastOrDefault())
+                .Where(s => s.Width != null)
+                .Where(s => s.FileSize != null && s.FileSize < 1024 * 1024 * 1024) // 1 GB
+                .ToList();
+
+            YouTubeAllInfoViewModel allVM = new YouTubeAllInfoViewModel()
+            {
+                DurationInSeconds = durationInSeconds.GetValueOrDefault(),
+                Formats = infos
+            };
+
+            return Json(allVM);
         }
 
         public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, double start, double end, bool? shouldTrim)
@@ -219,7 +297,20 @@ namespace CutytKendo.Controllers
                 outputFileName = $"{v}{selectedOption.Split(" ").Last()}";
             }
 
-            var linkviewModel = await rebusBus.SendRequest<YoutubeDownloadLinkReply>(new GetYoutubeDownloadLinkJob()
+            //var linkviewModel = await rebusBus.SendRequest<YoutubeDownloadLinkReply>(new GetYoutubeDownloadLinkJob()
+            //{
+            //    SelectedOption = selectedOption,
+            //    Url = url,
+            //    OutputFileName = outputFileName,
+            //    V = v,
+            //    ShouldTrim = shouldTrim.GetValueOrDefault(),
+            //    Start = start,
+            //    End = end,
+
+            //}
+            //, timeout: AppConstants.RebusTimeout);
+
+            var job = new GetYoutubeDownloadLinkJob()
             {
                 SelectedOption = selectedOption,
                 Url = url,
@@ -229,8 +320,9 @@ namespace CutytKendo.Controllers
                 Start = start,
                 End = end,
 
-            }
-            , timeout: AppConstants.RebusTimeout);
+            };
+
+            var linkviewModel = await YoutubeDlHelper.GetYoutubeDownloadLinkReply(job, telemetryClient, $"{cutYtBaseAddress}Downloads/");
 
             return PartialView(linkviewModel);
         }
@@ -238,10 +330,8 @@ namespace CutytKendo.Controllers
         [Route("/getfiles")]
         public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
-            //var reply = await adapter.Bus.SendRequest<DownloadedFilesReply>(new GetDownloadedFilesJob(), timeout: AppConstants.RebusTimeout);
-
-            var url = $"{serverAddressOfServices}/DownloadedFilesInfo/downloadedFiles.json";
-            var json = await httpClient.GetStringAsync(url);
+            var url = $"{AppConstants.YtWorkingDir}\\DownloadedFilesInfo\\downloadedFiles.json";
+            var json = await System.IO.File.ReadAllTextAsync(url); //await httpClient.GetStringAsync(url);
             var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
             existingReplies = existingReplies.OrderByDescending(s => s.DownloadedOn).ToList();
             var dsResult = existingReplies.ToDataSourceResult(request);
@@ -264,6 +354,14 @@ namespace CutytKendo.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+
+        [Route("/test")]
+        public async Task<IActionResult> Test([FromQuery] string url = "https://www.youtube.com/watch?v=ImK7w8lmDhY")
+        {
+            var path = Path.Combine(hostEnvironment.WebRootPath, "Downloads");
+            ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand($@"{path}\youtube-dl.exe", $"{url}");
+            return Json(res.StadardOutput);
         }
 
         public IActionResult GetEnv()

@@ -7,7 +7,9 @@
 
 		var split = e.value.toString().split(",")
 		var start = parseFloat(split[0]);
+		start = Math.round((start + Number.EPSILON) * 100) / 100
 		var end = parseFloat(split[1]);
+		end = Math.round((end + Number.EPSILON) * 100) / 100
 
 		mediaPlayerStart.seek(start * 1000);
 		mediaPlayerStart.pause();
@@ -48,7 +50,7 @@
 		var end = parseFloat(split[1]);
 		end = Math.round((end + Number.EPSILON) * 100) / 100
 
-		var shouldTrim = start != 0 && end != slider.options.max;
+		var shouldTrim = start != 0 || end != slider.options.max;
 
 		var btnDownload = $("#btnDownload").data("kendoButton");;
 		btnDownload.enable(false);

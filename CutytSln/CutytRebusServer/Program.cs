@@ -91,31 +91,7 @@ namespace CutytRebusServer
                     telemetryClient.TrackException(exceptionTelemetry);
                 }
             });
-
-            adapter.Handle<GetDownloadedFilesJob>(async (bus, job) =>
-            {
-                try
-                {
-                    DownloadedFilesReply downloadedFilesReply = new DownloadedFilesReply();
-
-                    downloadedFilesReply.UrlToDownloadJsonMetaInfo = $"{serverAddressOfServices}/DownloadedFilesInfo/downloadedFiles.json";
-                    //var filesMetaInfos = YoutubeDlHelper.GetDownloadedFilesMetaInfo();
-
-                    //downloadedFilesReply.Files.AddRange(filesMetaInfos);
-
-                    await bus.Reply(downloadedFilesReply);
-                }
-                catch (Exception ex)
-                {
-                    ExceptionTelemetry exceptionTelemetry = new ExceptionTelemetry(ex);
-                    exceptionTelemetry.Exception = ex;
-                    var jobAsJson = JsonSerializer.Serialize(job, new JsonSerializerOptions() { WriteIndented = true });
-                    exceptionTelemetry.Properties.Add("job", jobAsJson);
-
-                    telemetryClient.TrackException(exceptionTelemetry);
-                }
-            });
-
+            
             adapter.Handle<GetYoutubeDownloadLinkJob>(async (bus, job) =>
             {
                 YoutubeDownloadLinkReply reply = new YoutubeDownloadLinkReply();
