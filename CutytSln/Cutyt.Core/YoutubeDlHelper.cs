@@ -62,7 +62,7 @@ namespace Cutyt.Core
             }
 
             var dir = AppConstants.YtWorkingDir.Replace("\\", "/");
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
             if (!string.IsNullOrEmpty(res.StandardError))
             {
@@ -85,7 +85,7 @@ namespace Cutyt.Core
                 return fullFilePath;
             }
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"-f bestaudio {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f bestaudio {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
 
             if (!string.IsNullOrEmpty(res.StandardError))
@@ -110,7 +110,7 @@ namespace Cutyt.Core
             }
 
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"-f {code} {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f {code} {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
             if (!string.IsNullOrEmpty(res.StandardError))
             {
@@ -146,7 +146,7 @@ namespace Cutyt.Core
 
             var videoPath = DownloadVideo(v, videoCode, telemetryClient);
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\ffmpeg.exe",
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\ffmpeg.exe",
                 $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.mp4 -y").Result;
 
             //ffmpeg - does not log meaningfull values.
@@ -186,7 +186,7 @@ namespace Cutyt.Core
                 return outputFileFullPath;
             }
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\ffmpeg.exe", $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {AppConstants.YtWorkingDir}\\{outputFile} -y").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\ffmpeg.exe", $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {AppConstants.YtWorkingDir}\\{outputFile} -y").Result;
 
             outputFileFullPath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(outputFile));
 
@@ -291,7 +291,7 @@ namespace Cutyt.Core
             }
             else
             {
-                var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"-j \"{Id}\"");
+                var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-j \"{Id}\"");
 
                 json = res.StadardOutput;
 
@@ -349,7 +349,7 @@ namespace Cutyt.Core
 
             //var fileNameFromArgs = GetFileNameFromArgs(ytUrl);
 
-            ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand($@"{Environment.CurrentDirectory}\Downloads\youtube-dl.exe", $"--get-filename {job.Url} --encoding UTF8");
+            ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"--get-filename {job.Url} --encoding UTF8");
             var fileNameFromArgs = res.StadardOutput;
 
             var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);

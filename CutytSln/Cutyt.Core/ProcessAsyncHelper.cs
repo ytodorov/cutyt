@@ -20,11 +20,6 @@ public static class ProcessAsyncHelper
             process.StartInfo.WorkingDirectory = Path.GetDirectoryName(command);
             process.StartInfo.FileName = command;
 
-            //if (command.Contains("youtube-dl", StringComparison.InvariantCultureIgnoreCase))
-            //{
-            //    arguments = $" --config-location {Environment.CurrentDirectory}{Path.DirectorySeparatorChar}youtube-dl.conf {arguments}";
-            //}
-
             process.StartInfo.Arguments = arguments;
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.RedirectStandardInput = true;
