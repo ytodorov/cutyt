@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.ApplicationInsights;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -6,8 +7,13 @@ using System.Threading.Tasks;
 
 public static class ProcessAsyncHelper
 {
-    public static async Task<ProcessResult> ExecuteShellCommand(string command, string arguments, int timeout = int.MaxValue)
+    public static async Task<ProcessResult> ExecuteShellCommand(
+        string command,
+        string arguments,        
+        TelemetryClient telemetryClient)
     {
+        int timeout = int.MaxValue;
+
         var result = new ProcessResult()
         {
             ExitCode = -1,
@@ -67,7 +73,7 @@ public static class ProcessAsyncHelper
             try
             {
                 isStarted = process.Start();
-                if (!process.HasExited && command.Contains("ffmpeg", StringComparison.InvariantCultureIgnoreCase))
+                if (!process.HasExited)
                 {
                     process.PriorityClass = ProcessPriorityClass.BelowNormal;
                 }
@@ -120,6 +126,14 @@ public static class ProcessAsyncHelper
                     {
                     }
                 }
+            }
+        }
+
+        if (!string.IsNullOrEmpty(result.StandardError))
+        {
+            if (!command.Contains("ffmpeg", StringComparison.InvariantCultureIgnoreCase))
+            {
+                telemetryClient.TrackException(new Exception(result.StandardError));
             }
         }
 

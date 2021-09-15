@@ -24,12 +24,14 @@ namespace Cutyt.Core.Rebus.Jobs
 
 		public string V { get; set; }
 
-		/*
+        public string Ip { get; set; }
+
+        /*
          
          var encodedUrl = $"{serverAddressOfServices}home/exec?args=-f {HttpUtility.UrlEncode(selectedOption)}" +
                 $" --no-part \"{url}\" --output \"{outputFileName}.%(ext)s\" -k -v&ytUrl={url}&V={v}&selectedOption={HttpUtility.UrlEncode(selectedOption)}&shouldTrim={shouldTrim.GetValueOrDefault()}" +
                 $"&start={start}&end={end}";
 
          */
-	}
+    }
 }

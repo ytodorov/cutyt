@@ -22,6 +22,63 @@ namespace Cutyt.Core
 
         public static void FreeSpaceOnHardDiskIfNeeded()
         {
+            string dir = "D:\\local\\DynamicCache\\wwwroot\\wwwroot\\downloads";
+
+            var filesToDel = new List<string>();
+            if (Directory.Exists(dir))
+            {
+                filesToDel = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
+                foreach (var file in filesToDel)
+                {
+                    if (!file.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                }
+            }
+
+            dir = "D:\\local\\DynamicCache\\wwwroot\\wwwroot\\downloads\\Meta";
+
+            if (Directory.Exists(dir))
+            {
+                filesToDel = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
+                foreach (var file in filesToDel)
+                {
+                    if (!file.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                }
+            }
+
+            dir = "D:\\local\\VirtualDirectory0\\site\\wwwroot\\wwwroot\\downloads";           
+
+            if (Directory.Exists(dir))
+            {
+                filesToDel = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
+                foreach (var file in filesToDel)
+                {
+                    if (!file.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                }
+            }
+
+            dir = "D:\\local\\VirtualDirectory0\\site\\wwwroot\\wwwroot\\downloads\\Meta";
+
+            if (Directory.Exists(dir))
+            {
+                filesToDel = Directory.GetFiles(dir, "*.*", SearchOption.AllDirectories).ToList();
+                foreach (var file in filesToDel)
+                {
+                    if (!file.EndsWith(".exe", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        System.IO.File.Delete(file);
+                    }
+                }
+            }
+
             DirectoryInfo directoryInfo = new DirectoryInfo(AppConstants.YtWorkingDir);
             if (directoryInfo.Exists)
             {
@@ -63,12 +120,10 @@ namespace Cutyt.Core
             }
 
             var dir = AppConstants.YtWorkingDir.Replace("\\", "/");
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} https://www.youtube.com/watch?v={v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
-
-            if (!string.IsNullOrEmpty(res.StandardError))
-            {
-                telemetryClient.TrackException(new Exception(res.StandardError));
-            }
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand(
+                $@"{AppConstants.YtWorkingDir}\youtube-dl.exe",
+                $"-f bestaudio -x --audio-format {audioFormat} https://www.youtube.com/watch?v={v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"",
+                telemetryClient: telemetryClient).Result;
 
             fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
@@ -86,13 +141,10 @@ namespace Cutyt.Core
                 return fullFilePath;
             }
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f bestaudio https://www.youtube.com/watch?v={v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
-
-
-            if (!string.IsNullOrEmpty(res.StandardError))
-            {
-                telemetryClient.TrackException(new Exception(res.StandardError));
-            }
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand(
+                $@"{AppConstants.YtWorkingDir}\youtube-dl.exe",
+                $"-f bestaudio https://www.youtube.com/watch?v={v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"",
+                telemetryClient).Result;
 
             fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
@@ -111,12 +163,12 @@ namespace Cutyt.Core
             }
 
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f {code} https://www.youtube.com/watch?v={v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand(
+                $@"{AppConstants.YtWorkingDir}\youtube-dl.exe",
+                $"-f {code} https://www.youtube.com/watch?v={v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"",
+                telemetryClient
+                ).Result;
 
-            if (!string.IsNullOrEmpty(res.StandardError))
-            {
-                telemetryClient.TrackException(new Exception(res.StandardError));
-            }
             fullFilePath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(resultFileNameWithoutExtension));
 
             return fullFilePath;
@@ -147,8 +199,10 @@ namespace Cutyt.Core
 
             var videoPath = DownloadVideo(v, videoCode, telemetryClient);
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\ffmpeg.exe",
-                $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.mp4 -y").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand(
+                $@"{AppConstants.YtWorkingDir}\ffmpeg.exe",
+                $"-i {videoPath} -i {audioPath} -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 {AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.mp4 -y",
+                telemetryClient).Result;
 
             //ffmpeg - does not log meaningfull values.
             //if (!string.IsNullOrEmpty(res.StandardError))
@@ -187,7 +241,10 @@ namespace Cutyt.Core
                 return outputFileFullPath;
             }
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\ffmpeg.exe", $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {AppConstants.YtWorkingDir}\\{outputFile} -y").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand(
+                $@"{AppConstants.YtWorkingDir}\ffmpeg.exe",
+                $"-ss {startParam} -i {inputFile} -to {durationParam} -c copy {AppConstants.YtWorkingDir}\\{outputFile} -y",
+                telemetryClient).Result;
 
             outputFileFullPath = Directory.GetFiles($@"{AppConstants.YtWorkingDir}").FirstOrDefault(f => f.Contains(outputFile));
 
@@ -274,7 +331,7 @@ namespace Cutyt.Core
         //    return existingReplies;
         //}
 
-        public static async Task<YouTubeUrlFullDescription> GetYouTubeUrlFullDescription(string Id)
+        public static async Task<YouTubeUrlFullDescription> GetYouTubeUrlFullDescription(string Id, TelemetryClient telemetryClient)
         {
             var json = string.Empty;
             var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "Meta");
@@ -291,7 +348,10 @@ namespace Cutyt.Core
                 json = File.ReadAllText(cachedFile);
                 if (string.IsNullOrWhiteSpace(json))
                 {
-                    var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-j https://www.youtube.com/watch?v={Id}");
+                    var res = await ProcessAsyncHelper.ExecuteShellCommand(
+                        $@"{AppConstants.YtWorkingDir}\youtube-dl.exe",
+                        $"-j https://www.youtube.com/watch?v={Id}",
+                        telemetryClient);
 
                     json = res.StadardOutput;
 
@@ -300,7 +360,10 @@ namespace Cutyt.Core
             }
             else
             {
-                var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-j https://www.youtube.com/watch?v={Id}");
+                var res = await ProcessAsyncHelper.ExecuteShellCommand(
+                    $@"{AppConstants.YtWorkingDir}\youtube-dl.exe",
+                    $"-j https://www.youtube.com/watch?v={Id}",
+                    telemetryClient);
 
                 json = res.StadardOutput;
 
@@ -358,7 +421,11 @@ namespace Cutyt.Core
 
             //var fileNameFromArgs = GetFileNameFromArgs(ytUrl);
 
-            ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"--get-filename {job.Url} --encoding UTF8");
+            ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand(
+                $@"{AppConstants.YtWorkingDir}\youtube-dl.exe",
+                $"--get-filename {job.Url} --encoding UTF8",
+                telemetryClient);
+
             var fileNameFromArgs = res.StadardOutput;
 
             var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
@@ -380,6 +447,7 @@ namespace Cutyt.Core
                 FileOnDiskNameWithExtension = Path.GetFileName(physicalFileName),
                 DownloadedOn = DateTime.UtcNow,
                 FileOnDiskSize = size,
+                Ip = job.Ip
             };
 
             for (int i = 0; i < 10; i++)

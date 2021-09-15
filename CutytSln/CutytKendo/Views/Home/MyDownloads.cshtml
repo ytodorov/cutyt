@@ -1,0 +1,31 @@
+﻿@(Html.Kendo().Grid<YoutubeDownloadLinkReply>()
+                            .Name("grid")
+                            .Mobile(MobileMode.Auto)                            
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.DisplayName).Title("Name");
+                                columns.Bound(p => p.FileOnDiskExtension).Title("Type").MinScreenWidth(250);
+                                columns.Template("<a target='_blank' href=' #= Url #'>Download</a>").Title("Download");
+                                columns.Template(template: "#= kendo.toString(kendo.parseDate(DownloadedOn), 'yyyy/MM/dd hh:mm') #").Title("Downloaded on").MinScreenWidth(250);
+                                columns.Bound(p => p.Start).Title("Start").MinScreenWidth(250);
+                                columns.Bound(p => p.End).Title("End").MinScreenWidth(250);
+                                columns.Bound(p => p.FileOnDiskSizeInMegabytes).Title("Size in MBs").MinScreenWidth(250);
+
+
+                            })
+                             .ToolBar(t => t.Search())
+                            .Pageable()
+                            //.Sortable()
+                            //.Scrollable()
+                            //.HtmlAttributes(new { style = "height:550px;" })
+
+                            .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(20)
+                                .ServerOperation(false)
+                                .Read(read => read.Url("/getmyfiles"))
+                             )
+        )
+
+
+

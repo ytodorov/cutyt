@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31521.260
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cutyt", "Cutyt\Cutyt.csproj", "{D74CBF1E-86F1-4FA8-9944-74851B756B6E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CutytServerWebApi", "WebApplication1\CutytServerWebApi.csproj", "{53FC2C02-7BEA-4297-8D58-05FFFA36A35C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cutyt.Core", "Cutyt.Core\Cutyt.Core.csproj", "{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "youtube-dl", "youtube-dl", "{31DB3226-CA46-4B4A-AA14-F1303BC3F226}"
@@ -24,22 +20,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		global.json = global.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CutytRebusServer", "CutytRebusServer\CutytRebusServer.csproj", "{9D775218-99B1-4906-8DDD-2884E66568E7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D74CBF1E-86F1-4FA8-9944-74851B756B6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D74CBF1E-86F1-4FA8-9944-74851B756B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D74CBF1E-86F1-4FA8-9944-74851B756B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D74CBF1E-86F1-4FA8-9944-74851B756B6E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53FC2C02-7BEA-4297-8D58-05FFFA36A35C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53FC2C02-7BEA-4297-8D58-05FFFA36A35C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53FC2C02-7BEA-4297-8D58-05FFFA36A35C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53FC2C02-7BEA-4297-8D58-05FFFA36A35C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E7FB0DB-D8A5-447F-A6B0-587B4899DDC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -48,10 +34,6 @@ Global
 		{E0901831-D12D-4E5D-A793-1DD4213C4FF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0901831-D12D-4E5D-A793-1DD4213C4FF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0901831-D12D-4E5D-A793-1DD4213C4FF0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9D775218-99B1-4906-8DDD-2884E66568E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D775218-99B1-4906-8DDD-2884E66568E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D775218-99B1-4906-8DDD-2884E66568E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D775218-99B1-4906-8DDD-2884E66568E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

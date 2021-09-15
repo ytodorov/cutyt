@@ -87,9 +87,14 @@ namespace CutytKendo.Controllers
             return View();
         }
 
-        [Route("/downloads")]
-        public IActionResult Downloads()
+        [Route("/alldownloads")]
+        public IActionResult AllDownloads()
+        {
+            return View();
+        }
 
+        [Route("/mydownloads")]
+        public IActionResult MyDownloads()
         {
             return View();
         }
@@ -142,7 +147,7 @@ namespace CutytKendo.Controllers
 
             //var youTubeUrlFullDescriptionReply = await rebusBus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: AppConstants.RebusTimeout);
 
-            YouTubeUrlFullDescription youTubeUrlFullDescription = await YoutubeDlHelper.GetYouTubeUrlFullDescription(v);
+            YouTubeUrlFullDescription youTubeUrlFullDescription = await YoutubeDlHelper.GetYouTubeUrlFullDescription(v, telemetryClient);
             var durationInSeconds = youTubeUrlFullDescription.Duration;
             var infos = youTubeUrlFullDescription.Formats;
 
@@ -201,7 +206,6 @@ namespace CutytKendo.Controllers
                 url = $"https://vimeo.com/{vimeoId}";
             }
 
-            // PROBLEMS with bestvideo%2Bbestaudio - youtube-dl is stuck and does not quit on time. This was due from wrong exe files.
             // best - use single file -> mp4
             var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
 
@@ -210,19 +214,6 @@ namespace CutytKendo.Controllers
             {
                 outputFileName = $"{v}{selectedOption.Split(" ").Last()}";
             }
-
-            //var linkviewModel = await rebusBus.SendRequest<YoutubeDownloadLinkReply>(new GetYoutubeDownloadLinkJob()
-            //{
-            //    SelectedOption = selectedOption,
-            //    Url = url,
-            //    OutputFileName = outputFileName,
-            //    V = v,
-            //    ShouldTrim = shouldTrim.GetValueOrDefault(),
-            //    Start = start,
-            //    End = end,
-
-            //}
-            //, timeout: AppConstants.RebusTimeout);
 
             var job = new GetYoutubeDownloadLinkJob()
             {
@@ -233,7 +224,7 @@ namespace CutytKendo.Controllers
                 ShouldTrim = shouldTrim.GetValueOrDefault(),
                 Start = start,
                 End = end,
-
+                Ip = HttpContext.Connection.RemoteIpAddress.ToString(),
             };
 
             var linkviewModel = await YoutubeDlHelper.GetYoutubeDownloadLinkReply(job, telemetryClient, $"{cutYtBaseAddress}Downloads/");
@@ -244,11 +235,27 @@ namespace CutytKendo.Controllers
         [Route("/getfiles")]
         public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
-            var url = $"{AppConstants.YtWorkingDir}\\DownloadedFilesInfo\\downloadedFiles.json";
-            if (System.IO.File.Exists(url))
+            var filePath = $"{AppConstants.YtWorkingDir}\\DownloadedFilesInfo\\downloadedFiles.json";
+            if (System.IO.File.Exists(filePath))
             {
-                var json = await System.IO.File.ReadAllTextAsync(url); //await httpClient.GetStringAsync(url);
+                var json = await System.IO.File.ReadAllTextAsync(filePath); //await httpClient.GetStringAsync(url);
                 var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
+                existingReplies = existingReplies.OrderByDescending(s => s.DownloadedOn).ToList();
+                var dsResult = existingReplies.ToDataSourceResult(request);
+                return Json(dsResult);
+            }
+            return Json(new List<YoutubeDownloadLinkReply>().ToDataSourceResult(request));
+        }
+
+        [Route("/getmyfiles")]
+        public async Task<IActionResult> GetMyFiles([DataSourceRequest] DataSourceRequest request)
+        {
+            var filePath = $"{AppConstants.YtWorkingDir}\\DownloadedFilesInfo\\downloadedFiles.json";
+            if (System.IO.File.Exists(filePath))
+            {
+                var json = await System.IO.File.ReadAllTextAsync(filePath); 
+                var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
+                existingReplies = existingReplies.Where(r => r.Ip == HttpContext.Connection.RemoteIpAddress.ToString()).ToList();
                 existingReplies = existingReplies.OrderByDescending(s => s.DownloadedOn).ToList();
                 var dsResult = existingReplies.ToDataSourceResult(request);
                 return Json(dsResult);
@@ -273,18 +280,24 @@ namespace CutytKendo.Controllers
         {
             return View();
         }
-
-        [Route("/test")]
-        public async Task<IActionResult> Test([FromQuery] string url = "https://www.youtube.com/watch?v=ImK7w8lmDhY")
-        {
-            var path = Path.Combine(hostEnvironment.WebRootPath, "Downloads");
-            ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand($@"{path}\youtube-dl.exe", $"{url}");
-            return Json(res.StadardOutput);
-        }
-
+      
         public IActionResult GetEnv()
         {
             return Json(hostEnvironment.EnvironmentName);
+        }
+
+        [Route("/local")]
+        public IActionResult Local()
+        {
+            string local = @"D:\local";
+
+            if (Directory.Exists(local))
+            {
+                var files = Directory.GetFiles(local, "*.*", SearchOption.AllDirectories);
+                return Json(files);
+            }
+
+            return Json("");
         }
     }
 }

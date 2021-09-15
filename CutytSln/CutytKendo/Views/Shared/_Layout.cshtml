@@ -144,7 +144,9 @@
       {
           items.Add().Text("Home").Url("/");
 
-          items.Add().Text("Downloads").Url("/downloads").Selected(this.Context.Request.Path.Value.Contains("Downloads", StringComparison.InvariantCultureIgnoreCase));
+          items.Add().Text("My Downloads").Url("/mydownloads");
+
+          items.Add().Text("All Downloads").Url("/alldownloads");
 
           items.Add().Text("Privacy").Url("/privacy");
       })
