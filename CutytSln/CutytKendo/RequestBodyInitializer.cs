@@ -3,6 +3,7 @@ using Cutyt.Core.Extensions;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Http;
 using System.Web;
 
 namespace CutytKendoWeb;

@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using static ProcessAsyncHelper;
 
@@ -62,7 +63,7 @@ namespace Cutyt.Core
             }
 
             var dir = AppConstants.YtWorkingDir.Replace("\\", "/");
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} {v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f bestaudio -x --audio-format {audioFormat} https://www.youtube.com/watch?v={v} --output \"{dir}/{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
             if (!string.IsNullOrEmpty(res.StandardError))
             {
@@ -85,7 +86,7 @@ namespace Cutyt.Core
                 return fullFilePath;
             }
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f bestaudio {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f bestaudio https://www.youtube.com/watch?v={v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
 
             if (!string.IsNullOrEmpty(res.StandardError))
@@ -110,7 +111,7 @@ namespace Cutyt.Core
             }
 
 
-            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f {code} {v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
+            ProcessResult res = ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-f {code} https://www.youtube.com/watch?v={v} --output \"{AppConstants.YtWorkingDir}\\{resultFileNameWithoutExtension}.%(ext)s\"").Result;
 
             if (!string.IsNullOrEmpty(res.StandardError))
             {
@@ -288,10 +289,18 @@ namespace Cutyt.Core
             if (!string.IsNullOrEmpty(cachedFile))
             {
                 json = File.ReadAllText(cachedFile);
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-j https://www.youtube.com/watch?v={Id}");
+
+                    json = res.StadardOutput;
+
+                    File.WriteAllText(Path.Combine(cachedFileDirectory, $"{Id}.json"), json);
+                }
             }
             else
             {
-                var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-j \"{Id}\"");
+                var res = await ProcessAsyncHelper.ExecuteShellCommand($@"{AppConstants.YtWorkingDir}\youtube-dl.exe", $"-j https://www.youtube.com/watch?v={Id}");
 
                 json = res.StadardOutput;
 

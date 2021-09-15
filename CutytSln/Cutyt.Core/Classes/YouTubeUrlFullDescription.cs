@@ -47,7 +47,7 @@ namespace Cutyt.Core.Classes
         /// <summary>
         /// 25
         /// </summary>
-        public long? Fps { get; set; }
+        public double? Fps { get; set; }
 
         /// <summary>
         /// 133451
