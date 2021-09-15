@@ -3,7 +3,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 
 public static class ProcessAsyncHelper
 {
@@ -75,9 +77,8 @@ public static class ProcessAsyncHelper
                 isStarted = process.Start();
                 if (!process.HasExited)
                 {
-                    process.PriorityClass = ProcessPriorityClass.BelowNormal;
+                    process.PriorityClass = ProcessPriorityClass.Idle;
                 }
-
             }
             catch (Exception error)
             {
@@ -139,8 +140,6 @@ public static class ProcessAsyncHelper
 
         return result;
     }
-
-
     private static Task<bool> WaitForExitAsync(Process process, int timeout)
     {
         return Task.Run(() => process.WaitForExit(timeout));
