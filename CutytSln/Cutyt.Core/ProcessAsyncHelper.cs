@@ -1,11 +1,14 @@
-﻿using Microsoft.ApplicationInsights;
+﻿using Cutyt.Core.Kernels;
+using Microsoft.ApplicationInsights;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using static Cutyt.Core.Kernels.LimitCpuUsage;
 
 public static class ProcessAsyncHelper
 {
@@ -23,6 +26,8 @@ public static class ProcessAsyncHelper
 
         using (var process = new Process())
         {
+            
+
             // If you run bash-script on Linux it is possible that ExitCode can be 255.
             // To fix it you can try to add '#!/bin/bash' header to the script.
 
@@ -75,8 +80,22 @@ public static class ProcessAsyncHelper
             try
             {
                 isStarted = process.Start();
+
                 if (!process.HasExited)
                 {
+                    //Limit the CPU usage to 45%
+                    var jobHandle = LimitCpuUsage.CreateJobObject(null, null);
+                    AssignProcessToJobObject(jobHandle, process.Handle);
+                    var cpuLimits = new LimitCpuUsage.JOBOBJECT_CPU_RATE_CONTROL_INFORMATION();
+                    cpuLimits.ControlFlags = (UInt32)(CpuFlags.JOB_OBJECT_CPU_RATE_CONTROL_ENABLE | CpuFlags.JOB_OBJECT_CPU_RATE_CONTROL_HARD_CAP);
+                    cpuLimits.CpuRate = 15 * 100; // Limit CPu usage to 15%
+                    var pointerToJobCpuLimits = Marshal.AllocHGlobal(Marshal.SizeOf(cpuLimits));
+                    Marshal.StructureToPtr(cpuLimits, pointerToJobCpuLimits, false);
+                    if (!SetInformationJobObject(jobHandle, JOBOBJECTINFOCLASS.JobObjectCpuRateControlInformation, pointerToJobCpuLimits, (uint)Marshal.SizeOf(cpuLimits)))
+                    {
+                        Console.WriteLine("Error !");
+                    }
+
                     process.PriorityClass = ProcessPriorityClass.Idle;
                 }
             }

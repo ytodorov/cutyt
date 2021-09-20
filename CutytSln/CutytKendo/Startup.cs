@@ -138,6 +138,8 @@ namespace CutytKendo
             var provider = new FileExtensionContentTypeProvider();
             // Add new mappings
             provider.Mappings[".mkv"] = "video/x-matroska";
+
+            provider.Mappings[".opus"] = "audio/ogg";
             // Remove MP4 videos.
 
             app.UseStaticFiles(new StaticFileOptions

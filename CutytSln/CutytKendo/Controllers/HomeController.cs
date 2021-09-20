@@ -144,9 +144,6 @@ namespace CutytKendo.Controllers
 
             fullUrl = $"https://www.youtube.com/watch?v={v}";
 
-
-            //var youTubeUrlFullDescriptionReply = await rebusBus.SendRequest<YouTubeUrlFullDescriptionReply>(new GetYouTubeUrlFullDescriptionJob() { Id = v }, timeout: AppConstants.RebusTimeout);
-
             YouTubeUrlFullDescription youTubeUrlFullDescription = await YoutubeDlHelper.GetYouTubeUrlFullDescription(v, telemetryClient);
             var durationInSeconds = youTubeUrlFullDescription.Duration;
             var infos = youTubeUrlFullDescription.Formats;
@@ -263,12 +260,12 @@ namespace CutytKendo.Controllers
             return Json(new List<YoutubeDownloadLinkReply>().ToDataSourceResult(request));
         }
 
-        [Route("/watch")]
-        public IActionResult Watch(string v)
-        {
-            var view = View("Index", $"https://www.youtube.com/watch?v={v}");
-            return view;
-        }
+        //[Route("/watch")]
+        //public IActionResult Watch(string v)
+        //{
+        //    var view = View("Index", $"https://www.youtube.com/watch?v={v}");
+        //    return view;
+        //}
 
         [Route("/privacy")]
         public IActionResult Privacy()
@@ -291,9 +288,10 @@ namespace CutytKendo.Controllers
         {
             string local = @"D:\local";
 
-            if (Directory.Exists(local))
+            DirectoryInfo directoryInfo = new DirectoryInfo(local);
+            if (directoryInfo.Exists)
             {
-                var files = Directory.GetFiles(local, "*.*", SearchOption.AllDirectories);
+                var files = directoryInfo.GetFiles("*.*", SearchOption.AllDirectories).Select(s => new { s.FullName, s.Length, s.CreationTimeUtc });
                 return Json(files);
             }
 

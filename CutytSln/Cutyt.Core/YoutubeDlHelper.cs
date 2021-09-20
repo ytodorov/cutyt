@@ -86,7 +86,41 @@ namespace Cutyt.Core
             //    telemetryClient.TrackException(ex);
             //}
 
+            CleanDirectoryFromOldFiles(AppConstants.YtWorkingDir, telemetryClient);
+            CleanDirectoryFromOldFiles("D:\\local\\VirtualDirectory0\\site\\wwwroot\\wwwroot\\downloads", telemetryClient);
+            CleanDirectoryFromOldFiles("D:\\local\\DynamicCache\\wwwroot\\wwwroot\\downloads", telemetryClient);
 
+            //DirectoryInfo directoryInfo = new DirectoryInfo(AppConstants.YtWorkingDir);
+            //if (directoryInfo.Exists)
+            //{
+            //    var files = directoryInfo.GetFiles().ToList();
+
+            //    files = files
+            //        .OrderByDescending(s => s.CreationTimeUtc)
+            //        .Where(f => !f.Name.EndsWith(".exe") && !f.Name.EndsWith(".json"))
+            //        .ToList();
+
+            //    var totalSizeInBytes = files.Sum(f => f.Length);
+
+            //    var totalSizeInGigabytes = (double)totalSizeInBytes / 1024 / 1024 / 1024;
+
+            //    if (totalSizeInGigabytes > 80)
+            //    {
+            //        var filesToDelete = files.Skip(files.Count / 3 * 2).ToList();
+
+            //        // delete the last 33%  of the files
+
+            //        foreach (var fileToDelete in filesToDelete)
+            //        {
+            //            File.Delete(fileToDelete.FullName);
+            //        }
+            //    }
+
+            //}
+        }
+
+        private static void CleanDirectoryFromOldFiles(string dirPath, TelemetryClient telemetryClient)
+        {
             DirectoryInfo directoryInfo = new DirectoryInfo(AppConstants.YtWorkingDir);
             if (directoryInfo.Exists)
             {
@@ -101,7 +135,7 @@ namespace Cutyt.Core
 
                 var totalSizeInGigabytes = (double)totalSizeInBytes / 1024 / 1024 / 1024;
 
-                if (totalSizeInGigabytes > 80)
+                if (totalSizeInGigabytes > 10)
                 {
                     var filesToDelete = files.Skip(files.Count / 3 * 2).ToList();
 
@@ -109,7 +143,14 @@ namespace Cutyt.Core
 
                     foreach (var fileToDelete in filesToDelete)
                     {
-                        File.Delete(fileToDelete.FullName);
+                        try
+                        {
+                            File.Delete(fileToDelete.FullName);
+                        }
+                        catch (Exception ex)
+                        {
+                            telemetryClient.TrackException(ex);
+                        }
                     }
                 }
 

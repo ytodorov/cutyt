@@ -1,15 +1,9 @@
-﻿@model string
-
-<div class="jumbotron bg-info">
+﻿<div class="jumbotron bg-info">
     <div class="demo-section k-content mb-2">
         @(Html.Kendo().TextBox()
         .Name("textboxUrl")
         .Placeholder("Paste YouTube URL here")
-        //.Label(label => label
-        //    .Content("Enter YouTube URL here")
-        //    .Floating(true)
-        //)
-        .Value(Model)
+        //.Value(Model)
         .HtmlAttributes(new { style = "width: 100%" })
     )
 
@@ -26,7 +20,6 @@
     <p class="text-center">
         @(Html.Kendo().Button()
         .Name("btnStart")
-        //.HtmlAttributes(new { @class = "k-primary" })
         .Content(@<text>
                     @(Html.Kendo().Loader()
                            .Name("btnStartLoader")
@@ -69,10 +62,6 @@
         .Name("MediaPlayerStart")
         .AutoPlay(true)
         .Volume(0)
-        //.Media(m => m
-        //    .Title("Count up timer 10 minutes")
-        //    .Source("https://www.youtube.com/watch?v=cUAZHrmlTts")
-        //)
         .FullScreen(false)
         .ForwardSeek(true)
         .HtmlAttributes(new { style = "height:360px" })
@@ -88,10 +77,6 @@
         .Name("MediaPlayerEnd")
         .AutoPlay(true)
         .Volume(0)
-        //.Media(m => m
-        //    .Title("Count up timer 10 minutes")
-        //    .Source("https://www.youtube.com/watch?v=cUAZHrmlTts")
-        //)
         .FullScreen(false)
         .ForwardSeek(true)
 
@@ -101,14 +86,6 @@
     </div>
 </div>
 
-@*<div class="row">
-    <div class="col-md-12">
-        <div class="text-center">
-            <!-- Go to www.addthis.com/dashboard to customize your tools -->
-            <div class="addthis_inline_share_toolbox"></div>
-        </div>
-    </div>
-</div>*@
 <div class="row">
     <div class="col-md-12">
         <div class="text-center display-4">
@@ -194,6 +171,16 @@
 @section scripts {
     <script>
         $(document).ready(function () {
+
+            const urlSearchParams = new URLSearchParams(window.location.search);
+            const params = Object.fromEntries(urlSearchParams.entries());
+            var v = '';
+            if (window.location.pathname == '/watch')
+            {
+                v = params['v'];
+                 $("#textboxUrl").val("https://www.youtube.com/watch?v=" + v);
+            }
+
             var url = $("#textboxUrl").val();
 
             if (url.length > 0) {
