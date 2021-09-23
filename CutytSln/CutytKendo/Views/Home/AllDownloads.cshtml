@@ -1,4 +1,9 @@
-﻿@(Html.Kendo().Grid<YoutubeDownloadLinkReply>()
+﻿@{
+    ViewData["Title"] = $"All Downloads | {SiteConstants.Title}";
+    ViewData["Description"] = "Downloads made from all users in the last few hours";
+}
+
+@(Html.Kendo().Grid<YoutubeDownloadedFileInfo>()
                             .Name("grid")
                             .Mobile(MobileMode.Auto)                            
                             .Columns(columns =>

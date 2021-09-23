@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Cutyt.Core.Rebus.Replies
 {
-    public class YoutubeDownloadLinkReply
+    public class YoutubeDownloadedFileInfo
     {
         public string Id { get; set; }
 

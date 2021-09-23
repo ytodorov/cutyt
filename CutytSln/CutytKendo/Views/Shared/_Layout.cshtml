@@ -1,12 +1,17 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+    @{
+    var title = ViewData["Title"] is null ? SiteConstants.Title : ViewData["Title"];
+    var description = ViewData["Description"] is null ? SiteConstants.Description : ViewData["Description"];
+}
 <head>
+   
     @*<base href="@SiteConstants.CanonicalUrl">*@
     <meta charset="utf-8" />
-    <meta title="@SiteConstants.Title" />
+    <meta title="@(title)" />
     <meta property="og:image" content="@SiteConstants.ImageUrl" />
     <meta property="og:title" content="@SiteConstants.Title" />
-    <meta property="og:description" content="@SiteConstants.Description" />
+    <meta property="og:description" content="@(description)" />
     <meta property="og:url" content="@SiteConstants.CanonicalUrl" />
     <meta property="og:site_name" content="@SiteConstants.SiteName" />
     <meta property="og:author" content="@SiteConstants.Author" />
@@ -14,8 +19,8 @@
     <meta property="fb:app:id" content="773558706918738" />
     <meta property="fb:app_id" content="773558706918738" />
 
-    <meta name="description" content="@($"{SiteConstants.TitleLong}. {SiteConstants.Description}.")">
-    <title>@SiteConstants.TitleLong</title>
+    <meta name="description" content="@(description)">
+    <title>@(title)</title>
 
     <link rel="canonical" href="@SiteConstants.CanonicalUrl" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
@@ -66,7 +71,13 @@
 
     <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.userevents.min.js"></script>
 
+    <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.scrollview.min.js"></script>
+
+    <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.toolbar.min.js"></script>
+
     <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.draganddrop.min.js"></script>
+
+    <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.tooltip.min.js"></script>
 
     <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.slider.min.js"></script>
 
@@ -186,8 +197,8 @@
 
             <div class="position-relative overflow-hidden p-1 p-md-1 m-md-1 text-center">
                 <div class="mx-auto my-5">
-                    <h1>@(SiteConstants.Title.ToUpperInvariant())</h1>
-                    <h2>@SiteConstants.Description</h2>
+                    <h1>@(title)</h1>
+                    <h2>@(description)</h2>
                 </div>
             </div>
 

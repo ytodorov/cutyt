@@ -2,6 +2,7 @@
 using Cutyt.Core.Constants;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
+using Cutyt.Core.Storage;
 using Microsoft.ApplicationInsights;
 using System;
 using System.Collections.Generic;
@@ -321,7 +322,7 @@ namespace Cutyt.Core
             return result;
         }
 
-        public static void SaveDownloadedFilesMetaInfo(YoutubeDownloadLinkReply reply)
+        public static void SaveDownloadedFilesMetaInfo(YoutubeDownloadedFileInfo reply)
         {
             var cachedFileDirectory = Path.Combine(AppConstants.YtWorkingDir, "DownloadedFilesInfo");
             if (!Directory.Exists(cachedFileDirectory))
@@ -337,13 +338,13 @@ namespace Cutyt.Core
             }
 
             var json = File.ReadAllText(filePath);
-            var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
+            var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadedFileInfo>>(json);
 
             existingReplies.Add(reply);
 
             var existingFiles = Directory.GetFiles(AppConstants.YtWorkingDir);
 
-            var copyOfExistingReplies = new List<YoutubeDownloadLinkReply>();
+            var copyOfExistingReplies = new List<YoutubeDownloadedFileInfo>();
             copyOfExistingReplies.AddRange(existingReplies);
 
             foreach (var rep in copyOfExistingReplies)
@@ -430,9 +431,9 @@ namespace Cutyt.Core
             return youTubeUrlFullDescription;
         }
 
-        public static async Task<YoutubeDownloadLinkReply> GetYoutubeDownloadLinkReply(GetYoutubeDownloadLinkJob job, TelemetryClient telemetryClient, string hostBaseUrl)
+        public static async Task<YoutubeDownloadedFileInfo> GetYoutubeDownloadLinkReply(GetYoutubeDownloadLinkJob job, TelemetryClient telemetryClient, string hostBaseUrl)
         {
-            YoutubeDownloadLinkReply reply = new YoutubeDownloadLinkReply();
+            YoutubeDownloadedFileInfo reply = new YoutubeDownloadedFileInfo();
 
             if (job.V?.Length > 20)
             {
@@ -441,24 +442,24 @@ namespace Cutyt.Core
 
             var selectedOption = job.SelectedOption;
 
-            string filePathResult = string.Empty;
+            string fullFilePath = string.Empty;
 
             YoutubeDlHelper.FreeSpaceOnHardDiskIfNeeded(telemetryClient);
 
             if (selectedOption.Contains("--audio-format"))
             {
                 selectedOption = selectedOption.Split(" ").Last();
-                filePathResult = YoutubeDlHelper.DownloadCustomAudio(job.V, selectedOption, telemetryClient);
+                fullFilePath = YoutubeDlHelper.DownloadCustomAudio(job.V, selectedOption, telemetryClient);
             }
             else
             {
                 var selectedVideoOption = selectedOption.Split(" ").FirstOrDefault();
-                filePathResult = YoutubeDlHelper.MergeAudioAndVideoToMp4(job.V, selectedVideoOption, telemetryClient);
+                fullFilePath = YoutubeDlHelper.MergeAudioAndVideoToMp4(job.V, selectedVideoOption, telemetryClient);
             }
 
             if (job.ShouldTrim.GetValueOrDefault())
             {
-                filePathResult = YoutubeDlHelper.CutFile(filePathResult, job.Start.ToString(), job.End.ToString(), telemetryClient);
+                fullFilePath = YoutubeDlHelper.CutFile(fullFilePath, job.Start.ToString(), job.End.ToString(), telemetryClient);
             }
 
             //AddWatermark(filePathResult); cannot be played in browser. dunno why
@@ -466,9 +467,21 @@ namespace Cutyt.Core
             var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
             //var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
 
-            string physicalFileName = Path.GetFileName(filePathResult);
+            string physicalFileName = Path.GetFileName(fullFilePath);
 
             //var fileNameFromArgs = GetFileNameFromArgs(ytUrl);
+
+            //var metaFileToGetTitle = Directory.GetFiles(AppConstants.YtWorkingDir).FirstOrDefault(f => f.Contains(job.V, StringComparison.CurrentCultureIgnoreCase));
+            var fileNameWithoutDashV = string.Empty;
+
+            var fullDescription = await GetYouTubeUrlFullDescription(job.V, telemetryClient);
+
+            fileNameWithoutDashV = fullDescription.Title;
+            //if (metaFileToGetTitle != null)
+            //{
+            //    var fileContent = File.ReadAllText(metaFileToGetTitle);
+            //    asd
+            //}
 
             ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand(
                 $@"{AppConstants.YtWorkingDir}\youtube-dl.exe",
@@ -478,10 +491,12 @@ namespace Cutyt.Core
             var fileNameFromArgs = res.StadardOutput;
 
             var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
-            var fileNameWithoutDashV = fileNameWithoutExtensions.Replace($" [{job.V}]", string.Empty, StringComparison.InvariantCultureIgnoreCase);
+            fileNameWithoutDashV = fileNameWithoutExtensions.Replace($" [{job.V}]", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 
-            var size = new FileInfo(filePathResult).Length;
-            reply = new YoutubeDownloadLinkReply()
+            var size = new FileInfo(fullFilePath).Length;
+
+           
+            reply = new YoutubeDownloadedFileInfo()
             {
                 Id = job.V,
                 Name = fileNameFromArgs,
@@ -499,23 +514,44 @@ namespace Cutyt.Core
                 Ip = job.Ip
             };
 
-            for (int i = 0; i < 10; i++)
-            {
-                try
-                {
-                    YoutubeDlHelper.SaveDownloadedFilesMetaInfo(reply);
-                    break;
-                }
-                catch(IOException ex)
-                {
-                    if (i == 9)
-                    {
-                        telemetryClient.TrackException(ex);
-                    }
-                    Thread.Sleep(1000);
-                }
-            }
-            
+            Dictionary<string, string> metadata = new Dictionary<string, string>();
+
+            metadata[nameof(YoutubeDownloadedFileInfo.Start)] = reply.Start;
+            metadata[nameof(YoutubeDownloadedFileInfo.End)] = reply.End;
+            metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskSize)] = reply.FileOnDiskSize.ToString();
+
+            metadata[nameof(YoutubeDownloadedFileInfo.DisplayName)] = reply.DisplayName;
+
+            metadata[nameof(YoutubeDownloadedFileInfo.Url)] = reply.Url;
+
+            metadata[nameof(YoutubeDownloadedFileInfo.Ip)] = reply.Ip;
+
+            metadata[nameof(YoutubeDownloadedFileInfo.Id)] = reply.Id;
+
+
+            metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension)] = reply.FileOnDiskExtension;
+
+            await BlobStorageHelper.UploadBlob(fullFilePath, physicalFileName, metadata, telemetryClient);
+
+            File.Delete(fullFilePath);
+
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    try
+            //    {
+            //        YoutubeDlHelper.SaveDownloadedFilesMetaInfo(reply);
+            //        break;
+            //    }
+            //    catch(IOException ex)
+            //    {
+            //        if (i == 9)
+            //        {
+            //            telemetryClient.TrackException(ex);
+            //        }
+            //        Thread.Sleep(1000);
+            //    }
+            //}
+
 
             return reply;
 

@@ -3,6 +3,7 @@ using Cutyt.Core.Classes;
 using Cutyt.Core.Constants;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
+using Cutyt.Core.Storage;
 using CutytKendoWeb.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -41,7 +42,7 @@ namespace CutytKendo.Controllers
 
         private IWebHostEnvironment hostEnvironment;
 
-        private string cutYtBaseAddress = "https://localhost:44347/";
+        private string cutYtBaseAddress = "https://stcutyt.blob.core.windows.net/media/"; //"https://localhost:44347/";
 
         HttpClient httpClient = null;
 
@@ -51,7 +52,7 @@ namespace CutytKendo.Controllers
             ILogger<HomeController> logger,
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostEnvironment,
-            IMemoryCache cache,          
+            IMemoryCache cache,
             TelemetryClient telemetryClient)
         {
             _logger = logger;
@@ -64,7 +65,7 @@ namespace CutytKendo.Controllers
             if (!mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase) &&
                 !mn.Equals("yTodorov-nb", StringComparison.InvariantCultureIgnoreCase))
             {
-                cutYtBaseAddress = "https://www.cutyt.com/";
+                cutYtBaseAddress = "https://stcutyt.blob.core.windows.net/media/"; //"https://www.cutyt.com/";
             }
 
             httpClient = httpClientFactory.CreateClient();
@@ -95,6 +96,12 @@ namespace CutytKendo.Controllers
 
         [Route("/mydownloads")]
         public IActionResult MyDownloads()
+        {
+            return View();
+        }
+
+        [Route("/downloads/{id}")]
+        public IActionResult Downloads(string id)
         {
             return View();
         }
@@ -224,7 +231,7 @@ namespace CutytKendo.Controllers
                 Ip = HttpContext.Connection.RemoteIpAddress.ToString(),
             };
 
-            var linkviewModel = await YoutubeDlHelper.GetYoutubeDownloadLinkReply(job, telemetryClient, $"{cutYtBaseAddress}Downloads/");
+            var linkviewModel = await YoutubeDlHelper.GetYoutubeDownloadLinkReply(job, telemetryClient, $"{cutYtBaseAddress}");
 
             return PartialView(linkviewModel);
         }
@@ -232,32 +239,18 @@ namespace CutytKendo.Controllers
         [Route("/getfiles")]
         public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
-            var filePath = $"{AppConstants.YtWorkingDir}\\DownloadedFilesInfo\\downloadedFiles.json";
-            if (System.IO.File.Exists(filePath))
-            {
-                var json = await System.IO.File.ReadAllTextAsync(filePath); //await httpClient.GetStringAsync(url);
-                var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
-                existingReplies = existingReplies.OrderByDescending(s => s.DownloadedOn).ToList();
-                var dsResult = existingReplies.ToDataSourceResult(request);
-                return Json(dsResult);
-            }
-            return Json(new List<YoutubeDownloadLinkReply>().ToDataSourceResult(request));
+            var blobs = await BlobStorageHelper.ListBlobs(telemetryClient);
+
+            return Json(blobs.ToDataSourceResult(request));
         }
 
         [Route("/getmyfiles")]
         public async Task<IActionResult> GetMyFiles([DataSourceRequest] DataSourceRequest request)
         {
-            var filePath = $"{AppConstants.YtWorkingDir}\\DownloadedFilesInfo\\downloadedFiles.json";
-            if (System.IO.File.Exists(filePath))
-            {
-                var json = await System.IO.File.ReadAllTextAsync(filePath); 
-                var existingReplies = JsonSerializer.Deserialize<List<YoutubeDownloadLinkReply>>(json);
-                existingReplies = existingReplies.Where(r => r.Ip == HttpContext.Connection.RemoteIpAddress.ToString()).ToList();
-                existingReplies = existingReplies.OrderByDescending(s => s.DownloadedOn).ToList();
-                var dsResult = existingReplies.ToDataSourceResult(request);
-                return Json(dsResult);
-            }
-            return Json(new List<YoutubeDownloadLinkReply>().ToDataSourceResult(request));
+            var blobs = await BlobStorageHelper.ListBlobs(telemetryClient);
+            blobs = blobs.Where(r => r.Ip == HttpContext.Connection.RemoteIpAddress.ToString()).ToList();
+
+            return Json(blobs.ToDataSourceResult(request));
         }
 
         //[Route("/watch")]
@@ -277,7 +270,7 @@ namespace CutytKendo.Controllers
         {
             return View();
         }
-      
+
         public IActionResult GetEnv()
         {
             return Json(hostEnvironment.EnvironmentName);

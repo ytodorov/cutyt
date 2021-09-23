@@ -1,7 +1,23 @@
-﻿@model YoutubeDownloadLinkReply
+﻿@model YoutubeDownloadedFileInfo
 
 <div class="text-center">
 	<h4 class="text-center">Your file is ready for download</h4>
 	<a rel="noreferrer" href="@($"{Model.Url}")" target="_blank">@($"Download link -> {Model.DisplayName} <- Download link")</a>
 </div>
 
+
+<div class="text-center"
+   @(Html.Kendo().MediaPlayer()
+        .Name("mplayer")
+        .AutoPlay(true)
+        .Volume(0)
+        .FullScreen(false)
+        .Navigatable(true)
+        //.ForwardSeek(true)
+        .Media(m => 
+        {
+            m.Source(Model.Url).Title(Model.DisplayName);
+        })
+        .HtmlAttributes(new { style = "height:360px" })
+    )
+</div>
