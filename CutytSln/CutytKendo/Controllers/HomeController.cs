@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
@@ -253,22 +254,27 @@ namespace CutytKendo.Controllers
             return Json(blobs.ToDataSourceResult(request));
         }
 
-        //[Route("/watch")]
-        //public IActionResult Watch(string v)
-        //{
-        //    var view = View("Index", $"https://www.youtube.com/watch?v={v}");
-        //    return view;
-        //}
-
         [Route("/privacy")]
         public IActionResult Privacy()
         {
             return View();
         }
 
+        [Route("/error")]
         public IActionResult Error()
         {
-            return View();
+            if (HttpContext.Response.StatusCode == (int)HttpStatusCode.InternalServerError)
+            {
+                return View("error500");
+            }
+            else if (HttpContext.Response.StatusCode == (int)HttpStatusCode.NotFound)
+            {
+                return View("error400");
+            }
+            else
+            {
+                return View("error");
+            }
         }
 
         public IActionResult GetEnv()

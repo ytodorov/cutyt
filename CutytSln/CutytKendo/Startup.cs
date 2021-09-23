@@ -77,41 +77,20 @@ namespace CutytKendo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TelemetryClient applicationInsightsClient)
         {
-            //app.UseDeveloperExceptionPage();
-
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-            //else
-            //{
-            //    app.UseExceptionHandler("/Home/Error");
-            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //    app.UseHsts();
-            //}
-
-            //app.UseStatusCodePagesWithRedirects("/error?id={0}");
-
             applicationInsightsClient.TrackEvent("Application Started");
-            app.Use(async (ctx, next) =>
-            {
-                string body = await ctx.Request.GetRawBodyAsync();
-                ctx.Items.Add("_custom_http_body", body);
-                await next();
-            });
+
+            // Both must be here.
+            app.UseExceptionHandler("/error"); // 500
+            app.UseStatusCodePagesWithReExecute("/error", "?code={0}"); // 400
 
             app.Use(async (ctx, next) =>
             {
-                await next();
-
-                if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+                if ((int)ctx.Response.StatusCode < 400)
                 {
-                    //Re-execute the request so the user gets the error page
-                    string originalPath = ctx.Request.Path.Value;
-                    ctx.Items["originalPath"] = originalPath;
-                    ctx.Request.Path = "/";
-                    await next();
+                    string body = await ctx.Request.GetRawBodyAsync();
+                    ctx.Items.Add("_custom_http_body", body);
                 }
+                await next();
             });
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/url-rewriting?view=aspnetcore-2.2

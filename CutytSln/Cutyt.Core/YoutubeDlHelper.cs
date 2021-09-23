@@ -1,5 +1,6 @@
 ﻿using Cutyt.Core.Classes;
 using Cutyt.Core.Constants;
+using Cutyt.Core.Extensions;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
 using Cutyt.Core.Storage;
@@ -516,20 +517,19 @@ namespace Cutyt.Core
 
             Dictionary<string, string> metadata = new Dictionary<string, string>();
 
-            metadata[nameof(YoutubeDownloadedFileInfo.Start)] = reply.Start;
-            metadata[nameof(YoutubeDownloadedFileInfo.End)] = reply.End;
-            metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskSize)] = reply.FileOnDiskSize.ToString();
+            metadata[nameof(YoutubeDownloadedFileInfo.Start)] = reply.Start.Base64StringEncode();
+            metadata[nameof(YoutubeDownloadedFileInfo.End)] = reply.End.Base64StringEncode();
+            metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskSize)] = reply.FileOnDiskSize.ToString().Base64StringEncode();
 
-            metadata[nameof(YoutubeDownloadedFileInfo.DisplayName)] = reply.DisplayName;
+            metadata[nameof(YoutubeDownloadedFileInfo.DisplayName)] = reply.DisplayName.Base64StringEncode();
 
-            metadata[nameof(YoutubeDownloadedFileInfo.Url)] = reply.Url;
+            metadata[nameof(YoutubeDownloadedFileInfo.Url)] = reply.Url.Base64StringEncode();
 
-            metadata[nameof(YoutubeDownloadedFileInfo.Ip)] = reply.Ip;
+            metadata[nameof(YoutubeDownloadedFileInfo.Ip)] = reply.Ip.Base64StringEncode();
 
-            metadata[nameof(YoutubeDownloadedFileInfo.Id)] = reply.Id;
+            metadata[nameof(YoutubeDownloadedFileInfo.Id)] = reply.Id.Base64StringEncode();
 
-
-            metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension)] = reply.FileOnDiskExtension;
+            metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension)] = reply.FileOnDiskExtension.Base64StringEncode();
 
             await BlobStorageHelper.UploadBlob(fullFilePath, physicalFileName, metadata, telemetryClient);
 

@@ -88,7 +88,7 @@ public static class ProcessAsyncHelper
                     AssignProcessToJobObject(jobHandle, process.Handle);
                     var cpuLimits = new LimitCpuUsage.JOBOBJECT_CPU_RATE_CONTROL_INFORMATION();
                     cpuLimits.ControlFlags = (UInt32)(CpuFlags.JOB_OBJECT_CPU_RATE_CONTROL_ENABLE | CpuFlags.JOB_OBJECT_CPU_RATE_CONTROL_HARD_CAP);
-                    cpuLimits.CpuRate = 15 * 100; // Limit CPu usage to 15%
+                    cpuLimits.CpuRate = 5 * 100; // Limit CPu usage to 10%
                     var pointerToJobCpuLimits = Marshal.AllocHGlobal(Marshal.SizeOf(cpuLimits));
                     Marshal.StructureToPtr(cpuLimits, pointerToJobCpuLimits, false);
                     if (!SetInformationJobObject(jobHandle, JOBOBJECTINFOCLASS.JobObjectCpuRateControlInformation, pointerToJobCpuLimits, (uint)Marshal.SizeOf(cpuLimits)))

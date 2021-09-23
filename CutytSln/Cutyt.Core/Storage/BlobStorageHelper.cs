@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Cutyt.Core.Extensions;
 using Cutyt.Core.Rebus.Replies;
 using Microsoft.ApplicationInsights;
 using System;
@@ -63,19 +64,19 @@ namespace Cutyt.Core.Storage
                 blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension), out string fileOnDiskExtension);
 
                 youtubeDownloadedFileInfo.DownloadedOn = blobItem.Properties.CreatedOn.GetValueOrDefault().UtcDateTime;
-                youtubeDownloadedFileInfo.Start = start;
-                youtubeDownloadedFileInfo.End = end;
-                youtubeDownloadedFileInfo.DisplayName = displayName;
-                youtubeDownloadedFileInfo.Url = url;
-                if (long.TryParse(fileOnDiskSize, out long longFileOnDiskSize))
+                youtubeDownloadedFileInfo.Start = start.Base64StringDecode();
+                youtubeDownloadedFileInfo.End = end.Base64StringDecode();
+                youtubeDownloadedFileInfo.DisplayName = displayName.Base64StringDecode();
+                youtubeDownloadedFileInfo.Url = url.Base64StringDecode();
+                if (long.TryParse(fileOnDiskSize.Base64StringDecode(), out long longFileOnDiskSize))
                 {
                     youtubeDownloadedFileInfo.FileOnDiskSize = longFileOnDiskSize;
                 }
 
-                youtubeDownloadedFileInfo.Ip = Ip;
+                youtubeDownloadedFileInfo.Ip = Ip.Base64StringDecode();
 
-                youtubeDownloadedFileInfo.Id = Id;
-                youtubeDownloadedFileInfo.FileOnDiskExtension = fileOnDiskExtension;
+                youtubeDownloadedFileInfo.Id = Id.Base64StringDecode();
+                youtubeDownloadedFileInfo.FileOnDiskExtension = fileOnDiskExtension.Base64StringDecode();
 
 
                 youtubeDownloadedFileInfos.Add(youtubeDownloadedFileInfo);
