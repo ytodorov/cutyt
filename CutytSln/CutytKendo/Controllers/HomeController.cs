@@ -254,6 +254,13 @@ namespace CutytKendo.Controllers
             return Json(blobs.ToDataSourceResult(request));
         }
 
+        [Route("/watch")]
+        public IActionResult Watch(string v)
+        {
+            var view = View("Index", $"https://www.youtube.com/watch?v={v}");
+            return view;
+        }
+
         [Route("/privacy")]
         public IActionResult Privacy()
         {

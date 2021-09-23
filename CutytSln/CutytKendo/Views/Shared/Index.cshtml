@@ -1,9 +1,11 @@
-﻿<div class="jumbotron bg-info">
+﻿@model string;
+
+<div class="jumbotron bg-info">
     <div class="demo-section k-content mb-2">
         @(Html.Kendo().TextBox()
         .Name("textboxUrl")
         .Placeholder("Paste YouTube URL here")
-        //.Value(Model)
+        .Value(Model)
         .HtmlAttributes(new { style = "width: 100%" })
     )
 
