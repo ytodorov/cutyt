@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = $"My Downloads | {SiteConstants.Title}";
     ViewData["Description"] = "Downloads made from this IP (" + this.Context.Connection.RemoteIpAddress.ToString() + ")";
+    ViewData["CanonicalUrl"] = $"{SiteConstants.CanonicalUrl}/mydownloads";
 }
 
 @(Html.Kendo().Grid<YoutubeDownloadedFileInfo>()

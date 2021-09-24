@@ -34,7 +34,7 @@ namespace Cutyt.Core.Constants
         public static readonly string Author = "https://www.cutyt.com";
 
         /// <summary>
-        /// https://www.cutyt.com/
+        /// https://www.cutyt.com
         /// </summary>
         public static readonly string CanonicalUrl = "https://www.cutyt.com";
 

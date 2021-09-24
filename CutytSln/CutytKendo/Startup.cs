@@ -118,7 +118,7 @@ namespace CutytKendo
                 ctx.Response.OnStarting(
                     async () =>
                     {
-                        ctx.Response.Headers.Add("X-Response-Time", stopWatch.Elapsed.TotalMilliseconds.ToString());
+                        ctx.Response.Headers["X-Response-Time"] = stopWatch.Elapsed.TotalMilliseconds.ToString();
                         await Task.FromResult(0);
                     });
 
