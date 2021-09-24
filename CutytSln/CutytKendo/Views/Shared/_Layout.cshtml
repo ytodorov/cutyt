@@ -14,7 +14,7 @@
     <meta property="og:image" content="@SiteConstants.ImageUrl" />
     <meta property="og:title" content="@SiteConstants.Title" />
     <meta property="og:description" content="@(description)" />
-    <meta property="og:url" content="@SiteConstants.CanonicalUrl" />
+    <meta property="og:url" content="@(canonicalUrl)" />
     <meta property="og:site_name" content="@SiteConstants.SiteName" />
     <meta property="og:author" content="@SiteConstants.Author" />
     <meta property="og:type" content="website" />
@@ -24,7 +24,7 @@
     <meta name="description" content="@(description)">
     <title>@(title)</title>
 
-    <link rel="canonical" href="@SiteConstants.CanonicalUrl" />
+    <link rel="canonical" href="@(canonicalUrl)" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
