@@ -32,16 +32,6 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
 
-    @*<environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
-    </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
-*@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
     <link href="https://cdn.kendostatic.com/2021.2.511/styles/kendo.common-fiori.min.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.kendostatic.com/2021.2.511/styles/kendo.fiori.min.css" rel="stylesheet" type="text/css" />
@@ -50,8 +40,13 @@
     @*<link rel="stylesheet" href="https://cutyt.azureedge.net/cdnfiles/cutyt.min.css">*@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     
+    @*<script src="~/js/compressed.js"></script>*@
 
-    <script src="https://cdn.kendostatic.com/2021.2.511/js/jquery.min.js"></script>
+    <script src="https://cutyt.azureedge.net/cdnfiles/compressed.js"></script>
+ 
+    @* <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>*@
+
+   @*<script src="https://cdn.kendostatic.com/2021.2.511/js/jquery.min.js"></script>
 
     <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.core.min.js"></script>
 
@@ -111,7 +106,7 @@
 
     <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.breadcrumb.min.js"></script>
 
-    <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.aspnetmvc.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2021.2.511/js/kendo.aspnetmvc.min.js"></script>*@
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PK6JDTVPMV"></script>
@@ -217,15 +212,6 @@
             </p>
         </div>
     </footer>
-
-    <environment names="Development">
-        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"></script>
-    </environment>
 
     @RenderSection("scripts", required: false)
     <!-- Go to www.addthis.com/dashboard to customize your tools -->
