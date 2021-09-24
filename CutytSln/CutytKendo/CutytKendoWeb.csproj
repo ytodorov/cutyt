@@ -13,6 +13,7 @@
     <PackageReference Include="Rebus.AzureServiceBus" Version="9.0.5" />
     <PackageReference Include="Rebus.ServiceProvider" Version="6.4.1" />
     <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.2.511" />
+    <PackageReference Include="WebEssentials.AspNetCore.OutputCaching" Version="1.0.38" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

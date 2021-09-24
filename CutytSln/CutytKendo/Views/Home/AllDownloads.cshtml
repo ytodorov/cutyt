@@ -28,7 +28,7 @@
                                 .Ajax()
                                 .PageSize(20)
                                 .ServerOperation(false)
-                                .Read(read => read.Url("/getfiles"))
+                                .Read(read => read.Url("/getfiles").Type(HttpVerbs.Get))
                              )
         )
 

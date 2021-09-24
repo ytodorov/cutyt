@@ -77,6 +77,7 @@ namespace CutytKendo.Controllers
             AppConstants.YtWorkingDir = Path.Combine(hostEnvironment.WebRootPath, "downloads");
         }
 
+        [OutputCache(Profile = "default")]
         public IActionResult Index()
         {
             return View();
@@ -89,12 +90,14 @@ namespace CutytKendo.Controllers
             return View();
         }
 
+        [OutputCache(Profile = "default")]
         [Route("/alldownloads")]
         public IActionResult AllDownloads()
         {
             return View();
         }
 
+        [OutputCache(Profile = "default")]
         [Route("/mydownloads")]
         public IActionResult MyDownloads()
         {
@@ -237,6 +240,7 @@ namespace CutytKendo.Controllers
             return PartialView(linkviewModel);
         }
 
+        [OutputCache(Profile = "short")]
         [Route("/getfiles")]
         public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
@@ -261,6 +265,7 @@ namespace CutytKendo.Controllers
             return view;
         }
 
+        [OutputCache(Profile = "default")]
         [Route("/privacy")]
         public IActionResult Privacy()
         {

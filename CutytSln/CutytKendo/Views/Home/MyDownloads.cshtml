@@ -2,11 +2,7 @@
     ViewData["Title"] = $"My Downloads | {SiteConstants.Title}";
     ViewData["Description"] = "Downloads made from this IP (" + this.Context.Connection.RemoteIpAddress.ToString() + ")";
 }
-@*<div class="position-relative overflow-hidden p-1 p-md-1 m-md-1 text-center">
-                <div class="mx-auto my-5">
-                    <h3>Current IP: @(this.Context.Connection.RemoteIpAddress.ToString())</h3>
-                </div>
-            </div>*@
+
 @(Html.Kendo().Grid<YoutubeDownloadedFileInfo>()
                             .Name("grid")
                             .Mobile(MobileMode.Auto)                            
@@ -32,7 +28,7 @@
                                 .Ajax()
                                 .PageSize(20)
                                 .ServerOperation(false)
-                                .Read(read => read.Url("/getmyfiles"))
+                                .Read(read => read.Url("/getmyfiles").Type(HttpVerbs.Get))
                              )
         )
 

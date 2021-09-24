@@ -22,9 +22,11 @@ using Rebus.Routing.TypeBased;
 using Rebus.ServiceProvider;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using WebEssentials.AspNetCore.OutputCaching;
 
 namespace CutytKendo
 {
@@ -64,9 +66,25 @@ namespace CutytKendo
                     CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
             });
 
+
+
             services
                 .AddControllersWithViews()
                 .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
+
+            services.AddOutputCaching(options =>
+            {
+                options.Profiles["default"] = new OutputCacheProfile
+                {
+                    Duration = 6000
+                };
+
+                options.Profiles["short"] = new OutputCacheProfile
+                {
+                    Duration = 30,
+                    UseAbsoluteExpiration = true,
+                };
+            });
 
             services.AddKendo();
 
@@ -90,6 +108,20 @@ namespace CutytKendo
                     string body = await ctx.Request.GetRawBodyAsync();
                     ctx.Items.Add("_custom_http_body", body);
                 }
+                await next();
+            });
+
+            app.Use(async (ctx, next) =>
+            {
+                Stopwatch stopWatch = Stopwatch.StartNew();
+
+                ctx.Response.OnStarting(
+                    async () =>
+                    {
+                        ctx.Response.Headers.Add("X-Response-Time", stopWatch.Elapsed.TotalMilliseconds.ToString());
+                        await Task.FromResult(0);
+                    });
+
                 await next();
             });
 
@@ -135,6 +167,8 @@ namespace CutytKendo
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseOutputCaching();
 
             app.UseEndpoints(endpoints =>
             {
