@@ -13,5 +13,7 @@ namespace Cutyt.Core.Classes
         public long DurationInTensOfSeconds => DurationInSeconds * 10;
 
         public long DurationInSeconds { get; set; }
+
+        public string Title { get; set; }
     }
 }

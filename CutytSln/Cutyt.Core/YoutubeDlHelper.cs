@@ -432,7 +432,7 @@ namespace Cutyt.Core
             return youTubeUrlFullDescription;
         }
 
-        public static async Task<YoutubeDownloadedFileInfo> GetYoutubeDownloadLinkReply(GetYoutubeDownloadLinkJob job, TelemetryClient telemetryClient, string hostBaseUrl)
+        public static async Task<YoutubeDownloadedFileInfo> GetDownloadLinkReply(DownloadLinkRequestViewModel job, TelemetryClient telemetryClient, string hostBaseUrl)
         {
             YoutubeDownloadedFileInfo reply = new YoutubeDownloadedFileInfo();
 
@@ -496,7 +496,7 @@ namespace Cutyt.Core
 
             var size = new FileInfo(fullFilePath).Length;
 
-           
+
             reply = new YoutubeDownloadedFileInfo()
             {
                 Id = job.V,

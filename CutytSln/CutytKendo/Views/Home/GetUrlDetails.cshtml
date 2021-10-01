@@ -1,5 +1,5 @@
 ﻿@model YouTubeAllInfoViewModel
-
+<input id="hiddenTitle" type="hidden" value="@(Model.Title)" />
 <script>
 	function setValues(e) {
 		var mediaPlayerStart = $("#MediaPlayerStart").data("kendoMediaPlayer");
@@ -61,16 +61,18 @@
 		var pGenerateLink = $("#pGenerateLink");
 		pGenerateLink.show();
 
+		var title = $("#hiddenTitle").val();
+
 		$.ajax({
-			url: '/Home/GetDownloadLink?ytUrl=' + ytUrl + '&selectedOption=' + selectedValue + '&start=' + start + '&end=' + end + '&shouldTrim=' + shouldTrim,
-			contentType: 'application/html; charset=utf-8',
+			url: '/home/getdownloadlink',			
 			method: 'POST',
 			data: {
 				ytUrl : ytUrl,
 				selectedOption : selectedValue,
 				start : start,
 				end : end,
-				shouldTrim : shouldTrim
+				shouldTrim : shouldTrim,
+				title : title
 				}
 		})
 			.success(function (result) {

@@ -155,7 +155,19 @@ namespace CutytKendo.Controllers
 
             fullUrl = $"https://www.youtube.com/watch?v={v}";
 
-            YouTubeUrlFullDescription youTubeUrlFullDescription = await YoutubeDlHelper.GetYouTubeUrlFullDescription(v, telemetryClient);
+            //YouTubeUrlFullDescription youTubeUrlFullDescription = await YoutubeDlHelper.GetYouTubeUrlFullDescription(v, telemetryClient);
+
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                PropertyNameCaseInsensitive = true
+            };
+
+            var jsonStream = await httpClient.GetStreamAsync(
+                $"https://execprogram.azurewebsites.net/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
+
+            var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(jsonStream, options);
+
             var durationInSeconds = youTubeUrlFullDescription.Duration;
             var infos = youTubeUrlFullDescription.Formats;
 
@@ -181,61 +193,77 @@ namespace CutytKendo.Controllers
             YouTubeAllInfoViewModel allVM = new YouTubeAllInfoViewModel()
             {
                 DurationInSeconds = durationInSeconds.GetValueOrDefault(),
-                Formats = infos
+                Formats = infos,
+                Title = youTubeUrlFullDescription.Title
             };
 
             return PartialView(allVM);
         }
 
-        public async Task<IActionResult> GetDownloadLink(string v, string vimeoId, string selectedOption, string ytUrl, double start, double end, bool? shouldTrim)
+        [HttpPost]
+        public async Task<IActionResult> GetDownloadLink(PostDataDownloadLinkViewModel postDataDownloadLinkViewModel)
         {
             //selectedOption = selectedOption?.Replace(" ", "+");
-            ytUrl = Helpers.GetFullUrlFromYouTube(ytUrl, httpClientFactory.CreateClient());
+            var ytUrl = Helpers.GetFullUrlFromYouTube(postDataDownloadLinkViewModel.YtUrl, httpClientFactory.CreateClient());
             Uri uri = new Uri(ytUrl);
             var parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
-            v = parsedQSTest["v"];
-            if (string.IsNullOrEmpty(v))
+            postDataDownloadLinkViewModel.V = parsedQSTest["v"];
+            if (string.IsNullOrEmpty(postDataDownloadLinkViewModel.V))
             {
-                v = ytUrl.Replace("https://youtu.be/", string.Empty);
+                postDataDownloadLinkViewModel.V = ytUrl.Replace("https://youtu.be/", string.Empty);
             }
 
-            if (string.IsNullOrEmpty(selectedOption))
+            if (string.IsNullOrEmpty(postDataDownloadLinkViewModel.SelectedOption))
             {
-                selectedOption = "best";
+                postDataDownloadLinkViewModel.SelectedOption = "best";
             }
 
             string url = string.Empty;
-            if (v != "-1")
+            if (postDataDownloadLinkViewModel.V != "-1")
             {
-                url = $"https://www.youtube.com/watch?v={v}";
+                url = $"https://www.youtube.com/watch?v={postDataDownloadLinkViewModel.V}";
             }
-            if (vimeoId != "-1" && vimeoId != null)
+            if (postDataDownloadLinkViewModel.VimeoId != "-1" && postDataDownloadLinkViewModel.VimeoId != null)
             {
-                url = $"https://vimeo.com/{vimeoId}";
+                url = $"https://vimeo.com/{postDataDownloadLinkViewModel.VimeoId}";
             }
 
             // best - use single file -> mp4
-            var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
+            var selectedOptionWithoutPlus = postDataDownloadLinkViewModel.SelectedOption.Replace("+", string.Empty);
 
-            var outputFileName = $"{v}{selectedOptionWithoutPlus}";
-            if (selectedOptionWithoutPlus.Contains("--audio-format"))
-            {
-                outputFileName = $"{v}{selectedOption.Split(" ").Last()}";
-            }
+            var outputFileName = $"{postDataDownloadLinkViewModel.V}{selectedOptionWithoutPlus}";
 
-            var job = new GetYoutubeDownloadLinkJob()
+            var job = new DownloadLinkRequestViewModel()
             {
-                SelectedOption = selectedOption,
+                SelectedOption = postDataDownloadLinkViewModel.SelectedOption,
                 Url = url,
                 OutputFileName = outputFileName,
-                V = v,
-                ShouldTrim = shouldTrim.GetValueOrDefault(),
-                Start = start,
-                End = end,
+                V = postDataDownloadLinkViewModel.V,
+                ShouldTrim = postDataDownloadLinkViewModel.ShouldTrim.GetValueOrDefault(),
+                Start = postDataDownloadLinkViewModel.Start,
+                End = postDataDownloadLinkViewModel.End,
                 Ip = HttpContext.Connection.RemoteIpAddress.ToString(),
+                Title = postDataDownloadLinkViewModel.Title
+
             };
 
-            var linkviewModel = await YoutubeDlHelper.GetYoutubeDownloadLinkReply(job, telemetryClient, $"{cutYtBaseAddress}");
+            if (selectedOptionWithoutPlus.Contains("--audio-format"))
+            {
+                outputFileName = $"{postDataDownloadLinkViewModel.V}{postDataDownloadLinkViewModel.SelectedOption.Split(" ").Last()}";
+                job.AudioFormat = postDataDownloadLinkViewModel.SelectedOption.Split(" ").Last();
+            }
+
+            job.OutputFileName = outputFileName;
+
+            var json = JsonSerializer.Serialize(job);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var urlToGet = "https://execprogram.azurewebsites.net/getbloburl"; //"http://localhost:5036/getbloburl"; //"https://execprogram.azurewebsites.net/getbloburl";
+
+            var response = await httpClient.PostAsync(urlToGet, data);
+
+            var linkviewModel = await response.Content.ReadFromJsonAsync<YoutubeDownloadedFileInfo>();
+            //var linkviewModel = await YoutubeDlHelper.GetDownloadLinkReply(job, telemetryClient, $"{cutYtBaseAddress}");
 
             return PartialView(linkviewModel);
         }
@@ -292,6 +320,21 @@ namespace CutytKendo.Controllers
         public IActionResult GetEnv()
         {
             return Json(hostEnvironment.EnvironmentName);
+        }
+
+        [Route("/test")]
+        public async Task<IActionResult> Test()
+        {
+
+            var json = JsonSerializer.Serialize(new DownloadLinkRequestViewModel());
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var url = "http://localhost:5036/getbloburl";
+            var response = await httpClient.PostAsync(url, data);
+
+            var obj = await response.Content.ReadFromJsonAsync<DownloadLinkRequestViewModel>();
+
+            return Json(obj);
         }
 
         [Route("/local")]

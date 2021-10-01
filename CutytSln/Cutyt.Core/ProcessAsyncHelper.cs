@@ -96,7 +96,7 @@ public static class ProcessAsyncHelper
                         Console.WriteLine("Error !");
                     }
 
-                    process.PriorityClass = ProcessPriorityClass.Idle;
+                    process.PriorityClass = ProcessPriorityClass.BelowNormal;
                 }
             }
             catch (Exception error)
