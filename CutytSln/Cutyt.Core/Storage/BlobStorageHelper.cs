@@ -29,13 +29,15 @@ namespace Cutyt.Core.Storage
             // Get a reference to a blob
             BlobClient blobClient = containerClient.GetBlobClient(fileName);
 
+
+
             // Upload data from the local file
             await blobClient.UploadAsync(localFilePath, true);
 
             await AddBlobMetadataAsync(blobClient, metadata, telemetryClient);
         }
 
-        public static async Task<List<YoutubeDownloadedFileInfo>> ListBlobs(TelemetryClient telemetryClient)
+        public static async Task<List<YoutubeDownloadedFileInfo>> ListBlobs(TelemetryClient telemetryClient, string query = null)
         {
             // Create a BlobServiceClient object which will be used to create a container client
             BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=stcutyt;AccountKey=dL4wNdv+iksMDip5kwx148JepOOV7ajzDQDNyMhinxxYqW6CDYwz+IqCYX2Bb3YIV5gMVo+ABb+iDSaZYg3OTw==;EndpointSuffix=core.windows.net");
@@ -48,40 +50,99 @@ namespace Cutyt.Core.Storage
 
             //List<BlobItem> blobItems = new List<BlobItem>();
             List<YoutubeDownloadedFileInfo> youtubeDownloadedFileInfos = new List<YoutubeDownloadedFileInfo>();
-            
-            await foreach (BlobItem blobItem in containerClient.GetBlobsAsync(BlobTraits.Metadata))
+
+            if (!string.IsNullOrEmpty(query))
             {
-                YoutubeDownloadedFileInfo youtubeDownloadedFileInfo = new YoutubeDownloadedFileInfo();
-
-                blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Start), out string start);
-                blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.End), out string end);
-                blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.FileOnDiskSize), out string fileOnDiskSize);
-                blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.DisplayName), out string displayName);
-                blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Url), out string url);
-                blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Ip), out string Ip);
-                blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Id), out string Id);
-
-                blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension), out string fileOnDiskExtension);
-
-                youtubeDownloadedFileInfo.DownloadedOn = blobItem.Properties.CreatedOn.GetValueOrDefault().UtcDateTime;
-                youtubeDownloadedFileInfo.Start = start.Base64StringDecode();
-                youtubeDownloadedFileInfo.End = end.Base64StringDecode();
-                youtubeDownloadedFileInfo.DisplayName = displayName.Base64StringDecode();
-                youtubeDownloadedFileInfo.Url = url.Base64StringDecode();
-                if (long.TryParse(fileOnDiskSize.Base64StringDecode(), out long longFileOnDiskSize))
+                query = $"{query} AND @container = 'media'";
+                //blobServiceClient.FindBlobsByTagsAsync(query);
+                await foreach (TaggedBlobItem item in blobServiceClient.FindBlobsByTagsAsync(query))
                 {
-                    youtubeDownloadedFileInfo.FileOnDiskSize = longFileOnDiskSize;
+                    // Get a reference to a blob
+                    BlobClient blobClient = containerClient.GetBlobClient(item.BlobName);
+                    var metadata = await ReadBlobMetadataAsync(blobClient, telemetryClient);
+
+                    YoutubeDownloadedFileInfo youtubeDownloadedFileInfo = new YoutubeDownloadedFileInfo();
+
+                    metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Start), out string start);
+                    metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.End), out string end);
+                    metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.FileOnDiskSize), out string fileOnDiskSize);
+                    metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.DisplayName), out string displayName);
+                    metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Url), out string url);
+                    metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Ip), out string Ip);
+                    metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Id), out string Id);
+                    metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.DownloadedOn), out string downloadedOn);
+                    metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension), out string fileOnDiskExtension);
+
+                    //youtubeDownloadedFileInfo.DownloadedOn = blobItem.Properties.CreatedOn.GetValueOrDefault().UtcDateTime;
+                    youtubeDownloadedFileInfo.Start = start.Base64StringDecode();
+                    youtubeDownloadedFileInfo.End = end.Base64StringDecode();
+                    youtubeDownloadedFileInfo.DisplayName = displayName.Base64StringDecode();
+                    youtubeDownloadedFileInfo.Url = url.Base64StringDecode();
+                    if (long.TryParse(fileOnDiskSize.Base64StringDecode(), out long longFileOnDiskSize))
+                    {
+                        youtubeDownloadedFileInfo.FileOnDiskSize = longFileOnDiskSize;
+                    }
+
+                    youtubeDownloadedFileInfo.Ip = Ip.Base64StringDecode();
+
+                    youtubeDownloadedFileInfo.Id = Id.Base64StringDecode();
+                    youtubeDownloadedFileInfo.FileOnDiskExtension = fileOnDiskExtension.Base64StringDecode();
+
+                    if (DateTime.TryParse(downloadedOn.Base64StringDecode(), out DateTime downloadedOnDate))
+                    {
+                        youtubeDownloadedFileInfo.DownloadedOn = downloadedOnDate;
+                    }
+
+
+                    youtubeDownloadedFileInfos.Add(youtubeDownloadedFileInfo);
+
+                    youtubeDownloadedFileInfos = youtubeDownloadedFileInfos.OrderByDescending(d => d.DownloadedOn).ToList();
                 }
-
-                youtubeDownloadedFileInfo.Ip = Ip.Base64StringDecode();
-
-                youtubeDownloadedFileInfo.Id = Id.Base64StringDecode();
-                youtubeDownloadedFileInfo.FileOnDiskExtension = fileOnDiskExtension.Base64StringDecode();
+            }
 
 
-                youtubeDownloadedFileInfos.Add(youtubeDownloadedFileInfo);
 
-                youtubeDownloadedFileInfos = youtubeDownloadedFileInfos.OrderByDescending(d => d.DownloadedOn).ToList();
+            else
+            {
+                await foreach (BlobItem blobItem in containerClient.GetBlobsAsync(BlobTraits.Metadata))
+                {
+                    YoutubeDownloadedFileInfo youtubeDownloadedFileInfo = new YoutubeDownloadedFileInfo();
+
+                    blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Start), out string start);
+                    blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.End), out string end);
+                    blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.FileOnDiskSize), out string fileOnDiskSize);
+                    blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.DisplayName), out string displayName);
+                    blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Url), out string url);
+                    blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Ip), out string Ip);
+                    blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.Id), out string Id);
+                    blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.DownloadedOn), out string downloadedOn);
+
+                    blobItem.Metadata.TryGetValue(nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension), out string fileOnDiskExtension);
+
+                    youtubeDownloadedFileInfo.DownloadedOn = blobItem.Properties.CreatedOn.GetValueOrDefault().UtcDateTime;
+                    youtubeDownloadedFileInfo.Start = start.Base64StringDecode();
+                    youtubeDownloadedFileInfo.End = end.Base64StringDecode();
+                    youtubeDownloadedFileInfo.DisplayName = displayName.Base64StringDecode();
+                    youtubeDownloadedFileInfo.Url = url.Base64StringDecode();
+                    if (long.TryParse(fileOnDiskSize.Base64StringDecode(), out long longFileOnDiskSize))
+                    {
+                        youtubeDownloadedFileInfo.FileOnDiskSize = longFileOnDiskSize;
+                    }
+
+                    youtubeDownloadedFileInfo.Ip = Ip.Base64StringDecode();
+
+                    youtubeDownloadedFileInfo.Id = Id.Base64StringDecode();
+                    youtubeDownloadedFileInfo.FileOnDiskExtension = fileOnDiskExtension.Base64StringDecode();
+
+                    if (DateTime.TryParse(downloadedOn, out DateTime downloadedOnDate))
+                    {
+                        youtubeDownloadedFileInfo.DownloadedOn = downloadedOnDate;
+                    }
+
+                    youtubeDownloadedFileInfos.Add(youtubeDownloadedFileInfo);
+
+                    youtubeDownloadedFileInfos = youtubeDownloadedFileInfos.OrderByDescending(d => d.DownloadedOn).ToList();
+                }
             }
 
             return youtubeDownloadedFileInfos;
@@ -95,6 +156,9 @@ namespace Cutyt.Core.Storage
             {
                 // Set the blob's metadata.
                 await blob.SetMetadataAsync(metadata);
+
+                await blob.SetTagsAsync(metadata);
+
             }
             catch (RequestFailedException e)
             {

@@ -1,3 +1,5 @@
+using System.Globalization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationInsightsTelemetry();
@@ -137,6 +139,8 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
     metadata[nameof(YoutubeDownloadedFileInfo.Id)] = reply.Id.Base64StringEncode();
 
     metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension)] = reply.FileOnDiskExtension.Base64StringEncode();
+
+    metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOn)] = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture).Base64StringEncode();
 
     await BlobStorageHelper.UploadBlob(fullFilePath, fileOnDiskNameWithExtension, metadata, telemetryClient);
 

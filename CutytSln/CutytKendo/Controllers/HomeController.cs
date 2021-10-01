@@ -1,6 +1,7 @@
 ﻿using Cutyt.Core;
 using Cutyt.Core.Classes;
 using Cutyt.Core.Constants;
+using Cutyt.Core.Extensions;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
 using Cutyt.Core.Storage;
@@ -263,7 +264,8 @@ namespace CutytKendo.Controllers
         [Route("/getmyfiles")]
         public async Task<IActionResult> GetMyFiles([DataSourceRequest] DataSourceRequest request)
         {
-            var blobs = await BlobStorageHelper.ListBlobs(telemetryClient);
+            var query = $"\"Ip\" = '{HttpContext.Connection.RemoteIpAddress.ToString().Base64StringEncode()}'";
+            var blobs = await BlobStorageHelper.ListBlobs(telemetryClient, query);
             blobs = blobs.Where(r => r.Ip == HttpContext.Connection.RemoteIpAddress.ToString()).ToList();
 
             return Json(blobs.ToDataSourceResult(request));
