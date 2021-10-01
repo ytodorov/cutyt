@@ -48,7 +48,7 @@ namespace Cutyt.Core.Storage
 
             //List<BlobItem> blobItems = new List<BlobItem>();
             List<YoutubeDownloadedFileInfo> youtubeDownloadedFileInfos = new List<YoutubeDownloadedFileInfo>();
-
+            
             await foreach (BlobItem blobItem in containerClient.GetBlobsAsync(BlobTraits.Metadata))
             {
                 YoutubeDownloadedFileInfo youtubeDownloadedFileInfo = new YoutubeDownloadedFileInfo();

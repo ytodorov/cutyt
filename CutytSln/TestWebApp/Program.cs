@@ -54,7 +54,9 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
     string audioAndVideoOption = string.Empty;
     string audioFormatOption = string.Empty;
 
-    var fileNameToUploadInBLobWithoutExtension = $"{job.V}_{job.SelectedOption}_{job.Start}_{job.End}".Replace(" ", "_");
+    var uniqueTicks = DateTime.Now.Ticks.ToString();
+
+    var fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.Start}_{job.End}".Replace(" ", "_");
 
     if (string.IsNullOrEmpty(job.AudioFormat))
     {
@@ -68,7 +70,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
         job.SelectedOption = "bestaudio";
 
-        fileNameToUploadInBLobWithoutExtension = $"{job.V}_{job.SelectedOption}_{job.AudioFormat}_{job.Start}_{job.End}".Replace(" ", "_");
+        fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.AudioFormat}_{job.Start}_{job.End}".Replace(" ", "_");
     }
 
     var output = $"{AppConstants.YtWorkingDir}\\{fileNameToUploadInBLobWithoutExtension}.%(ext)s";
@@ -93,7 +95,8 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
     }
     DirectoryInfo di = new DirectoryInfo(AppConstants.YtWorkingDir);
 
-    var fi = di.GetFiles().OrderByDescending(f => f.CreationTimeUtc).FirstOrDefault(f => f.FullName.Contains(fileNameToUploadInBLobWithoutExtension, StringComparison.InvariantCultureIgnoreCase));
+    var allRelatedFiles = di.GetFiles().OrderByDescending(f => f.CreationTimeUtc).Where(f => f.FullName.Contains(fileNameToUploadInBLobWithoutExtension, StringComparison.InvariantCultureIgnoreCase));
+    var fi = allRelatedFiles.OrderBy(f => f.Name.Length).FirstOrDefault();
 
     var fullFilePath = fi.FullName; //Directory.GetFiles(AppConstants.YtWorkingDir).FirstOrDefault(f => f.Contains(fileNameToUploadInBLobWithoutExtension, StringComparison.InvariantCultureIgnoreCase));
 
