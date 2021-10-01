@@ -35,39 +35,22 @@ namespace CutytKendo.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
         private readonly IHttpClientFactory httpClientFactory;
 
-        private readonly IMemoryCache cache;
-
         private IWebHostEnvironment hostEnvironment;
-
-        private string cutYtBaseAddress = "https://stcutyt.blob.core.windows.net/media/"; //"https://localhost:44347/";
 
         HttpClient httpClient = null;
 
         TelemetryClient telemetryClient;
 
         public HomeController(
-            ILogger<HomeController> logger,
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostEnvironment,
-            IMemoryCache cache,
             TelemetryClient telemetryClient)
         {
-            _logger = logger;
             this.httpClientFactory = httpClientFactory;
             this.hostEnvironment = hostEnvironment;
-            this.cache = cache;
             this.telemetryClient = telemetryClient;
-
-            var mn = Environment.MachineName;
-            if (!mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase) &&
-                !mn.Equals("yTodorov-nb", StringComparison.InvariantCultureIgnoreCase))
-            {
-                cutYtBaseAddress = "https://stcutyt.blob.core.windows.net/media/"; //"https://www.cutyt.com/";
-            }
 
             httpClient = httpClientFactory.CreateClient();
 

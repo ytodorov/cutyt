@@ -14,7 +14,7 @@ public static class ProcessAsyncHelper
 {
     public static async Task<ProcessResult> ExecuteShellCommand(
         string command,
-        string arguments,        
+        string arguments,
         TelemetryClient telemetryClient)
     {
         int timeout = int.MaxValue;
@@ -26,8 +26,6 @@ public static class ProcessAsyncHelper
 
         using (var process = new Process())
         {
-            
-
             // If you run bash-script on Linux it is possible that ExitCode can be 255.
             // To fix it you can try to add '#!/bin/bash' header to the script.
 
@@ -41,8 +39,8 @@ public static class ProcessAsyncHelper
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.CreateNoWindow = true;
             process.StartInfo.StandardOutputEncoding = Encoding.UTF8;
-            
-            
+
+
             var outputBuilder = new StringBuilder();
             var outputCloseEvent = new TaskCompletionSource<bool>();
 
@@ -81,23 +79,23 @@ public static class ProcessAsyncHelper
             {
                 isStarted = process.Start();
 
-                if (!process.HasExited)
-                {
-                    //Limit the CPU usage to 45%
-                    var jobHandle = LimitCpuUsage.CreateJobObject(null, null);
-                    AssignProcessToJobObject(jobHandle, process.Handle);
-                    var cpuLimits = new LimitCpuUsage.JOBOBJECT_CPU_RATE_CONTROL_INFORMATION();
-                    cpuLimits.ControlFlags = (UInt32)(CpuFlags.JOB_OBJECT_CPU_RATE_CONTROL_ENABLE | CpuFlags.JOB_OBJECT_CPU_RATE_CONTROL_HARD_CAP);
-                    cpuLimits.CpuRate = 5 * 100; // Limit CPu usage to 10%
-                    var pointerToJobCpuLimits = Marshal.AllocHGlobal(Marshal.SizeOf(cpuLimits));
-                    Marshal.StructureToPtr(cpuLimits, pointerToJobCpuLimits, false);
-                    if (!SetInformationJobObject(jobHandle, JOBOBJECTINFOCLASS.JobObjectCpuRateControlInformation, pointerToJobCpuLimits, (uint)Marshal.SizeOf(cpuLimits)))
-                    {
-                        Console.WriteLine("Error !");
-                    }
+                //if (!process.HasExited)
+                //{
+                //    //Limit the CPU usage to 45%
+                //    var jobHandle = LimitCpuUsage.CreateJobObject(null, null);
+                //    AssignProcessToJobObject(jobHandle, process.Handle);
+                //    var cpuLimits = new LimitCpuUsage.JOBOBJECT_CPU_RATE_CONTROL_INFORMATION();
+                //    cpuLimits.ControlFlags = (UInt32)(CpuFlags.JOB_OBJECT_CPU_RATE_CONTROL_ENABLE | CpuFlags.JOB_OBJECT_CPU_RATE_CONTROL_HARD_CAP);
+                //    cpuLimits.CpuRate = 5 * 100; // Limit CPu usage to 10%
+                //    var pointerToJobCpuLimits = Marshal.AllocHGlobal(Marshal.SizeOf(cpuLimits));
+                //    Marshal.StructureToPtr(cpuLimits, pointerToJobCpuLimits, false);
+                //    if (!SetInformationJobObject(jobHandle, JOBOBJECTINFOCLASS.JobObjectCpuRateControlInformation, pointerToJobCpuLimits, (uint)Marshal.SizeOf(cpuLimits)))
+                //    {
+                //        Console.WriteLine("Error !");
+                //    }
 
-                    process.PriorityClass = ProcessPriorityClass.BelowNormal;
-                }
+                //    process.PriorityClass = ProcessPriorityClass.BelowNormal;
+                //}
             }
             catch (Exception error)
             {
