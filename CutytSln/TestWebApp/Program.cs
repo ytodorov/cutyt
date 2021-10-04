@@ -58,7 +58,9 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
     var uniqueTicks = DateTime.Now.Ticks.ToString();
 
-    string? fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.Start}_{job.End}".Replace(" ", "_");
+    string? fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.Start}_{job.End}"
+    .Replace(" ", "_")
+    .Replace("+", "_");
 
     if (string.IsNullOrEmpty(job.AudioFormat))
     {
@@ -72,31 +74,44 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
         job.SelectedOption = "bestaudio";
 
-        fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.AudioFormat}_{job.Start}_{job.End}".Replace(" ", "_");
+        fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.AudioFormat}_{job.Start}_{job.End}"
+        .Replace(" ", "_")
+        .Replace("+", "_");
     }
 
     var output = $"{AppConstants.YtWorkingDir}\\{fileNameToUploadInBLobWithoutExtension}.%(ext)s";
 
+
+    //output = output.Replace("+", "_");
     if (job.ShouldTrim.GetValueOrDefault())
     {
         start = TimeSpan.FromSeconds(job.Start).ToString("c"); //HH:mm:ss:ff"
         end = TimeSpan.FromSeconds(job.End).ToString("c");
 
 
-        var args = $"--external-downloader ffmpeg --external-downloader-args \"-ss {start} -to {end}\" -f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --output \"{output}\"";
+        var args = $"--external-downloader ffmpeg --external-downloader-args \"-ss {start} -to {end}\" -f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --no-part  --output \"{output}\"";
 
         var resFromShell = await ProcessAsyncHelperNoLog.ExecuteShellCommand(
                 $@"{currDir}\youtube-dl.exe",
                 args);
+
+        if (!string.IsNullOrEmpty(resFromShell.StandardError))
+        {
+            telemetryClient.TrackException(new Exception(resFromShell.StandardError));
+        }
     }
     else
     {
         var resFromShell2 = await ProcessAsyncHelperNoLog.ExecuteShellCommand(
                 $@"{currDir}\youtube-dl.exe",
-                $"-f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --output {output}");
+                $"-f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --no-part  --output {output}");
+
+        if (!string.IsNullOrEmpty(resFromShell2.StandardError))
+        {
+            telemetryClient.TrackException(new Exception(resFromShell2.StandardError));
+        }
     }
 
-    //Thread.Sleep(1000);
 
     DirectoryInfo di = new DirectoryInfo(AppConstants.YtWorkingDir);
 
