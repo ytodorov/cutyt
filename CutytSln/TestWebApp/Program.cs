@@ -58,7 +58,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
     var uniqueTicks = DateTime.Now.Ticks.ToString();
 
-    var fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.Start}_{job.End}".Replace(" ", "_");
+    string? fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.Start}_{job.End}".Replace(" ", "_");
 
     if (string.IsNullOrEmpty(job.AudioFormat))
     {
@@ -98,7 +98,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
     DirectoryInfo di = new DirectoryInfo(AppConstants.YtWorkingDir);
 
     var allRelatedFiles = di.GetFiles().OrderByDescending(f => f.CreationTimeUtc).Where(f => f.FullName.Contains(fileNameToUploadInBLobWithoutExtension, StringComparison.InvariantCultureIgnoreCase));
-    var fi = allRelatedFiles.OrderBy(f => f.Name.Length).FirstOrDefault();
+    var fi = allRelatedFiles.OrderByDescending(f => f.Length).FirstOrDefault(); // the biggest file is the correct one
 
     var fullFilePath = fi.FullName; //Directory.GetFiles(AppConstants.YtWorkingDir).FirstOrDefault(f => f.Contains(fileNameToUploadInBLobWithoutExtension, StringComparison.InvariantCultureIgnoreCase));
 
@@ -144,7 +144,13 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
     await BlobStorageHelper.UploadBlob(fullFilePath, fileOnDiskNameWithExtension, metadata, telemetryClient);
 
-    File.Delete(fullFilePath);
+    foreach (var fileToDelete in allRelatedFiles)
+    {
+        if (File.Exists(fileToDelete.FullName))
+        {
+            fileToDelete.Delete();
+        }
+    }
 
     return reply;
 }
