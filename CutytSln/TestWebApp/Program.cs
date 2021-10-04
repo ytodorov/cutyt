@@ -83,7 +83,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
         end = TimeSpan.FromSeconds(job.End).ToString("c");
 
 
-        var args = $"--external-downloader ffmpeg --external-downloader-args \"-ss {start} -to {end}\" -f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" --output \"{output}\"";
+        var args = $"--external-downloader ffmpeg --external-downloader-args \"-ss {start} -to {end}\" -f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --output \"{output}\"";
 
         var resFromShell = await ProcessAsyncHelperNoLog.ExecuteShellCommand(
                 $@"{currDir}\youtube-dl.exe",
@@ -93,12 +93,18 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
     {
         var resFromShell2 = await ProcessAsyncHelperNoLog.ExecuteShellCommand(
                 $@"{currDir}\youtube-dl.exe",
-                $"-f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" --output {output}");
+                $"-f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --output {output}");
     }
+
+    //Thread.Sleep(1000);
+
     DirectoryInfo di = new DirectoryInfo(AppConstants.YtWorkingDir);
 
-    var allRelatedFiles = di.GetFiles().OrderByDescending(f => f.CreationTimeUtc).Where(f => f.FullName.Contains(fileNameToUploadInBLobWithoutExtension, StringComparison.InvariantCultureIgnoreCase));
-    var fi = allRelatedFiles.OrderByDescending(f => f.Length).FirstOrDefault(); // the biggest file is the correct one
+    var allRelatedFiles = di.GetFiles()
+        .OrderByDescending(f => f.CreationTime.Ticks).Where(f => f.FullName.Contains(fileNameToUploadInBLobWithoutExtension, StringComparison.InvariantCultureIgnoreCase))
+        .ToList();
+
+    var fi = allRelatedFiles.FirstOrDefault(); // the biggest file is the correct one. The latest one .OrderByDescending(f => f.Length)
 
     var fullFilePath = fi.FullName; //Directory.GetFiles(AppConstants.YtWorkingDir).FirstOrDefault(f => f.Contains(fileNameToUploadInBLobWithoutExtension, StringComparison.InvariantCultureIgnoreCase));
 
