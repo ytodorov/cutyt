@@ -1,0 +1,35 @@
+﻿@{
+	ViewData["Title"] = $"Media player | {SiteConstants.Title}";
+	ViewData["Description"] = "Play your media";
+	ViewData["CanonicalUrl"] = $"{SiteConstants.CanonicalUrl}/mediaplayer";
+}
+
+<div class="text-center">
+	<a rel="noreferrer" id="aDownload" href="" target="_blank">DownloadFile</a>
+</div>
+@(Html.Kendo().MediaPlayer()
+        .Name("mediaPlayer")
+		.Navigatable(true)
+		.ForwardSeek(true)
+        .HtmlAttributes(new { style = "height:360px" })
+    )
+
+<script type="text/javascript">
+	 $(document).ready(function () {
+	const urlSearchParams = new URLSearchParams(window.location.search);
+	const params = Object.fromEntries(urlSearchParams.entries());
+	var url = params['url'];
+
+	var mediaPlayer = $("#mediaPlayer").data("kendoMediaPlayer");
+
+					mediaPlayer.media({
+						source: url
+					});
+ 
+					$("#aDownload").attr("href", url);
+
+	 });
+
+	
+
+</script>

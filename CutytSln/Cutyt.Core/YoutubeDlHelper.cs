@@ -531,7 +531,7 @@ namespace Cutyt.Core
 
             metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension)] = reply.FileOnDiskExtension.Base64StringEncode();
 
-            await BlobStorageHelper.UploadBlob(fullFilePath, physicalFileName, metadata, telemetryClient);
+            await BlobStorageHelper.UploadBlob(fullFilePath, physicalFileName, "media", metadata, telemetryClient);
 
             File.Delete(fullFilePath);
 

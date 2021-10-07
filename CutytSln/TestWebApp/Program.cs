@@ -31,13 +31,38 @@ app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient) 
             string args = context.Request.Query["args"];
             string command = context.Request.Query["command"];
 
+            var blobFileNameEncoded = $"{args}{command}".Base64StringEncode();
+
+            Dictionary<string, string> metadata = new Dictionary<string, string>();
+
+            metadata["blobFileNameEncoded"] = blobFileNameEncoded;
+
+            var query = $"\"blobFileNameEncoded\" = '{blobFileNameEncoded}'";
+
+            var cachedData = await BlobStorageHelper.GetFirstBlobContent("runresults", query);
+
+            if (cachedData != null)
+            {
+                return cachedData;
+            }
+
             var currDir = Environment.CurrentDirectory;
 
-            var res = await ProcessAsyncHelperNoLog.ExecuteShellCommand(
-                        $@"{currDir}\{command}",
-                        $"{args}");
+            var res = await ProcessAsyncHelperNoLog.ExecuteShellCommand($@"{currDir}\{command}", $"{args}");
+            if (res.StandardError?.Contains("error", StringComparison.InvariantCultureIgnoreCase) == true)
+            {
+                telemetryClient.TrackException(new Exception(res.StandardError));
+                return string.Empty;
+            }
 
-            return res.StadardOutput + res.StandardError;
+            var path = Path.GetTempFileName();
+            File.WriteAllText(path, res.StadardOutput);
+
+            await BlobStorageHelper.UploadBlob(path, blobFileNameEncoded, "runresults", metadata, telemetryClient);
+
+            File.Delete(path);
+
+            return res.StadardOutput;
         }
         );
 
@@ -97,7 +122,10 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
         if (!string.IsNullOrEmpty(resFromShell.StandardError))
         {
-            telemetryClient.TrackException(new Exception(resFromShell.StandardError));
+            if (resFromShell.StandardError?.Contains("error", StringComparison.InvariantCultureIgnoreCase) == true)
+            {
+                telemetryClient.TrackException(new Exception(resFromShell.StandardError));
+            }
         }
     }
     else
@@ -108,7 +136,10 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
         if (!string.IsNullOrEmpty(resFromShell2.StandardError))
         {
-            telemetryClient.TrackException(new Exception(resFromShell2.StandardError));
+            if (resFromShell2.StandardError?.Contains("error", StringComparison.InvariantCultureIgnoreCase) == true)
+            {
+                telemetryClient.TrackException(new Exception(resFromShell2.StandardError));
+            }
         }
     }
 
@@ -163,7 +194,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
     metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOn)] = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture).Base64StringEncode();
 
-    await BlobStorageHelper.UploadBlob(fullFilePath, fileOnDiskNameWithExtension, metadata, telemetryClient);
+    await BlobStorageHelper.UploadBlob(fullFilePath, fileOnDiskNameWithExtension, "media", metadata, telemetryClient);
 
     foreach (var fileToDelete in allRelatedFiles)
     {

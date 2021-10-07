@@ -94,6 +94,13 @@ namespace CutytKendo.Controllers
             return View();
         }
 
+        [OutputCache(Profile = "default")]
+        [Route("/mediaplayer")]
+        public IActionResult MediaPlayer()
+        {
+            return View();
+        }
+
         [Route("/contact")]
         public IActionResult Contact()
         {
@@ -147,6 +154,10 @@ namespace CutytKendo.Controllers
                 PropertyNameCaseInsensitive = true
             };
 
+            //var str = await httpClient.GetStringAsync(
+            //    $"https://execprogram.azurewebsites.net/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
+
+            //"http://localhost:5036/getbloburl"; //"https://execprogram.azurewebsites.net/getbloburl";
             var jsonStream = await httpClient.GetStreamAsync(
                 $"https://execprogram.azurewebsites.net/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
 
@@ -245,7 +256,7 @@ namespace CutytKendo.Controllers
             var urlToGet = "https://execprogram.azurewebsites.net/getbloburl"; //"http://localhost:5036/getbloburl"; //"https://execprogram.azurewebsites.net/getbloburl";
 
             var response = await httpClient.PostAsync(urlToGet, data);
-
+            var str = await response.Content.ReadAsStringAsync();
             var linkviewModel = await response.Content.ReadFromJsonAsync<YoutubeDownloadedFileInfo>();
             //var linkviewModel = await YoutubeDlHelper.GetDownloadLinkReply(job, telemetryClient, $"{cutYtBaseAddress}");
 
@@ -256,7 +267,7 @@ namespace CutytKendo.Controllers
         [Route("/getfiles")]
         public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
-            var blobs = await BlobStorageHelper.ListBlobs(telemetryClient);
+            var blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient);
 
             return Json(blobs.ToDataSourceResult(request));
         }
@@ -265,7 +276,7 @@ namespace CutytKendo.Controllers
         public async Task<IActionResult> GetMyFiles([DataSourceRequest] DataSourceRequest request)
         {
             var query = $"\"Ip\" = '{HttpContext.Connection.RemoteIpAddress.ToString().Base64StringEncode()}'";
-            var blobs = await BlobStorageHelper.ListBlobs(telemetryClient, query);
+            var blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, query);
             blobs = blobs.Where(r => r.Ip == HttpContext.Connection.RemoteIpAddress.ToString()).ToList();
 
             return Json(blobs.ToDataSourceResult(request));

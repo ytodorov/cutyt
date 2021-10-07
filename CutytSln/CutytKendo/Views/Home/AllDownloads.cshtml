@@ -11,7 +11,8 @@
                             {
                                 columns.Bound(p => p.DisplayName).Title("Name");
                                 columns.Bound(p => p.FileOnDiskExtension).Title("Type").MinScreenWidth(250);
-                                columns.Template("<a target='_blank' href=' #= Url #'>Download</a>").Title("Download");
+                                @*columns.Template("<a target='_blank' href=' #= Url #'>Download</a>").Title("Download");*@
+                                columns.Template("<a target='_blank' href='https://www.cutyt.com/mediaplayer?url=#= Url #'>View</a>").Title("View");
                                 columns.Template(template: "#= kendo.toString(kendo.parseDate(DownloadedOn), 'yyyy/MM/dd hh:mm') #").Title("Downloaded on").MinScreenWidth(250);
                                 columns.Bound(p => p.Start).Title("Start").MinScreenWidth(250);
                                 columns.Bound(p => p.End).Title("End").MinScreenWidth(250);

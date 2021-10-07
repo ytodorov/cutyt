@@ -15,13 +15,13 @@ namespace Cutyt.Core.Storage
 {
     public class BlobStorageHelper
     {
-        public static async Task UploadBlob(string localFilePath, string fileName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
+        public static async Task UploadBlob(string localFilePath, string fileName, string containerName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
         {
             // Create a BlobServiceClient object which will be used to create a container client
             BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=stcutyt;AccountKey=dL4wNdv+iksMDip5kwx148JepOOV7ajzDQDNyMhinxxYqW6CDYwz+IqCYX2Bb3YIV5gMVo+ABb+iDSaZYg3OTw==;EndpointSuffix=core.windows.net");
 
             //Create a unique name for the container
-            string containerName = "media";
+            //string containerName = "media";
 
             // Create the container and return a container client object
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
@@ -37,13 +37,13 @@ namespace Cutyt.Core.Storage
             await AddBlobMetadataAsync(blobClient, metadata, telemetryClient);
         }
 
-        public static async Task<List<YoutubeDownloadedFileInfo>> ListBlobs(TelemetryClient telemetryClient, string query = null)
+        public static async Task<string> GetFirstBlobContent(string containerName, string query)
         {
             // Create a BlobServiceClient object which will be used to create a container client
             BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=stcutyt;AccountKey=dL4wNdv+iksMDip5kwx148JepOOV7ajzDQDNyMhinxxYqW6CDYwz+IqCYX2Bb3YIV5gMVo+ABb+iDSaZYg3OTw==;EndpointSuffix=core.windows.net");
 
             //Create a unique name for the container
-            string containerName = "media";
+            //string containerName = "media";
 
             // Create the container and return a container client object
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
@@ -53,7 +53,42 @@ namespace Cutyt.Core.Storage
 
             if (!string.IsNullOrEmpty(query))
             {
-                query = $"{query} AND @container = 'media'";
+                query = $"{query} AND @container = '{containerName}'";
+                //blobServiceClient.FindBlobsByTagsAsync(query);
+                await foreach (TaggedBlobItem item in blobServiceClient.FindBlobsByTagsAsync(query))
+                {
+                    // Get a reference to a blob
+                    BlobClient blobClient = containerClient.GetBlobClient(item.BlobName);
+
+                    var content = await blobClient.DownloadContentAsync();
+
+                    var stringContent = content.Value.Content.ToString();
+
+                    return stringContent;
+
+                }
+            }
+
+            return null;
+        }
+
+        public static async Task<List<YoutubeDownloadedFileInfo>> ListYoutubeDownloadedFileInfoBlobs(string containerName, TelemetryClient telemetryClient, string query = null)
+        {
+            // Create a BlobServiceClient object which will be used to create a container client
+            BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=stcutyt;AccountKey=dL4wNdv+iksMDip5kwx148JepOOV7ajzDQDNyMhinxxYqW6CDYwz+IqCYX2Bb3YIV5gMVo+ABb+iDSaZYg3OTw==;EndpointSuffix=core.windows.net");
+
+            //Create a unique name for the container
+            //string containerName = "media";
+
+            // Create the container and return a container client object
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            //List<BlobItem> blobItems = new List<BlobItem>();
+            List<YoutubeDownloadedFileInfo> youtubeDownloadedFileInfos = new List<YoutubeDownloadedFileInfo>();
+
+            if (!string.IsNullOrEmpty(query))
+            {
+                query = $"{query} AND @container = '{containerName}'";
                 //blobServiceClient.FindBlobsByTagsAsync(query);
                 await foreach (TaggedBlobItem item in blobServiceClient.FindBlobsByTagsAsync(query))
                 {

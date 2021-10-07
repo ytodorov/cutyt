@@ -149,10 +149,10 @@ public static class ProcessAsyncHelper
 
         if (!string.IsNullOrEmpty(result.StandardError))
         {
-            if (!command.Contains("ffmpeg", StringComparison.InvariantCultureIgnoreCase))
-            {
-                telemetryClient.TrackException(new Exception(result.StandardError));
-            }
+            //if (!command.Contains("ffmpeg", StringComparison.InvariantCultureIgnoreCase))
+            //{
+            //    telemetryClient.TrackException(new Exception(result.StandardError));
+            //}
         }
 
         return result;
