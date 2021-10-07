@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,6 +34,23 @@ namespace Cutyt.Core.Extensions
             var decodedString = Encoding.UTF8.GetString(bytes);
 
             return decodedString;
+        }
+
+        public static string Hash(this string input)
+        {
+            StringBuilder sb = new StringBuilder();
+            using (SHA256 hash = SHA256.Create())
+            {
+                Encoding enc = Encoding.UTF8;
+                Byte[] result = hash.ComputeHash(enc.GetBytes(input));
+
+                foreach (Byte b in result)
+                    sb.Append(b.ToString("x2"));
+            }
+
+            var resultHash = sb.ToString();
+
+            return resultHash;
         }
     }
 }

@@ -11,11 +11,11 @@
 <div class="text-center"
    @(Html.Kendo().MediaPlayer()
         .Name("mplayer")
-        .AutoPlay(true)
+        .AutoPlay(false)
         .Volume(0)
         .FullScreen(false)
         .Navigatable(true)
-        //.ForwardSeek(true)
+        .ForwardSeek(true)
         .Media(m => 
         {
             m.Source(Model.Url).Title(Model.DisplayName);

@@ -31,7 +31,7 @@ app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient) 
             string args = context.Request.Query["args"];
             string command = context.Request.Query["command"];
 
-            var blobFileNameEncoded = $"{args}{command}".Base64StringEncode();
+            var blobFileNameEncoded = $"{args}{command}".Hash();
 
             Dictionary<string, string> metadata = new Dictionary<string, string>();
 
@@ -49,7 +49,7 @@ app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient) 
             var currDir = Environment.CurrentDirectory;
 
             var res = await ProcessAsyncHelperNoLog.ExecuteShellCommand($@"{currDir}\{command}", $"{args}");
-            if (res.StandardError?.Contains("error", StringComparison.InvariantCultureIgnoreCase) == true)
+            if (res.StandardError?.Contains("error:", StringComparison.InvariantCultureIgnoreCase) == true)
             {
                 telemetryClient.TrackException(new Exception(res.StandardError));
                 return string.Empty;
@@ -122,7 +122,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
         if (!string.IsNullOrEmpty(resFromShell.StandardError))
         {
-            if (resFromShell.StandardError?.Contains("error", StringComparison.InvariantCultureIgnoreCase) == true)
+            if (resFromShell.StandardError?.Contains("error:", StringComparison.InvariantCultureIgnoreCase) == true)
             {
                 telemetryClient.TrackException(new Exception(resFromShell.StandardError));
             }
@@ -136,7 +136,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
         if (!string.IsNullOrEmpty(resFromShell2.StandardError))
         {
-            if (resFromShell2.StandardError?.Contains("error", StringComparison.InvariantCultureIgnoreCase) == true)
+            if (resFromShell2.StandardError?.Contains("error:", StringComparison.InvariantCultureIgnoreCase) == true)
             {
                 telemetryClient.TrackException(new Exception(resFromShell2.StandardError));
             }
