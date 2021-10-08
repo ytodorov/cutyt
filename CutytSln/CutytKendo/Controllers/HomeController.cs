@@ -28,6 +28,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Web;
 using static ProcessAsyncHelper;
@@ -86,6 +87,66 @@ namespace CutytKendo.Controllers
         public IActionResult MyDownloads()
         {
             return View();
+        }
+
+        [OutputCache(Profile = "default")]
+        [Route("/trending")]
+        public async Task<IActionResult> Trending()
+        {
+
+
+            List<YoutubeTrendingViewModel> youtubeTrendings = new List<YoutubeTrendingViewModel>();
+
+            List<string> regionCodes = new List<string>() { "IN", "US", "ID", "BR", "PH", "GB", "FR", "DE", "MA", "CA" };
+
+            foreach (var regionCode in regionCodes)
+            {
+                var res = await httpClient.GetStringAsync(
+                    $"https://www.googleapis.com/youtube/v3/videos?part=contentDetails&chart=mostPopular&regionCode={regionCode}&key=AIzaSyAi72YHlA7Smr215lCmxgWjijA21Imchdk");
+
+                var root = JsonNode.Parse(res);
+                var items = root["items"];
+
+                var videoDatas = JsonSerializer.Deserialize<List<VideoDataViewModel>>
+                    (items, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
+                foreach (var data in videoDatas)
+                {
+                    string fullUrl = $"https://www.youtube.com/watch?v={data.id}";
+
+                    var options = new JsonSerializerOptions
+                    {
+                        AllowTrailingCommas = true,
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                    //"http://localhost:5036/getbloburl"; //"https://execprogram.azurewebsites.net/getbloburl";
+                    var json = await httpClient.GetStringAsync(
+                        $"https://execprogram.azurewebsites.net/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
+
+                    if (!string.IsNullOrEmpty(json))
+                    {
+                        var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(json, options);
+
+                        youtubeTrendings.Add(new YoutubeTrendingViewModel
+                        {
+                            Id = data.id,
+                            V = data.id,
+                            Likes = youTubeUrlFullDescription.Like_Count.GetValueOrDefault(),
+                            Dislikes = youTubeUrlFullDescription.Dislike_Count.GetValueOrDefault(),
+                            Views = youTubeUrlFullDescription.View_Count.GetValueOrDefault(),
+                            AverageRating = Math.Round(youTubeUrlFullDescription.Average_Rating.GetValueOrDefault(), 2),
+                            Name = youTubeUrlFullDescription.Title,
+                            Url = fullUrl,
+                            RegionCode = regionCode,
+                        });
+                    }
+
+                }
+            }
+
+
+            return View(youtubeTrendings);
         }
 
         [Route("/downloads/{id}")]
@@ -267,7 +328,9 @@ namespace CutytKendo.Controllers
         [Route("/getfiles")]
         public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
-            var blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient);
+            var query = $"\"DownloadedOnTicks\" > '{DateTime.UtcNow.Date.Ticks}'";
+
+            var blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, query);
 
             return Json(blobs.ToDataSourceResult(request));
         }

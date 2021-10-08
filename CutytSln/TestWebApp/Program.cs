@@ -194,6 +194,8 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
     metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOn)] = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture).Base64StringEncode();
 
+    metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOnTicks)] = DateTime.UtcNow.Ticks.ToString();
+
     await BlobStorageHelper.UploadBlob(fullFilePath, fileOnDiskNameWithExtension, "media", metadata, telemetryClient);
 
     foreach (var fileToDelete in allRelatedFiles)

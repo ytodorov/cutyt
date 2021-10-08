@@ -39,6 +39,8 @@ namespace Cutyt.Core.Rebus.Replies
 
         public DateTime DownloadedOn { get; set; }
 
+        public long DownloadedOnTicks { get; set; }
+
         public long FileOnDiskSize { get; set; }
 
         public double FileOnDiskSizeInMegabytes

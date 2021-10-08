@@ -1,0 +1,32 @@
+﻿@model List<YoutubeTrendingViewModel>
+
+@{
+	ViewData["Title"] = $"Trending videos | {SiteConstants.Title}";
+	ViewData["Description"] = "See trending videos";
+	ViewData["CanonicalUrl"] = $"{SiteConstants.CanonicalUrl}/trending";
+}
+
+@(Html.Kendo().Grid<YoutubeTrendingViewModel>(Model)
+                            .Name("grid")
+                            .Mobile(MobileMode.Auto)                            
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.Name).Title("Name");
+                                columns.Bound(p => p.RegionCode).Title("RegionCode");
+                                columns.Template("<a target='_blank' href='https://www.cutyt.com/watch?v=#= Id #'>View</a>").Title("Download options");
+                                columns.Bound(p => p.Likes).Title("Likes");
+                                columns.Bound(p => p.Dislikes).Title("Dislikes");
+                                columns.Bound(p => p.Views).Title("Views");
+                                columns.Bound(p => p.AverageRating).Title("Average rating");
+
+                            })
+
+                             .ToolBar(t => t.Search())
+                            .Pageable()
+
+                            .DataSource(dataSource => dataSource        
+        .Ajax()
+        .PageSize(20)
+        .ServerOperation(false)        
+     )
+        )

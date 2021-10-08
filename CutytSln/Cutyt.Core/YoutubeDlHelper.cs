@@ -432,129 +432,131 @@ namespace Cutyt.Core
             return youTubeUrlFullDescription;
         }
 
-        public static async Task<YoutubeDownloadedFileInfo> GetDownloadLinkReply(DownloadLinkRequestViewModel job, TelemetryClient telemetryClient, string hostBaseUrl)
-        {
-            YoutubeDownloadedFileInfo reply = new YoutubeDownloadedFileInfo();
+        //public static async Task<YoutubeDownloadedFileInfo> GetDownloadLinkReply(DownloadLinkRequestViewModel job, TelemetryClient telemetryClient, string hostBaseUrl)
+        //{
+        //    YoutubeDownloadedFileInfo reply = new YoutubeDownloadedFileInfo();
 
-            if (job.V?.Length > 20)
-            {
-                throw new Exception($"{job.V} is not valid for v in youtube URL");
-            }
+        //    if (job.V?.Length > 20)
+        //    {
+        //        throw new Exception($"{job.V} is not valid for v in youtube URL");
+        //    }
 
-            var selectedOption = job.SelectedOption;
+        //    var selectedOption = job.SelectedOption;
 
-            string fullFilePath = string.Empty;
+        //    string fullFilePath = string.Empty;
 
-            YoutubeDlHelper.FreeSpaceOnHardDiskIfNeeded(telemetryClient);
+        //    YoutubeDlHelper.FreeSpaceOnHardDiskIfNeeded(telemetryClient);
 
-            if (selectedOption.Contains("--audio-format"))
-            {
-                selectedOption = selectedOption.Split(" ").Last();
-                fullFilePath = YoutubeDlHelper.DownloadCustomAudio(job.V, selectedOption, telemetryClient);
-            }
-            else
-            {
-                var selectedVideoOption = selectedOption.Split(" ").FirstOrDefault();
-                fullFilePath = YoutubeDlHelper.MergeAudioAndVideoToMp4(job.V, selectedVideoOption, telemetryClient);
-            }
+        //    if (selectedOption.Contains("--audio-format"))
+        //    {
+        //        selectedOption = selectedOption.Split(" ").Last();
+        //        fullFilePath = YoutubeDlHelper.DownloadCustomAudio(job.V, selectedOption, telemetryClient);
+        //    }
+        //    else
+        //    {
+        //        var selectedVideoOption = selectedOption.Split(" ").FirstOrDefault();
+        //        fullFilePath = YoutubeDlHelper.MergeAudioAndVideoToMp4(job.V, selectedVideoOption, telemetryClient);
+        //    }
 
-            if (job.ShouldTrim.GetValueOrDefault())
-            {
-                fullFilePath = YoutubeDlHelper.CutFile(fullFilePath, job.Start.ToString(), job.End.ToString(), telemetryClient);
-            }
+        //    if (job.ShouldTrim.GetValueOrDefault())
+        //    {
+        //        fullFilePath = YoutubeDlHelper.CutFile(fullFilePath, job.Start.ToString(), job.End.ToString(), telemetryClient);
+        //    }
 
-            //AddWatermark(filePathResult); cannot be played in browser. dunno why
+        //    //AddWatermark(filePathResult); cannot be played in browser. dunno why
 
-            var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
-            //var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
+        //    var selectedOptionWithoutPlus = selectedOption.Replace("+", string.Empty);
+        //    //var programFullPath = $@"{AppConstants.YtWorkingDir}\youtube-dl.exe";
 
-            string physicalFileName = Path.GetFileName(fullFilePath);
+        //    string physicalFileName = Path.GetFileName(fullFilePath);
 
-            //var fileNameFromArgs = GetFileNameFromArgs(ytUrl);
+        //    //var fileNameFromArgs = GetFileNameFromArgs(ytUrl);
 
-            //var metaFileToGetTitle = Directory.GetFiles(AppConstants.YtWorkingDir).FirstOrDefault(f => f.Contains(job.V, StringComparison.CurrentCultureIgnoreCase));
-            var fileNameWithoutDashV = string.Empty;
+        //    //var metaFileToGetTitle = Directory.GetFiles(AppConstants.YtWorkingDir).FirstOrDefault(f => f.Contains(job.V, StringComparison.CurrentCultureIgnoreCase));
+        //    var fileNameWithoutDashV = string.Empty;
 
-            var fullDescription = await GetYouTubeUrlFullDescription(job.V, telemetryClient);
+        //    var fullDescription = await GetYouTubeUrlFullDescription(job.V, telemetryClient);
 
-            fileNameWithoutDashV = fullDescription.Title;
-            //if (metaFileToGetTitle != null)
-            //{
-            //    var fileContent = File.ReadAllText(metaFileToGetTitle);
-            //    asd
-            //}
+        //    fileNameWithoutDashV = fullDescription.Title;
+        //    //if (metaFileToGetTitle != null)
+        //    //{
+        //    //    var fileContent = File.ReadAllText(metaFileToGetTitle);
+        //    //    asd
+        //    //}
 
-            ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand(
-                $@"{AppConstants.YtWorkingDir}\youtube-dl.exe",
-                $"--get-filename {job.Url} --encoding UTF8",
-                telemetryClient);
+        //    ProcessResult res = await ProcessAsyncHelper.ExecuteShellCommand(
+        //        $@"{AppConstants.YtWorkingDir}\youtube-dl.exe",
+        //        $"--get-filename {job.Url} --encoding UTF8",
+        //        telemetryClient);
 
-            var fileNameFromArgs = res.StadardOutput;
+        //    var fileNameFromArgs = res.StadardOutput;
 
-            var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
-            fileNameWithoutDashV = fileNameWithoutExtensions.Replace($" [{job.V}]", string.Empty, StringComparison.InvariantCultureIgnoreCase);
+        //    var fileNameWithoutExtensions = Path.GetFileNameWithoutExtension(fileNameFromArgs);
+        //    fileNameWithoutDashV = fileNameWithoutExtensions.Replace($" [{job.V}]", string.Empty, StringComparison.InvariantCultureIgnoreCase);
 
-            var size = new FileInfo(fullFilePath).Length;
-
-
-            reply = new YoutubeDownloadedFileInfo()
-            {
-                Id = job.V,
-                Name = fileNameFromArgs,
-                Url = $"{hostBaseUrl}{physicalFileName}",
-                FileName = fileNameFromArgs,
-                DisplayName = fileNameWithoutDashV,
-                V = job.V,
-                Start = job.Start.ToString(),
-                End = job.End.ToString(),
-                FileOnDiskNameWithoutExtension = Path.GetFileNameWithoutExtension(physicalFileName),
-                FileOnDiskExtension = Path.GetExtension(physicalFileName),
-                FileOnDiskNameWithExtension = Path.GetFileName(physicalFileName),
-                DownloadedOn = DateTime.UtcNow,
-                FileOnDiskSize = size,
-                Ip = job.Ip
-            };
-
-            Dictionary<string, string> metadata = new Dictionary<string, string>();
-
-            metadata[nameof(YoutubeDownloadedFileInfo.Start)] = reply.Start.Base64StringEncode();
-            metadata[nameof(YoutubeDownloadedFileInfo.End)] = reply.End.Base64StringEncode();
-            metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskSize)] = reply.FileOnDiskSize.ToString().Base64StringEncode();
-
-            metadata[nameof(YoutubeDownloadedFileInfo.DisplayName)] = reply.DisplayName.Base64StringEncode();
-
-            metadata[nameof(YoutubeDownloadedFileInfo.Url)] = reply.Url.Base64StringEncode();
-
-            metadata[nameof(YoutubeDownloadedFileInfo.Ip)] = reply.Ip.Base64StringEncode();
-
-            metadata[nameof(YoutubeDownloadedFileInfo.Id)] = reply.Id.Base64StringEncode();
-
-            metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension)] = reply.FileOnDiskExtension.Base64StringEncode();
-
-            await BlobStorageHelper.UploadBlob(fullFilePath, physicalFileName, "media", metadata, telemetryClient);
-
-            File.Delete(fullFilePath);
-
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    try
-            //    {
-            //        YoutubeDlHelper.SaveDownloadedFilesMetaInfo(reply);
-            //        break;
-            //    }
-            //    catch(IOException ex)
-            //    {
-            //        if (i == 9)
-            //        {
-            //            telemetryClient.TrackException(ex);
-            //        }
-            //        Thread.Sleep(1000);
-            //    }
-            //}
+        //    var size = new FileInfo(fullFilePath).Length;
 
 
-            return reply;
+        //    reply = new YoutubeDownloadedFileInfo()
+        //    {
+        //        Id = job.V,
+        //        Name = fileNameFromArgs,
+        //        Url = $"{hostBaseUrl}{physicalFileName}",
+        //        FileName = fileNameFromArgs,
+        //        DisplayName = fileNameWithoutDashV,
+        //        V = job.V,
+        //        Start = job.Start.ToString(),
+        //        End = job.End.ToString(),
+        //        FileOnDiskNameWithoutExtension = Path.GetFileNameWithoutExtension(physicalFileName),
+        //        FileOnDiskExtension = Path.GetExtension(physicalFileName),
+        //        FileOnDiskNameWithExtension = Path.GetFileName(physicalFileName),
+        //        DownloadedOn = DateTime.UtcNow,
+        //        FileOnDiskSize = size,
+        //        Ip = job.Ip
+        //    };
 
-        }
+        //    Dictionary<string, string> metadata = new Dictionary<string, string>();
+
+        //    metadata[nameof(YoutubeDownloadedFileInfo.Start)] = reply.Start.Base64StringEncode();
+        //    metadata[nameof(YoutubeDownloadedFileInfo.End)] = reply.End.Base64StringEncode();
+        //    metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskSize)] = reply.FileOnDiskSize.ToString().Base64StringEncode();
+
+        //    metadata[nameof(YoutubeDownloadedFileInfo.DisplayName)] = reply.DisplayName.Base64StringEncode();
+
+        //    metadata[nameof(YoutubeDownloadedFileInfo.Url)] = reply.Url.Base64StringEncode();
+
+        //    metadata[nameof(YoutubeDownloadedFileInfo.Ip)] = reply.Ip.Base64StringEncode();
+
+        //    metadata[nameof(YoutubeDownloadedFileInfo.Id)] = reply.Id.Base64StringEncode();
+
+        //    metadata[nameof(YoutubeDownloadedFileInfo.FileOnDiskExtension)] = reply.FileOnDiskExtension.Base64StringEncode();
+
+
+
+        //    await BlobStorageHelper.UploadBlob(fullFilePath, physicalFileName, "media", metadata, telemetryClient);
+
+        //    File.Delete(fullFilePath);
+
+        //    //for (int i = 0; i < 10; i++)
+        //    //{
+        //    //    try
+        //    //    {
+        //    //        YoutubeDlHelper.SaveDownloadedFilesMetaInfo(reply);
+        //    //        break;
+        //    //    }
+        //    //    catch(IOException ex)
+        //    //    {
+        //    //        if (i == 9)
+        //    //        {
+        //    //            telemetryClient.TrackException(ex);
+        //    //        }
+        //    //        Thread.Sleep(1000);
+        //    //    }
+        //    //}
+
+
+        //    return reply;
+
+        //}
     }
 }
