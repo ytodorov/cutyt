@@ -5,6 +5,8 @@ using Cutyt.Core.Rebus.Jobs;
 using CutytKendoWeb;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -89,6 +91,30 @@ namespace CutytKendo
             services.AddKendo();
 
             services.AddHttpClient();
+
+            //services.AddAuthentication(
+            //        v =>
+            //        {
+            //            v.DefaultAuthenticateScheme = FacebookDefaults.AuthenticationScheme;
+            //            v.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
+            //        }
+            //        )
+            //    .AddFacebook(facebookOptions =>
+            //    {
+            //        facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+            //        facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            //    })
+            //.AddGoogle(options =>
+            //{
+            //    IConfigurationSection googleAuthNSection =
+            //        Configuration.GetSection("Authentication:Google");
+
+            //    options.ClientId = googleAuthNSection["ClientId"];
+
+
+            //    options.ClientSecret = googleAuthNSection["ClientSecret"];
+            //})
+            //;
 
         }
 

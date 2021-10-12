@@ -9,6 +9,7 @@ using CutytKendoWeb.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -74,6 +75,21 @@ namespace CutytKendo.Controllers
 
             return View();
         }
+
+        [Authorize]
+        [Route("/login")]
+        public IActionResult LogIn()
+        {
+            return View();
+        }
+
+        [Route("/signin-facebook")]
+        public IActionResult SigninFacebook()
+        {
+            // OK, here we are after login
+            return View();
+        }
+
 
         [OutputCache(Profile = "default")]
         [Route("/alldownloads")]
@@ -219,7 +235,7 @@ namespace CutytKendo.Controllers
             //    $"https://execprogram.azurewebsites.net/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
 
             //"http://localhost:5036/getbloburl"; //"https://execprogram.azurewebsites.net/getbloburl";
-            var jsonStream = await httpClient.GetStreamAsync(
+            var jsonStream = await httpClient.GetStringAsync(
                 $"https://execprogram.azurewebsites.net/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
 
             var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(jsonStream, options);

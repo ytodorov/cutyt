@@ -83,7 +83,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
     var uniqueTicks = DateTime.Now.Ticks.ToString();
 
-    string? fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.Start}_{job.End}"
+    string? fileNameToUploadInBLobWithoutExtension = $"{job.V}_{job.SelectedOption}_{job.Start}_{job.End}_{uniqueTicks}"
     .Replace(" ", "_")
     .Replace("+", "_");
 
@@ -99,7 +99,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
 
         job.SelectedOption = "bestaudio";
 
-        fileNameToUploadInBLobWithoutExtension = $"{uniqueTicks}_{job.V}_{job.SelectedOption}_{job.AudioFormat}_{job.Start}_{job.End}"
+        fileNameToUploadInBLobWithoutExtension = $"{job.V}_{job.SelectedOption}_{job.AudioFormat}_{job.Start}_{job.End}_{uniqueTicks}"
         .Replace(" ", "_")
         .Replace("+", "_");
     }
@@ -162,7 +162,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
     {
         Id = job.V,
         Name = job.Title,
-        Url = $"https://stcutyt.blob.core.windows.net/media/{fileOnDiskNameWithExtension}",
+        Url = $"https://cutytne.blob.core.windows.net/media/{fileOnDiskNameWithExtension}",
         FileName = job.Title,
         DisplayName = job.Title,
         V = job.V,
