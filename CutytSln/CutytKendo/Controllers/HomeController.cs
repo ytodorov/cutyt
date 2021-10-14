@@ -375,6 +375,13 @@ namespace CutytKendo.Controllers
             return View();
         }
 
+        [OutputCache(Profile = "default")]
+        [Route("/terms")]
+        public IActionResult Terms()
+        {
+            return View();
+        }
+
         [Route("/error")]
         public IActionResult Error()
         {
