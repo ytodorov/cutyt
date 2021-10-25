@@ -4,6 +4,7 @@
 	ViewData["Title"] = $"Trending videos | {SiteConstants.Title}";
 	ViewData["Description"] = "See trending videos";
 	ViewData["CanonicalUrl"] = $"{SiteConstants.CanonicalUrl}/trending";
+    ViewData["DescriptionSeo"] = "Trending videos. Recent videos that have been marked as trending by Google's algorithm in some countries. Updated daily with fresh data from YouTube's servers.";
 }
 
 @(Html.Kendo().Grid<YoutubeTrendingViewModel>(Model)

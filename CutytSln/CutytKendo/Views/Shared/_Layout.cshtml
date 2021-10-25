@@ -4,6 +4,7 @@
 	var title = ViewData["Title"] is null ? SiteConstants.Title : ViewData["Title"];
 	var description = ViewData["Description"] is null ? SiteConstants.Description : ViewData["Description"];
 	var canonicalUrl = ViewData["CanonicalUrl"] is null ? SiteConstants.CanonicalUrl : ViewData["CanonicalUrl"];
+	var descriptionSeo = ViewData["DescriptionSeo"] is null ? SiteConstants.DescriptionSeo : ViewData["DescriptionSeo"];
 
 }
 <head>
@@ -13,7 +14,7 @@
 	<meta title="@(title)" />
 	<meta property="og:image" content="@SiteConstants.ImageUrl" />
 	<meta property="og:title" content="@SiteConstants.Title" />
-	<meta property="og:description" content="@(description)" />
+	<meta property="og:description" content="@(descriptionSeo)" />
 	<meta property="og:url" content="@(canonicalUrl)" />
 	<meta property="og:site_name" content="@SiteConstants.SiteName" />
 	<meta property="og:author" content="@SiteConstants.Author" />
@@ -21,7 +22,7 @@
 	<meta property="fb:app:id" content="773558706918738" />
 	<meta property="fb:app_id" content="773558706918738" />
 
-	<meta name="description" content="@(description)">
+	<meta name="description" content="@(descriptionSeo)">
 	<title>@(title)</title>
 
 	<link rel="canonical" href="@(canonicalUrl)" />
@@ -205,7 +206,7 @@
 	</header>
 
 	<main>
-		<div class="container-fluid">
+		<div class="container-fluid">			
 			@RenderBody()
 		</div>
 	</main>
