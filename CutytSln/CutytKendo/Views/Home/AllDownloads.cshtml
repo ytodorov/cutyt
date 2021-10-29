@@ -4,8 +4,7 @@
     ViewData["CanonicalUrl"] = $"{SiteConstants.CanonicalUrl}/alldownloads";
     ViewData["DescriptionSeo"] = "All downloads for today from all users. Quick access to all files that have been downloaded today.";
 }
-<script async="async" data-cfasync="false" src="//crevicedepressingpumpkin.com/f426e8bdf0a760687d33e875d60ab653/invoke.js"></script>
-<div id="container-f426e8bdf0a760687d33e875d60ab653"></div>
+
 @(Html.Kendo().Grid<YoutubeDownloadedFileInfo>()
                             .Name("grid")
                             .Mobile(MobileMode.Auto)                            
