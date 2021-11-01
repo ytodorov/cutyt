@@ -5,6 +5,7 @@ using Cutyt.Core.Extensions;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
 using Cutyt.Core.Storage;
+using CutytKendoWeb;
 using CutytKendoWeb.Models;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
@@ -12,6 +13,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -46,14 +48,18 @@ namespace CutytKendo.Controllers
 
         TelemetryClient telemetryClient;
 
+        IHubContext<ChatHub> chatHub;
+
         public HomeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostEnvironment,
-            TelemetryClient telemetryClient)
+            TelemetryClient telemetryClient,
+            IHubContext<ChatHub> chatHub)
         {
             this.httpClientFactory = httpClientFactory;
             this.hostEnvironment = hostEnvironment;
             this.telemetryClient = telemetryClient;
+            this.chatHub = chatHub;
 
             httpClient = httpClientFactory.CreateClient();
 
@@ -69,11 +75,10 @@ namespace CutytKendo.Controllers
             return View();
         }
 
-        public IActionResult About()
+        public async Task About()
         {
-            ViewData["Message"] = "Your application description page.";
+            await chatHub.Clients.All.SendAsync("echo", "test", "test");
 
-            return View();
         }
 
         [Authorize]
@@ -107,18 +112,20 @@ namespace CutytKendo.Controllers
 
         [OutputCache(Profile = "default")]
         [Route("/trending")]
-        public async Task<IActionResult> Trending()
+        public async Task<IActionResult> Trending(string c)
         {
-
-
             List<YoutubeTrendingViewModel> youtubeTrendings = new List<YoutubeTrendingViewModel>();
 
             List<string> regionCodes = new List<string>() { "IN", "US", "ID", "BR", "PH", "GB", "FR", "DE", "MA", "CA" };
+            if (regionCodes.Any(s => s.Equals(c?.Trim(), StringComparison.InvariantCultureIgnoreCase)) == true)
+            {
+                regionCodes = new List<string>() { c.Trim().ToUpperInvariant() };
+            }
 
             foreach (var regionCode in regionCodes)
             {
                 var res = await httpClient.GetStringAsync(
-                    $"https://www.googleapis.com/youtube/v3/videos?part=contentDetails&chart=mostPopular&regionCode={regionCode}&key=AIzaSyAi72YHlA7Smr215lCmxgWjijA21Imchdk");
+                    $"https://www.googleapis.com/youtube/v3/videos?part=contentDetails&maxResults=9&chart=mostPopular&regionCode={regionCode}&key=AIzaSyAi72YHlA7Smr215lCmxgWjijA21Imchdk");
 
                 var root = JsonNode.Parse(res);
                 var items = root["items"];

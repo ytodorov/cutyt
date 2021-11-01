@@ -172,6 +172,30 @@
 
 @section scripts {
     <script>
+        function bindConnectionMessage(connection) {
+            var messageCallback = function (name, message) {
+                if (!message) return;
+                // deal with the message
+                     console.log("message received:" + message);
+                };
+                // Create a function that the hub can call to broadcast messages.
+                connection.on('broadcastMessage', messageCallback);
+                connection.on('echo', messageCallback);
+            }
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl('/chat')
+                .build();
+
+            bindConnectionMessage(connection);
+            connection.start()
+                .then(function () {
+                    console.log("onConnected");
+                })
+                .catch(function (error) {
+                   console.log("onConnected error " + error.message);
+                });
+
         $(document).ready(function () {
 
             const urlSearchParams = new URLSearchParams(window.location.search);

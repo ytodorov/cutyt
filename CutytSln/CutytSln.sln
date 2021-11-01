@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleConsole", "SimpleCons
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebApp", "TestWebApp\TestWebApp.csproj", "{66E8D195-72F7-43D7-9029-AF1548AFBDB4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSendSignalrMessage", "TestSendSignalrMessage\TestSendSignalrMessage.csproj", "{2DB5F33D-865C-46F5-AE13-8919C79CE10C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{66E8D195-72F7-43D7-9029-AF1548AFBDB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66E8D195-72F7-43D7-9029-AF1548AFBDB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66E8D195-72F7-43D7-9029-AF1548AFBDB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DB5F33D-865C-46F5-AE13-8919C79CE10C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DB5F33D-865C-46F5-AE13-8919C79CE10C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DB5F33D-865C-46F5-AE13-8919C79CE10C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DB5F33D-865C-46F5-AE13-8919C79CE10C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

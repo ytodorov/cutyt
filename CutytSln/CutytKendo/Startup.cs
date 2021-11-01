@@ -76,14 +76,16 @@ namespace CutytKendo
 
             services.AddOutputCaching(options =>
             {
+                // Disabling cache by setting duration to 1 - adds with IsMobile usage // TO DO
                 options.Profiles["default"] = new OutputCacheProfile
                 {
-                    Duration = 6000
+                    Duration = TimeSpan.FromHours(2).TotalSeconds,
+                    VaryByParam = "c"
                 };
 
                 options.Profiles["short"] = new OutputCacheProfile
                 {
-                    Duration = 30,
+                    Duration = TimeSpan.FromMinutes(10).TotalSeconds,
                     UseAbsoluteExpiration = true,
                 };
             });
@@ -92,29 +94,10 @@ namespace CutytKendo
 
             services.AddHttpClient();
 
-            //services.AddAuthentication(
-            //        v =>
-            //        {
-            //            v.DefaultAuthenticateScheme = FacebookDefaults.AuthenticationScheme;
-            //            v.DefaultChallengeScheme = FacebookDefaults.AuthenticationScheme;
-            //        }
-            //        )
-            //    .AddFacebook(facebookOptions =>
-            //    {
-            //        facebookOptions.AppId = Configuration["Authentication:Facebook:AppId"];
-            //        facebookOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            //    })
-            //.AddGoogle(options =>
-            //{
-            //    IConfigurationSection googleAuthNSection =
-            //        Configuration.GetSection("Authentication:Google");
+            services.AddSignalR()
+                    .AddAzureSignalR("Endpoint=https://cutyt.service.signalr.net;AccessKey=CqW6IpODOQ1vwEncPHN67KhUIr08xvLLv1Y4HNoj7ek=;Version=1.0;");
 
-            //    options.ClientId = googleAuthNSection["ClientId"];
-
-
-            //    options.ClientSecret = googleAuthNSection["ClientSecret"];
-            //})
-            //;
+           
 
         }
 
@@ -201,9 +184,10 @@ namespace CutytKendo
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapHub<ChatHub>("/chat");
             });
 
-            //app.ApplicationServices.UseRebus();
         }
 
         private void CheckSameSite(HttpContext httpContext, CookieOptions options)
