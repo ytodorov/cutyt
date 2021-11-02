@@ -20,4 +20,34 @@
 	<url>
 		<loc>https://www.cutyt.com/privacy</loc>
 	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=IN</loc>
+	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=US</loc>
+	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=ID</loc>
+	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=BR</loc>
+	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=PH</loc>
+	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=GB</loc>
+	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=FR</loc>
+	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=DE</loc>
+	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=MA</loc>
+	</url>
+	<url>
+		<loc>https://www.cutyt.com/trending?c=CA</loc>
+	</url>
 </urlset>

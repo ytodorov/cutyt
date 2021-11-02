@@ -26,5 +26,7 @@ namespace Cutyt.Core.Classes
         public double AverageRating { get; set; }
 
         public string RegionCode { get; set; }
+
+        public string ImageUrl { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace CutytKendoWeb
+namespace Cutyt.Core.Hubs
 {
     public class ChatHub : Hub
     {
@@ -15,5 +15,10 @@ namespace CutytKendoWeb
             Clients.Client(Context.ConnectionId).SendAsync("echo", name, message + " (echo from server)");
         }
 
+        public override async Task OnConnectedAsync()
+        {
+            await Clients.Caller.SendAsync("setSignalrId", Context.ConnectionId);
+            await base.OnConnectedAsync();
+        }
     }
 }

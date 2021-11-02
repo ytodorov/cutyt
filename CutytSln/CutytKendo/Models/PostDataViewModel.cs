@@ -17,6 +17,8 @@ public class PostDataDownloadLinkViewModel
     public bool? ShouldTrim { get; set; }
 
     public string Title { get; set; }
+
+    public string SignalrId { get; set; }
 }
 
 // [FromBody] string v, [FromBody] string vimeoId, [FromBody] string selectedOption, [FromBody] string ytUrl,

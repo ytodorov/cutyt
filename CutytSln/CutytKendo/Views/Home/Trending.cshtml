@@ -12,7 +12,8 @@
                             .Mobile(MobileMode.Auto)                            
                             .Columns(columns =>
                             {
-                                columns.Bound(p => p.Name).Title("Name");
+                                columns.Bound(p => p.Name).Title("Name");                               
+                                columns.Template("<img src='#= ImageUrl #' alt='#= Name #' title='#= Name #' /> ").Title("Thumbnail");
                                 columns.Bound(p => p.RegionCode).Title("RegionCode");
                                 columns.Template("<a target='_blank' href='https://www.cutyt.com/watch?v=#= Id #'>View</a>").Title("Download options");
                                 columns.Bound(p => p.Likes).Title("Likes");

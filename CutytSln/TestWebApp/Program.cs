@@ -1,8 +1,15 @@
+using Cutyt.Core.Hubs;
+using Microsoft.AspNetCore.SignalR;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationInsightsTelemetry();
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddSignalR()
+                    .AddAzureSignalR("Endpoint=https://cutyt.service.signalr.net;AccessKey=CqW6IpODOQ1vwEncPHN67KhUIr08xvLLv1Y4HNoj7ek=;Version=1.0;");
 
 var app = builder.Build();
 
@@ -20,13 +27,23 @@ else
 {
     AppConstants.YtWorkingDir = Environment.CurrentDirectory;
 }
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapHub<ChatHub>("/chat");
+});
 
 app.MapGet("/", async (HttpContext context, TelemetryClient telemetryClient) =>
 {
     return await Task.FromResult("OK");
 });
 
-app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient) =>
+app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient, IHubContext<ChatHub> chatHub) =>
         {
             string args = context.Request.Query["args"];
             string command = context.Request.Query["command"];
@@ -48,7 +65,7 @@ app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient) 
 
             var currDir = Environment.CurrentDirectory;
 
-            var res = await ProcessAsyncHelperNoLog.ExecuteShellCommand($@"{currDir}\{command}", $"{args}");
+            var res = await ProcessAsyncHelperNoLog.ExecuteShellCommand($@"{currDir}\{command}", $"{args}", null, null);
             if (res.StandardError?.Contains("error:", StringComparison.InvariantCultureIgnoreCase) == true)
             {
                 telemetryClient.TrackException(new Exception(res.StandardError));
@@ -66,7 +83,7 @@ app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient) 
         }
         );
 
-app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownloadedFileInfo>>)(async (HttpContext context, TelemetryClient telemetryClient) =>
+app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatHub>, Task <YoutubeDownloadedFileInfo>>)(async (HttpContext context, TelemetryClient telemetryClient, IHubContext<ChatHub> chatHub) =>
 {
     string requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
     var job = JsonConvert.DeserializeObject<DownloadLinkRequestViewModel>(requestBody);
@@ -82,6 +99,8 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
     string audioFormatOption = string.Empty;
 
     var uniqueTicks = DateTime.Now.Ticks.ToString();
+
+    string signalrId = job.SignalrId;
 
     string? fileNameToUploadInBLobWithoutExtension = $"{job.V}_{job.SelectedOption}_{job.Start}_{job.End}_{uniqueTicks}"
     .Replace(" ", "_")
@@ -114,11 +133,13 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
         end = TimeSpan.FromSeconds(job.End).ToString("c");
 
 
-        var args = $"--external-downloader ffmpeg --external-downloader-args \"-ss {start} -to {end}\" -f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --no-part  --output \"{output}\"";
+        var args = $"--external-downloader ffmpeg --external-downloader-args \"-ss {start} -to {end}\" -f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --no-part --output \"{output}\"";
 
         var resFromShell = await ProcessAsyncHelperNoLog.ExecuteShellCommand(
                 $@"{currDir}\youtube-dl.exe",
-                args);
+                args,
+                chatHub,
+                signalrId);
 
         if (!string.IsNullOrEmpty(resFromShell.StandardError))
         {
@@ -132,7 +153,9 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, Task<YoutubeDownl
     {
         var resFromShell2 = await ProcessAsyncHelperNoLog.ExecuteShellCommand(
                 $@"{currDir}\youtube-dl.exe",
-                $"-f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --no-part  --output {output}");
+                $"-f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --no-part --output {output}",
+                chatHub,
+                signalrId);
 
         if (!string.IsNullOrEmpty(resFromShell2.StandardError))
         {

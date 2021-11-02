@@ -2,6 +2,7 @@
 using Cutyt.Core.Classes;
 using Cutyt.Core.Constants;
 using Cutyt.Core.Extensions;
+using Cutyt.Core.Hubs;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
 using Cutyt.Core.Storage;
@@ -162,6 +163,7 @@ namespace CutytKendo.Controllers
                             Name = youTubeUrlFullDescription.Title,
                             Url = fullUrl,
                             RegionCode = regionCode,
+                            ImageUrl = youTubeUrlFullDescription?.Thumbnails?.Where(s => s.TestUrl != true)?.FirstOrDefault()?.Url
                         });
                     }
 
@@ -322,8 +324,8 @@ namespace CutytKendo.Controllers
                 Start = postDataDownloadLinkViewModel.Start,
                 End = postDataDownloadLinkViewModel.End,
                 Ip = HttpContext.Connection.RemoteIpAddress.ToString(),
-                Title = postDataDownloadLinkViewModel.Title
-
+                Title = postDataDownloadLinkViewModel.Title,
+                SignalrId = postDataDownloadLinkViewModel.SignalrId,
             };
 
             if (selectedOptionWithoutPlus.Contains("--audio-format"))
@@ -418,7 +420,7 @@ namespace CutytKendo.Controllers
             var json = JsonSerializer.Serialize(new DownloadLinkRequestViewModel());
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var url = "http://localhost:5036/getbloburl";
+            var url = "https://execprogram.azurewebsites.net/getbloburl";
             var response = await httpClient.PostAsync(url, data);
 
             var obj = await response.Content.ReadFromJsonAsync<DownloadLinkRequestViewModel>();

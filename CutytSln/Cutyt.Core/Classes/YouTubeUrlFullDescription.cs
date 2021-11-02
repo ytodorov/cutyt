@@ -76,6 +76,8 @@ namespace Cutyt.Core.Classes
 
         public List<YouTubeFormat> Formats { get; set; }
 
+        public List<YouTubeThumbnail> Thumbnails { get; set; }
+
 
     }
 }

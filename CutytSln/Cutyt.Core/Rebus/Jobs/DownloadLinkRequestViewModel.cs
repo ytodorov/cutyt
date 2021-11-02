@@ -29,5 +29,7 @@ namespace Cutyt.Core.Rebus.Jobs
         public string AudioFormat { get; set; }
 
         public string Title { get; set; }
+
+        public string SignalrId { get; set; }
     }
 }

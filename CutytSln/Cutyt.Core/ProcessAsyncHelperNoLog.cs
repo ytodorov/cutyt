@@ -1,5 +1,7 @@
-﻿using Cutyt.Core.Kernels;
+﻿using Cutyt.Core.Hubs;
+using Cutyt.Core.Kernels;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -14,8 +16,9 @@ public static class ProcessAsyncHelperNoLog
 {
     public static async Task<ProcessResult> ExecuteShellCommand(
         string command,
-        string arguments
-        )
+        string arguments,
+        IHubContext<ChatHub> chatHub,
+        string signalrId)
     {
         int timeout = int.MaxValue;
 
@@ -50,7 +53,7 @@ public static class ProcessAsyncHelperNoLog
 
 
 
-            process.OutputDataReceived += (s, e) =>
+            process.OutputDataReceived += async (s, e) =>
             {
                 // The output stream has been closed i.e. the process has terminated
                 if (e.Data == null)
@@ -59,6 +62,17 @@ public static class ProcessAsyncHelperNoLog
                 }
                 else
                 {
+                    if (!string.IsNullOrEmpty(signalrId) && chatHub?.Clients.Client(signalrId) != null)
+                    {
+                        if (e.Data.Length > 55)
+                        {
+                            await chatHub?.Clients.Client(signalrId).SendAsync("echo", $"{e.Data.Substring(0, 55)} ...");
+                        }
+                        else
+                        {
+                            await chatHub?.Clients.Client(signalrId).SendAsync("echo", e.Data);
+                        }
+                    }
                     outputBuilder.AppendLine(e.Data);
                     totalCountOfData++;
                 }
@@ -67,7 +81,7 @@ public static class ProcessAsyncHelperNoLog
             var errorBuilder = new StringBuilder();
             var errorCloseEvent = new TaskCompletionSource<bool>();
 
-            process.ErrorDataReceived += (s, e) =>
+            process.ErrorDataReceived += async (s, e) =>
             {
                 // The error stream has been closed i.e. the process has terminated
                 if (e.Data == null)
@@ -76,6 +90,17 @@ public static class ProcessAsyncHelperNoLog
                 }
                 else
                 {
+                    if (!string.IsNullOrEmpty(signalrId) && chatHub?.Clients.Client(signalrId) != null)
+                    {
+                        if (e.Data.Length > 55)
+                        {
+                            await chatHub?.Clients.Client(signalrId).SendAsync("echo", $"{e.Data.Substring(0, 55)} ...");
+                        }
+                        else
+                        {
+                            await chatHub?.Clients.Client(signalrId).SendAsync("echo", e.Data);
+                        }
+                    }
                     errorBuilder.AppendLine(e.Data);
                     totalCountOfError++;
                 }

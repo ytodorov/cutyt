@@ -33,6 +33,8 @@
 
 	function onBtnDownloadClick(e) {
 
+		$("#kendoConsole").empty();
+
 		var loader = $("#btnDownloadLoader").data("kendoLoader");
 		loader.show();
 
@@ -72,7 +74,8 @@
 				start : start,
 				end : end,
 				shouldTrim : shouldTrim,
-				title : title
+				title : title,
+				signalrId : sessionStorage.getItem('signalrId')
 				}
 		})
 			.success(function (result) {
@@ -146,6 +149,9 @@
 	.Events(ev => ev.Click("onBtnDownloadClick")))
 	</p>
 
+	<span>Info console:</span>
+	<div id="kendoConsole" class="console"></div>
+
 	<div class="text-center" style="display:none" id="pGenerateLink">
 		@(Html.Kendo().Loader()
 	.Name("loader3")
@@ -172,7 +178,7 @@
 			<div class="text-center">
 				<!-- Go to www.addthis.com/dashboard to customize your tools -->
 				<div class="addthis_inline_share_toolbox"></div>
-				<div class="addthis_tipjar_inline"></div>
+				@*<div class="addthis_tipjar_inline"></div>*@
 			</div>
 		</div>
 	</div>

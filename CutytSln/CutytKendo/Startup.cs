@@ -1,5 +1,6 @@
 ﻿using Cutyt.Core.Constants;
 using Cutyt.Core.Extensions;
+using Cutyt.Core.Hubs;
 using Cutyt.Core.Infrastructure;
 using Cutyt.Core.Rebus.Jobs;
 using CutytKendoWeb;
