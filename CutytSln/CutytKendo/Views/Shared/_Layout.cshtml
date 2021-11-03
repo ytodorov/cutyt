@@ -142,7 +142,7 @@
         })(window, document, "clarity", "script", "91fxsij5e7");
         </script>*@
 </head>
-<body class="k-content" style="display:none">
+<body class="k-content">
     @*<nav class="navbar navbar-dark bg-dark">
         <div class="container-fluid d-flex justify-content-between p-0">
         <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">@(SiteConstants.Title)</a>
@@ -172,20 +172,20 @@
         items.Add().Text("My Downloads").Url("/mydownloads");
 
         items.Add().Text("All Downloads").Url("/alldownloads");
-            
-                items.Add().Text("Trending").Items(subItems => 
-                {
-                    subItems.Add().Text("India").Url("/trending?c=IN");
-                    subItems.Add().Text("USA").Url("/trending?c=US");
-                    subItems.Add().Text("Indonesia").Url("/trending?c=ID");
-                    subItems.Add().Text("Brazil").Url("/trending?c=BR");
-                    subItems.Add().Text("Philippines").Url("/trending?c=PH");
-                    subItems.Add().Text("Great Britain").Url("/trending?c=GB");
-                    subItems.Add().Text("France").Url("/trending?c=FR");
-                    subItems.Add().Text("Germany").Url("/trending?c=DE");
-                    subItems.Add().Text("Morocco").Url("/trending?c=MA");
-                    subItems.Add().Text("Canada").Url("/trending?c=CA");
-                });
+
+        items.Add().Text("Trending").Items(subItems =>
+        {
+        subItems.Add().Text("India").Url("/trending?c=IN");
+        subItems.Add().Text("USA").Url("/trending?c=US");
+        subItems.Add().Text("Indonesia").Url("/trending?c=ID");
+        subItems.Add().Text("Brazil").Url("/trending?c=BR");
+        subItems.Add().Text("Philippines").Url("/trending?c=PH");
+        subItems.Add().Text("Great Britain").Url("/trending?c=GB");
+        subItems.Add().Text("France").Url("/trending?c=FR");
+        subItems.Add().Text("Germany").Url("/trending?c=DE");
+        subItems.Add().Text("Morocco").Url("/trending?c=MA");
+        subItems.Add().Text("Canada").Url("/trending?c=CA");
+        });
         })
         )
     </nav>
@@ -223,30 +223,31 @@
 
             <div class="position-relative overflow-hidden p-1 p-md-1 m-md-1 text-center">
                 <div class="mx-auto my-3">
-                    <h1>@(title)</h1>
-                    <h2>@(description)</h2>
+                    <h1 class="h2">@(title)</h1>
+                    <h2 class="h4">@(description)</h2>
                 </div>
             </div>
-
-       @*     <div class=text-center>
-
-                @if (this.Context.IsMobileBrowser())
-                {
-                    <script type="text/javascript" src="https://pppbr.com/bnr.php?section=General&pub=893253&format=300x50&ga=g"></script>
-<noscript><a href="https://yllix.com/publishers/893253" target="_blank"><img src="//ylx-aff.advertica-cdn.com/pub_zn9ugf.png" style="border:none;margin:0;padding:0;vertical-align:baseline;" alt="ylliX - Online Advertising Network" /></a></noscript>
-                }
-                else
-                {
-                    <script type="text/javascript" src="https://pppbr.com/bnr.php?section=General&pub=893253&format=728x90&ga=g"></script>
-                    <noscript><a href="https://yllix.com/publishers/893253" target="_blank"><img src="//ylx-aff.advertica-cdn.com/pub/728x90.png" style="border:none;margin:0;padding:0;vertical-align:baseline;" alt="ylliX - Online Advertising Network" /></a></noscript>
-                }
-            </div>*@
-
         </section>
     </header>
 
     <main>
         <div class="container">
+            <p class="text-center">
+                @if (!this.Context.IsMobileBrowser())
+                {
+                    @*<a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=40528&file_id=114" target="_blank"><img src="https://media.go2speed.org/brand/files/nordvpn/15/20160415073802-NordV2728x90.gif" width="728" height="90" border="0" /></a><img src="https://go.nordvpn.net/aff_i?offer_id=15&file_id=114&aff_id=40528" width="0" height="0" style="position:absolute;visibility:hidden;" border="0" />*@
+                    <a href="https://go.nordvpn.net/SH3mD?file_id=114" target="_blank"><img src="https://media.go2speed.org/brand/files/nordvpn/15/20160415073802-NordV2728x90.gif" width="728" height="90" border="0" /></a>
+
+                    <img src="https://go.nordvpn.net/aff_i?offer_id=15&file_id=114&aff_id=40528&file_id=114&tiny_url=1" width="0" height="0" style="position:absolute;visibility:hidden;" border="0" />
+
+                }
+                else
+                {
+                    <a href="https://go.nordvpn.net/SH3mD?file_id=100" target="_blank"><img src="https://media.go2speed.org/brand/files/nordvpn/15/20160415073048-300x250v4.gif" width="300" height="250" border="0" /></a>
+
+                    <img src="https://go.nordvpn.net/aff_i?offer_id=15&file_id=100&aff_id=40528&file_id=114&tiny_url=1" width="0" height="0" style="position:absolute;visibility:hidden;" border="0" />
+                }
+            </p>
             @RenderBody()
         </div>
     </main>
@@ -347,12 +348,7 @@
     @RenderSection("scripts", required: false)
     <!-- Go to www.addthis.com/dashboard to customize your tools -->
     @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-6043f6619df39ba3"></script>*@
-    <script>
-        $(document).ready(function () {
-                $("body").show();
-            });
 
-    </script>
 </body>
 
 </html>

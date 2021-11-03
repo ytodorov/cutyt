@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Blobs.Specialized;
 using Cutyt.Core.Extensions;
 using Cutyt.Core.Rebus.Replies;
 using Microsoft.ApplicationInsights;
@@ -15,6 +16,32 @@ namespace Cutyt.Core.Storage
 {
     public class BlobStorageHelper
     {
+        public static async Task UploadPageBlob(string localFilePath, string fileName, string containerName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
+        {
+            // Create a BlobServiceClient object which will be used to create a container client
+            BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutytne;AccountKey=xv5Oxwy+1awbuVAgryEqfjTJbNC6q9WluSckpWllRmIoJ3MxtwTA6R/hAYOwgtVfynLeUZhpgTULF06ai1P88g==;EndpointSuffix=core.windows.net");
+
+            //Create a unique name for the container
+            //string containerName = "media";
+
+            // Create the container and return a container client object
+            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            PageBlobClient pageBlobClient = containerClient.GetPageBlobClient(fileName);
+
+            var fileInfo = new FileInfo(localFilePath);
+
+            using var fileStream = File.Open(localFilePath, FileMode.Open);
+
+            long correctNewSize = fileInfo.Length / 512 * 512 + 512;
+
+            pageBlobClient.Create(correctNewSize);
+
+            var response = pageBlobClient.UploadPages(fileStream, 512);
+
+            await AddBlobMetadataAsync(pageBlobClient, metadata, telemetryClient);
+        }
+
         public static async Task UploadBlob(string localFilePath, string fileName, string containerName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
         {
             // Create a BlobServiceClient object which will be used to create a container client
@@ -150,7 +177,7 @@ namespace Cutyt.Core.Storage
 
         // https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-properties-metadata?tabs=dotnet
 
-        public static async Task AddBlobMetadataAsync(BlobClient blob, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
+        public static async Task AddBlobMetadataAsync(BlobBaseClient blob, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
         {
             try
             {
@@ -170,7 +197,7 @@ namespace Cutyt.Core.Storage
             }
         }
 
-        public static async Task<IDictionary<string, string>> ReadBlobMetadataAsync(BlobClient blob, TelemetryClient telemetryClient)
+        public static async Task<IDictionary<string, string>> ReadBlobMetadataAsync(BlobBaseClient blob, TelemetryClient telemetryClient)
         {
             try
             {

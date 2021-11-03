@@ -81,7 +81,8 @@ namespace CutytKendo
                 options.Profiles["default"] = new OutputCacheProfile
                 {
                     Duration = TimeSpan.FromHours(2).TotalSeconds,
-                    VaryByParam = "c"
+                    VaryByParam = "c",
+                    VaryByHeader = "user-agent"
                 };
 
                 options.Profiles["short"] = new OutputCacheProfile

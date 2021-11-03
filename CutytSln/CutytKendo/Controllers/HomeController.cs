@@ -51,6 +51,8 @@ namespace CutytKendo.Controllers
 
         IHubContext<ChatHub> chatHub;
 
+        string baseUrl = "https://execprogram.azurewebsites.net"; // http://localhost:5036 // https://execprogram.azurewebsites.net
+
         public HomeController(
             IHttpClientFactory httpClientFactory,
             IWebHostEnvironment hostEnvironment,
@@ -144,9 +146,8 @@ namespace CutytKendo.Controllers
                         PropertyNameCaseInsensitive = true
                     };
 
-                    //"http://localhost:5036/getbloburl"; //"https://execprogram.azurewebsites.net/getbloburl";
                     var json = await httpClient.GetStringAsync(
-                        $"https://execprogram.azurewebsites.net/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
+                        $"{baseUrl}/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
 
                     if (!string.IsNullOrEmpty(json))
                     {
@@ -240,12 +241,8 @@ namespace CutytKendo.Controllers
                 PropertyNameCaseInsensitive = true
             };
 
-            //var str = await httpClient.GetStringAsync(
-            //    $"https://execprogram.azurewebsites.net/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
-
-            //"http://localhost:5036/getbloburl"; //"https://execprogram.azurewebsites.net/getbloburl";
             var jsonStream = await httpClient.GetStringAsync(
-                $"https://execprogram.azurewebsites.net/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
+                $"{baseUrl}/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
 
             var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(jsonStream, options);
 
@@ -339,7 +336,7 @@ namespace CutytKendo.Controllers
             var json = JsonSerializer.Serialize(job);
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var urlToGet = "https://execprogram.azurewebsites.net/getbloburl"; //"http://localhost:5036/getbloburl"; //"https://execprogram.azurewebsites.net/getbloburl";
+            var urlToGet = $"{baseUrl}/getbloburl";
 
             var response = await httpClient.PostAsync(urlToGet, data);
             var str = await response.Content.ReadAsStringAsync();
@@ -420,7 +417,7 @@ namespace CutytKendo.Controllers
             var json = JsonSerializer.Serialize(new DownloadLinkRequestViewModel());
             var data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var url = "https://execprogram.azurewebsites.net/getbloburl";
+            var url = $"{baseUrl}/getbloburl";
             var response = await httpClient.PostAsync(url, data);
 
             var obj = await response.Content.ReadFromJsonAsync<DownloadLinkRequestViewModel>();
