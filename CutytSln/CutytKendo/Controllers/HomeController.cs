@@ -5,9 +5,12 @@ using Cutyt.Core.Extensions;
 using Cutyt.Core.Hubs;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
+using Cutyt.Core.Redis;
 using Cutyt.Core.Storage;
+using CutytKendo.Models;
 using CutytKendoWeb;
 using CutytKendoWeb.Models;
+using IpInfo;
 using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.ApplicationInsights;
@@ -23,6 +26,7 @@ using Rebus.Activation;
 using Rebus.Bus;
 using Rebus.Config;
 using Rebus.Routing.TypeBased;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -125,33 +129,33 @@ namespace CutytKendo.Controllers
                 regionCodes = new List<string>() { c.Trim().ToUpperInvariant() };
             }
 
-            foreach (var regionCode in regionCodes)
+            foreach (string regionCode in regionCodes)
             {
-                var res = await httpClient.GetStringAsync(
+                string res = await httpClient.GetStringAsync(
                     $"https://www.googleapis.com/youtube/v3/videos?part=contentDetails&maxResults=9&chart=mostPopular&regionCode={regionCode}&key=AIzaSyAi72YHlA7Smr215lCmxgWjijA21Imchdk");
 
-                var root = JsonNode.Parse(res);
-                var items = root["items"];
+                JsonNode root = JsonNode.Parse(res);
+                JsonNode items = root["items"];
 
-                var videoDatas = JsonSerializer.Deserialize<List<VideoDataViewModel>>
+                List<VideoDataViewModel> videoDatas = JsonSerializer.Deserialize<List<VideoDataViewModel>>
                     (items, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
-                foreach (var data in videoDatas)
+                foreach (VideoDataViewModel data in videoDatas)
                 {
                     string fullUrl = $"https://www.youtube.com/watch?v={data.id}";
 
-                    var options = new JsonSerializerOptions
+                    JsonSerializerOptions options = new JsonSerializerOptions
                     {
                         AllowTrailingCommas = true,
                         PropertyNameCaseInsensitive = true
                     };
 
-                    var json = await httpClient.GetStringAsync(
+                    string json = await httpClient.GetStringAsync(
                         $"{baseUrl}/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
 
                     if (!string.IsNullOrEmpty(json))
                     {
-                        var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(json, options);
+                        YouTubeUrlFullDescription youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(json, options);
 
                         youtubeTrendings.Add(new YoutubeTrendingViewModel
                         {
@@ -201,7 +205,7 @@ namespace CutytKendo.Controllers
             string url = postDataViewModel.Url;
 
             // get the single url
-            var splits = url.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
+            List<string> splits = url.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList();
             if (splits.Count > 1)
             {
                 url = splits[0];
@@ -209,7 +213,7 @@ namespace CutytKendo.Controllers
 
             if (!Uri.TryCreate(url, UriKind.Absolute, out Uri result))
             {
-                var res = Content($"'{url}' must be valid URL!");
+                ContentResult res = Content($"'{url}' must be valid URL!");
                 res.StatusCode = 500;
                 return res;
             }
@@ -218,38 +222,38 @@ namespace CutytKendo.Controllers
                 if (!result.ToString().Contains("youtube", StringComparison.CurrentCultureIgnoreCase) &&
                     !result.ToString().Contains("youtu.be", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    var res = Content($"'{url}' must be valid YouTube url!");
+                    ContentResult res = Content($"'{url}' must be valid YouTube url!");
                     res.StatusCode = 500;
                     return res;
                 }
             }
 
 
-            var fullUrl = Helpers.GetFullUrlFromYouTube(url, httpClientFactory.CreateClient());
+            string fullUrl = Helpers.GetFullUrlFromYouTube(url, httpClientFactory.CreateClient());
 
             Uri uri = new Uri(fullUrl);
-            var parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
-            var v = parsedQSTest["v"];
+            System.Collections.Specialized.NameValueCollection parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
+            string v = parsedQSTest["v"];
 
             fullUrl = $"https://www.youtube.com/watch?v={v}";
 
             //YouTubeUrlFullDescription youTubeUrlFullDescription = await YoutubeDlHelper.GetYouTubeUrlFullDescription(v, telemetryClient);
 
-            var options = new JsonSerializerOptions
+            JsonSerializerOptions options = new JsonSerializerOptions
             {
                 AllowTrailingCommas = true,
                 PropertyNameCaseInsensitive = true
             };
 
-            var jsonStream = await httpClient.GetStringAsync(
+            string jsonStream = await httpClient.GetStringAsync(
                 $"{baseUrl}/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
 
-            var youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(jsonStream, options);
+            YouTubeUrlFullDescription youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(jsonStream, options);
 
-            var durationInSeconds = youTubeUrlFullDescription.Duration;
-            var infos = youTubeUrlFullDescription.Formats;
+            long? durationInSeconds = youTubeUrlFullDescription.Duration;
+            List<YouTubeFormat> infos = youTubeUrlFullDescription.Formats;
 
-            foreach (var info in infos)
+            foreach (YouTubeFormat info in infos)
             {
                 if (info.Width != null)
                 {
@@ -282,9 +286,9 @@ namespace CutytKendo.Controllers
         public async Task<IActionResult> GetDownloadLink(PostDataDownloadLinkViewModel postDataDownloadLinkViewModel)
         {
             //selectedOption = selectedOption?.Replace(" ", "+");
-            var ytUrl = Helpers.GetFullUrlFromYouTube(postDataDownloadLinkViewModel.YtUrl, httpClientFactory.CreateClient());
+            string ytUrl = Helpers.GetFullUrlFromYouTube(postDataDownloadLinkViewModel.YtUrl, httpClientFactory.CreateClient());
             Uri uri = new Uri(ytUrl);
-            var parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
+            System.Collections.Specialized.NameValueCollection parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
             postDataDownloadLinkViewModel.V = parsedQSTest["v"];
             if (string.IsNullOrEmpty(postDataDownloadLinkViewModel.V))
             {
@@ -307,11 +311,11 @@ namespace CutytKendo.Controllers
             }
 
             // best - use single file -> mp4
-            var selectedOptionWithoutPlus = postDataDownloadLinkViewModel.SelectedOption.Replace("+", string.Empty);
+            string selectedOptionWithoutPlus = postDataDownloadLinkViewModel.SelectedOption.Replace("+", string.Empty);
 
-            var outputFileName = $"{postDataDownloadLinkViewModel.V}{selectedOptionWithoutPlus}";
+            string outputFileName = $"{postDataDownloadLinkViewModel.V}{selectedOptionWithoutPlus}";
 
-            var job = new DownloadLinkRequestViewModel()
+            DownloadLinkRequestViewModel job = new DownloadLinkRequestViewModel()
             {
                 SelectedOption = postDataDownloadLinkViewModel.SelectedOption,
                 Url = url,
@@ -333,14 +337,14 @@ namespace CutytKendo.Controllers
 
             job.OutputFileName = outputFileName;
 
-            var json = JsonSerializer.Serialize(job);
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            string json = JsonSerializer.Serialize(job);
+            StringContent data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var urlToGet = $"{baseUrl}/getbloburl";
+            string urlToGet = $"{baseUrl}/getbloburl";
 
-            var response = await httpClient.PostAsync(urlToGet, data);
-            var str = await response.Content.ReadAsStringAsync();
-            var linkviewModel = await response.Content.ReadFromJsonAsync<YoutubeDownloadedFileInfo>();
+            HttpResponseMessage response = await httpClient.PostAsync(urlToGet, data);
+            string str = await response.Content.ReadAsStringAsync();
+            YoutubeDownloadedFileInfo linkviewModel = await response.Content.ReadFromJsonAsync<YoutubeDownloadedFileInfo>();
             //var linkviewModel = await YoutubeDlHelper.GetDownloadLinkReply(job, telemetryClient, $"{cutYtBaseAddress}");
 
             return PartialView(linkviewModel);
@@ -350,9 +354,9 @@ namespace CutytKendo.Controllers
         [Route("/getfiles")]
         public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
-            var query = $"\"DownloadedOnTicks\" > '{DateTime.UtcNow.Date.Ticks}'";
+            string query = $"\"DownloadedOnTicks\" > '{DateTime.UtcNow.Date.Ticks}'";
 
-            var blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, query);
+            List<YoutubeDownloadedFileInfo> blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, query);
 
             return Json(blobs.ToDataSourceResult(request));
         }
@@ -360,8 +364,8 @@ namespace CutytKendo.Controllers
         [Route("/getmyfiles")]
         public async Task<IActionResult> GetMyFiles([DataSourceRequest] DataSourceRequest request)
         {
-            var query = $"\"Ip\" = '{HttpContext.Connection.RemoteIpAddress.ToString().Base64StringEncode()}'";
-            var blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, query);
+            string query = $"\"Ip\" = '{HttpContext.Connection.RemoteIpAddress.ToString().Base64StringEncode()}'";
+            List<YoutubeDownloadedFileInfo> blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, query);
             blobs = blobs.Where(r => r.Ip == HttpContext.Connection.RemoteIpAddress.ToString()).ToList();
 
             return Json(blobs.ToDataSourceResult(request));
@@ -370,7 +374,7 @@ namespace CutytKendo.Controllers
         [Route("/watch")]
         public IActionResult Watch(string v)
         {
-            var view = View("Index", $"https://www.youtube.com/watch?v={v}");
+            ViewResult view = View("Index", $"https://www.youtube.com/watch?v={v}");
             return view;
         }
 
@@ -414,13 +418,13 @@ namespace CutytKendo.Controllers
         public async Task<IActionResult> Test()
         {
 
-            var json = JsonSerializer.Serialize(new DownloadLinkRequestViewModel());
-            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            string json = JsonSerializer.Serialize(new DownloadLinkRequestViewModel());
+            StringContent data = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var url = $"{baseUrl}/getbloburl";
-            var response = await httpClient.PostAsync(url, data);
+            string url = $"{baseUrl}/getbloburl";
+            HttpResponseMessage response = await httpClient.PostAsync(url, data);
 
-            var obj = await response.Content.ReadFromJsonAsync<DownloadLinkRequestViewModel>();
+            DownloadLinkRequestViewModel obj = await response.Content.ReadFromJsonAsync<DownloadLinkRequestViewModel>();
 
             return Json(obj);
         }
@@ -438,6 +442,39 @@ namespace CutytKendo.Controllers
             }
 
             return Json("");
+        }
+
+        [Route("/getip")]
+        public async Task<IActionResult> GetIp()
+        {
+            try
+            {
+                string stringIp = HttpContext.Connection.RemoteIpAddress.ToString();
+
+                RedisValue ipDetailsAsJson = RedisConnection.Connection.GetDatabase().StringGet(stringIp);
+
+                if (ipDetailsAsJson.IsNullOrEmpty)
+                {
+                    IpInfoApi api = new IpInfoApi("6a852f28bb9103", httpClient);
+
+                    FullResponse response = await api.GetInformationByIpAsync(stringIp);
+
+                    string responseAsJson = JsonSerializer.Serialize(response);
+
+                    RedisConnection.Connection.GetDatabase().StringSet(stringIp, responseAsJson);
+
+                    return Json(response);
+                }
+                else
+                {
+                    FullResponse response = JsonSerializer.Deserialize<FullResponse>(ipDetailsAsJson);
+                    return Json(response);
+                }
+            }
+            catch(Exception ex)
+            {
+                return Json(new FullResponse() { Ip = ex.Message });
+            }
         }
     }
 }

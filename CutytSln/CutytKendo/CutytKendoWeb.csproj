@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="IpInfo" Version="1.1.11" />
     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.18.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.18.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="5.0.10" />
@@ -16,6 +17,7 @@
     <PackageReference Include="Rebus.Async" Version="7.2.0" />
     <PackageReference Include="Rebus.AzureServiceBus" Version="9.0.5" />
     <PackageReference Include="Rebus.ServiceProvider" Version="6.4.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.2.79" />
     <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.3.914" />
     <PackageReference Include="WebEssentials.AspNetCore.OutputCaching" Version="1.0.38" />
   </ItemGroup>

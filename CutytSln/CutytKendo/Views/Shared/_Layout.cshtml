@@ -38,12 +38,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
     <link href="https://cdn.kendostatic.com/2021.3.914/styles/kendo.common-fiori.min.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.kendostatic.com/2021.3.914/styles/kendo.fiori.min.css" rel="stylesheet" type="text/css" />
-    @*  <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.3.914/styles/kendo.default-nordic.min.css" />*@
+    <link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     @*<link rel="stylesheet" href="https://cutyt.azureedge.net/cdnfiles/cutyt.min.css">*@
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
     @*<script src="~/js/compressed.js"></script>*@
     <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@3.1.8/dist/browser/signalr.min.js"></script>
 
@@ -221,7 +219,7 @@
     <header>
         <section>
 
-            <div class="position-relative overflow-hidden p-1 p-md-1 m-md-1 text-center">
+            <div class="position-relative overflow-hidden text-center">
                 <div class="mx-auto my-3">
                     <h1 class="h2">@(title)</h1>
                     <h2 class="h4">@(description)</h2>
@@ -231,8 +229,13 @@
     </header>
 
     <main>
-        <div class="container">
-            <p class="text-center">
+        <div id="divIpInfo" class="container">
+                @*<div class="alert alert-primary text-center" role="alert">
+                    Warning! If you are in <strong>Sofia</strong> right now you should consider using a VPN to hide your location. We highly recommend using:
+                </div>*@
+        </div>
+        <div class="container">          
+            <p class="text-center">                
                 @if (!this.Context.IsMobileBrowser())
                 {
                     @*<a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=40528&file_id=114" target="_blank"><img src="https://media.go2speed.org/brand/files/nordvpn/15/20160415073802-NordV2728x90.gif" width="728" height="90" border="0" /></a><img src="https://go.nordvpn.net/aff_i?offer_id=15&file_id=114&aff_id=40528" width="0" height="0" style="position:absolute;visibility:hidden;" border="0" />*@
@@ -251,21 +254,6 @@
             @RenderBody()
         </div>
     </main>
-
-    @*<footer class="footer text-center d-flex align-items-center">
-        <div class="container-fluid">
-        <p class="text-muted">
-        <a href="@($"{SiteConstants.CanonicalUrl}/contact")">Contact us</a>
-        <a href="@($"{SiteConstants.CanonicalUrl}/privacy")">Privacy</a>
-        <a href="@($"{SiteConstants.CanonicalUrl}/terms")">Terms of Service</a>
-        </p>
-        <p class="text-muted">
-        &#169; @DateTime.Now.Year <a href="@SiteConstants.CanonicalUrl" title="@SiteConstants.Title">cutyt.com</a>. All Rights Reserved. Follow us: <a target="_blank" rel="noreferrer" title="https://www.facebook.com/Cutyt-162865322145097" href="https://www.facebook.com/Cutyt-162865322145097">
-        <span class="mbr-iconfont-c fa-facebook-f fa"></span>
-        </a>
-        </p>
-        </div>
-        </footer>*@
 
     <div class="footer-basic">
         <footer>
@@ -346,9 +334,30 @@
     </style>
 
     @RenderSection("scripts", required: false)
-    <!-- Go to www.addthis.com/dashboard to customize your tools -->
-    @*<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-6043f6619df39ba3"></script>*@
 
+    <script>
+         $(document).ready(function () {
+
+                 $.ajax({
+            url: '/getip',
+            method: 'POST',
+        })
+            .success(function (result) {
+                console.log('IP address details: ' + JSON.stringify(result));
+
+                if (typeof(result.city) != 'undefined' && typeof(result.region) != 'undefined')
+                {
+                $("#divIpInfo").html(`<div class='alert alert-primary text-center' role='alert'>
+                    Warning! If you are in <strong>` + result.city + ' / ' + result.region + `</strong> right now you should consider using a VPN to hide your location. We highly recommend using NordVPN. We are using it and you should using it!
+                </div>`)
+                }
+            })
+            .error(function (xhr, status) {
+
+
+            })
+         });
+    </script>
 </body>
 
 </html>
