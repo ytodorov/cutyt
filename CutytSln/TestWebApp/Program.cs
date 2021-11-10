@@ -47,6 +47,7 @@ app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient, 
         {
             string args = context.Request.Query["args"];
             string command = context.Request.Query["command"];
+            string id = context.Request.Query["id"];
 
             var blobFileNameEncoded = $"{args}{command}".Hash();
 
@@ -56,11 +57,22 @@ app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient, 
 
             var query = $"\"blobFileNameEncoded\" = '{blobFileNameEncoded}'";
 
-            var cachedData = await BlobStorageHelper.GetFirstBlobContent("runresults", query);
+            var idHasched = id.Hash();
 
-            if (cachedData != null)
+            var cachedData = await BlobStorageHelper.GetFirstBlobContent("runresults", query, idHasched);
+
+            if (!string.IsNullOrEmpty(cachedData))
             {
-                return cachedData;
+                //return cachedData;
+
+                var jsonString = cachedData.Trim();
+                var lengtt = jsonString.Length;
+
+                char[] chars = jsonString.ToCharArray();
+                var nonEmptyChars = chars.Where(s => s != 0).ToArray();
+                jsonString = new string(nonEmptyChars);
+
+                return jsonString;
             }
 
             var currDir = Environment.CurrentDirectory;
@@ -75,10 +87,10 @@ app.MapGet("/run", async (HttpContext context, TelemetryClient telemetryClient, 
             var path = Path.GetTempFileName();
             File.WriteAllText(path, res.StadardOutput);
 
-            await BlobStorageHelper.UploadBlob(path, blobFileNameEncoded, "runresults", metadata, telemetryClient);
+            await BlobStorageHelper.UploadBlob(path, $"{idHasched}_{blobFileNameEncoded}", "runresults", metadata, telemetryClient);
 
             File.Delete(path);
-
+                        
             return res.StadardOutput;
         }
         );
@@ -185,7 +197,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
     {
         Id = job.V,
         Name = job.Title,
-        Url = $"https://cutytne.blob.core.windows.net/media/{fileOnDiskNameWithExtension}",
+        Url = $"https://cutneprem.blob.core.windows.net/media/{job.Ip}_{fileOnDiskNameWithExtension}?sv=2020-08-04&st=2020-11-08T17%3A39%3A00Z&se=2032-11-09T17%3A39%3A00Z&sr=c&sp=rl&sig=qVfsYWs6cBvaO7bdmr6bSqNaUS84eTVbDZ2ecUUVwC8%3D",
         FileName = job.Title,
         DisplayName = job.Title,
         V = job.V,
@@ -219,7 +231,8 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
 
     metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOnTicks)] = DateTime.UtcNow.Ticks.ToString();
 
-    await BlobStorageHelper.UploadBlob(fullFilePath, fileOnDiskNameWithExtension, "media", metadata, telemetryClient);
+    var prefix = job.Ip;
+    await BlobStorageHelper.UploadBlob(fullFilePath, $"{prefix}_{fileOnDiskNameWithExtension}", "media", metadata, telemetryClient);
 
     foreach (var fileToDelete in allRelatedFiles)
     {

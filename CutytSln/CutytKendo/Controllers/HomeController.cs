@@ -74,6 +74,11 @@ namespace CutytKendo.Controllers
             httpClient.Timeout = TimeSpan.FromHours(2);
 
             AppConstants.YtWorkingDir = Path.Combine(hostEnvironment.WebRootPath, "downloads");
+
+            if (Environment.MachineName.Equals("YTODOROV-NB", StringComparison.InvariantCultureIgnoreCase))
+            {
+                baseUrl = "http://localhost:5036";
+            }
         }
 
         [OutputCache(Profile = "default")]
@@ -151,7 +156,7 @@ namespace CutytKendo.Controllers
                     };
 
                     string json = await httpClient.GetStringAsync(
-                        $"{baseUrl}/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
+                        $"{baseUrl}/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"&id={data.id}");
 
                     if (!string.IsNullOrEmpty(json))
                     {
@@ -245,10 +250,21 @@ namespace CutytKendo.Controllers
                 PropertyNameCaseInsensitive = true
             };
 
-            string jsonStream = await httpClient.GetStringAsync(
-                $"{baseUrl}/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
+            string jsonString = await httpClient.GetStringAsync(
+                $"{baseUrl}/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"&id={v}");
 
-            YouTubeUrlFullDescription youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(jsonStream, options);
+            //if (jsonString.EndsWith(Environment.NewLine))
+            //{
+            //    jsonString = jsonString.Trim();
+            //    var lengtt = jsonString.Length;
+
+            //    char[] chars = jsonString.ToCharArray();
+            //    var nonEmptyChars = chars.Where(s => s != 0).ToArray();
+            //    jsonString = new string(nonEmptyChars);
+            
+            //}
+
+            YouTubeUrlFullDescription youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(jsonString, options);
 
             long? durationInSeconds = youTubeUrlFullDescription.Duration;
             List<YouTubeFormat> infos = youTubeUrlFullDescription.Formats;
@@ -354,6 +370,7 @@ namespace CutytKendo.Controllers
         [Route("/getfiles")]
         public async Task<IActionResult> GetFiles([DataSourceRequest] DataSourceRequest request)
         {
+            // no - remove this
             string query = $"\"DownloadedOnTicks\" > '{DateTime.UtcNow.Date.Ticks}'";
 
             List<YoutubeDownloadedFileInfo> blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, query);
@@ -364,9 +381,8 @@ namespace CutytKendo.Controllers
         [Route("/getmyfiles")]
         public async Task<IActionResult> GetMyFiles([DataSourceRequest] DataSourceRequest request)
         {
-            string query = $"\"Ip\" = '{HttpContext.Connection.RemoteIpAddress.ToString().Base64StringEncode()}'";
-            List<YoutubeDownloadedFileInfo> blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, query);
-            blobs = blobs.Where(r => r.Ip == HttpContext.Connection.RemoteIpAddress.ToString()).ToList();
+            string prefix = HttpContext.Connection.RemoteIpAddress.ToString();
+            List<YoutubeDownloadedFileInfo> blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, prefix);
 
             return Json(blobs.ToDataSourceResult(request));
         }

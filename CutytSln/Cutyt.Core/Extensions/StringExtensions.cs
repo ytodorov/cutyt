@@ -38,6 +38,11 @@ namespace Cutyt.Core.Extensions
 
         public static string Hash(this string input)
         {
+            if (input == null)
+            {
+                input = string.Empty;
+            }
+
             StringBuilder sb = new StringBuilder();
             using (SHA256 hash = SHA256.Create())
             {
