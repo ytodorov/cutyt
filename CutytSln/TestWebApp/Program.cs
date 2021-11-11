@@ -197,7 +197,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
     {
         Id = job.V,
         Name = job.Title,
-        Url = $"https://cutneprem.blob.core.windows.net/media/{job.Ip}_{fileOnDiskNameWithExtension}?sv=2020-08-04&st=2020-11-08T17%3A39%3A00Z&se=2032-11-09T17%3A39%3A00Z&sr=c&sp=rl&sig=qVfsYWs6cBvaO7bdmr6bSqNaUS84eTVbDZ2ecUUVwC8%3D",
+        Url = $"https://cutytne.file.core.windows.net/fss/media/{job.Ip.Hash()}_{fileOnDiskNameWithExtension}?st=2020-11-10T15%3A24%3A00Z&se=2033-11-11T15%3A24%3A00Z&sp=rl&sv=2018-03-28&sr=s&sig=juF3YmyCWctoxTsIGxXmvDrZ7E7eQyOCLf1CNqxSK4M%3D",
         FileName = job.Title,
         DisplayName = job.Title,
         V = job.V,
@@ -232,7 +232,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
     metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOnTicks)] = DateTime.UtcNow.Ticks.ToString();
 
     var prefix = job.Ip;
-    await BlobStorageHelper.UploadBlob(fullFilePath, $"{prefix}_{fileOnDiskNameWithExtension}", "media", metadata, telemetryClient);
+    await BlobStorageHelper.UploadBlob(fullFilePath, $"{prefix.Hash()}_{fileOnDiskNameWithExtension}", "media", metadata, telemetryClient);
 
     foreach (var fileToDelete in allRelatedFiles)
     {

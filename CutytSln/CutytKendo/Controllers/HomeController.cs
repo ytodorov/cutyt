@@ -382,7 +382,7 @@ namespace CutytKendo.Controllers
         public async Task<IActionResult> GetMyFiles([DataSourceRequest] DataSourceRequest request)
         {
             string prefix = HttpContext.Connection.RemoteIpAddress.ToString();
-            List<YoutubeDownloadedFileInfo> blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, prefix);
+            List<YoutubeDownloadedFileInfo> blobs = await BlobStorageHelper.ListYoutubeDownloadedFileInfoBlobs("media", telemetryClient, prefix.Hash());
 
             return Json(blobs.ToDataSourceResult(request));
         }

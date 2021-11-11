@@ -2,6 +2,8 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Blobs.Specialized;
+using Azure.Storage.Files.Shares;
+using Azure.Storage.Files.Shares.Models;
 using Cutyt.Core.Extensions;
 using Cutyt.Core.Rebus.Replies;
 using Microsoft.ApplicationInsights;
@@ -16,38 +18,31 @@ namespace Cutyt.Core.Storage
 {
     public class BlobStorageHelper
     {
-        private static string connString = "DefaultEndpointsProtocol=https;AccountName=cutneprem;AccountKey=enCaqfqPBihSD3tGhDG1eX4T0K5lXSi+unQHAR0vcJMQMd2a295OuVNekurcIOfC75BlfbB6pMzvL+0Dza4MZg==;EndpointSuffix=core.windows.net";
+        private static string connString = "DefaultEndpointsProtocol=https;AccountName=cutytne;AccountKey=xv5Oxwy+1awbuVAgryEqfjTJbNC6q9WluSckpWllRmIoJ3MxtwTA6R/hAYOwgtVfynLeUZhpgTULF06ai1P88g==;EndpointSuffix=core.windows.net";
         public static async Task UploadBlob(string localFilePath, string fileName, string containerName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
         {
-            BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutneprem;AccountKey=enCaqfqPBihSD3tGhDG1eX4T0K5lXSi+unQHAR0vcJMQMd2a295OuVNekurcIOfC75BlfbB6pMzvL+0Dza4MZg==;EndpointSuffix=core.windows.net");
 
-            // Create the container and return a container client object
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-
-            PageBlobClient pageBlobClient = containerClient.GetPageBlobClient(fileName);
-
-            using var fs = File.OpenRead(localFilePath);
-
-            var length = fs.Length;
-
-            var partSize = 1024 * 1024;
-
-            var bytesArr = new byte[partSize];
-
-            var parts = length / bytesArr.Length + 1;
-
-            var res = pageBlobClient.Create(parts * partSize);
-
-            for (int i = 0; i < parts; i++)
+            try
             {
-                var part = fs.Read(bytesArr, 0, bytesArr.Length);
+                using var fs = File.OpenRead(localFilePath);
 
-                using MemoryStream ms = new MemoryStream(bytesArr);
+                ShareFileClient destFile = new ShareFileClient(connString, "fss", $"{containerName}/{fileName}");
 
-                var r = await pageBlobClient.UploadPagesAsync(ms, i * partSize);
+                destFile.Create(fs.Length);
+
+                ShareFileHttpHeaders headers = new ShareFileHttpHeaders();
+                headers.CacheControl = "no-cache, no-store, must-revalidate";
+
+                await destFile.SetHttpHeadersAsync(fs.Length, headers);
+
+                await destFile.SetMetadataAsync(metadata);
+
+                await destFile.UploadAsync(fs);
             }
-
-            await AddBlobMetadataAsync(pageBlobClient, metadata, telemetryClient);
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         public static async Task UploadBlobOld(string localFilePath, string fileName, string containerName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
@@ -74,65 +69,91 @@ namespace Cutyt.Core.Storage
 
         public static async Task<string> GetFirstBlobContent(string containerName, string query, string prefix)
         {
-            // Create a BlobServiceClient object which will be used to create a container client
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connString);
 
-            //Create a unique name for the container
-            //string containerName = "media";
+            // Connect to the existing share
+            string shareName = "fss";
+            ShareClient share = new ShareClient(connString, shareName);
 
-            // Create the container and return a container client object
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            ShareDirectoryClient dirClient = share.GetDirectoryClient(containerName);
+            ShareDirectoryGetFilesAndDirectoriesOptions d = new ShareDirectoryGetFilesAndDirectoriesOptions();
+            d.Prefix = prefix;
+            var files = dirClient.GetFilesAndDirectories(d);
+            var firstFile = files.FirstOrDefault();
 
-            //List<BlobItem> blobItems = new List<BlobItem>();
-            List<YoutubeDownloadedFileInfo> youtubeDownloadedFileInfos = new List<YoutubeDownloadedFileInfo>();
-
-            if (!string.IsNullOrEmpty(query))
+            if (firstFile != null)
             {
-                query = $"{query} AND @container = '{containerName}'";
+
+                // Get a reference to the file
+                //ShareClient share = new ShareClient(connString, shareName);
+                //ShareDirectoryClient directory = dirClient.GetDirectoryClient(containerName);
+                ShareFileClient file = dirClient.GetFileClient(firstFile.Name);
 
 
-                var blobs = containerClient.GetBlobs(BlobTraits.None, BlobStates.None, prefix);
-                var firstBlob = blobs.FirstOrDefault();
-                if (firstBlob != null)
+
+                //var file = new ShareFileClient(connString, shareName, firstFile.Name);
+                // Download the file
+                ShareFileDownloadInfo download = file.Download();
+                var tempFile = Path.GetTempFileName();
+                using (FileStream stream = File.OpenWrite(tempFile))
                 {
-                    // Get a reference to a blob
-                    BlobClient blobClient = containerClient.GetBlobClient(firstBlob.Name);
-
-                    var content = await blobClient.DownloadContentAsync();
-
-                    var stringContent = content.Value.Content.ToString();
-
-                    return stringContent;
+                    download.Content.CopyTo(stream);
                 }
-           
+
+                var content = File.ReadAllText(tempFile);
+                File.Delete(tempFile);
+                return content;
             }
+
+            //// Create a BlobServiceClient object which will be used to create a container client
+            //BlobServiceClient blobServiceClient = new BlobServiceClient(connString);
+
+            //// Create the container and return a container client object
+            //BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+            ////List<BlobItem> blobItems = new List<BlobItem>();
+            //List<YoutubeDownloadedFileInfo> youtubeDownloadedFileInfos = new List<YoutubeDownloadedFileInfo>();
+
+            //var blobs = containerClient.GetBlobs(BlobTraits.None, BlobStates.None, prefix);
+            //var firstBlob = blobs.FirstOrDefault();
+            //if (firstBlob != null)
+            //{
+            //    // Get a reference to a blob
+            //    BlobClient blobClient = containerClient.GetBlobClient(firstBlob.Name);
+
+            //    var content = await blobClient.DownloadContentAsync();
+
+            //    var stringContent = content.Value.Content.ToString();
+
+            //    return stringContent;
+            //}
+
 
             return null;
         }
 
         public static async Task<List<YoutubeDownloadedFileInfo>> ListYoutubeDownloadedFileInfoBlobs(string containerName, TelemetryClient telemetryClient, string prefix)
         {
-            // Create a BlobServiceClient object which will be used to create a container client
-            BlobServiceClient blobServiceClient = new BlobServiceClient(connString);
+            // Connect to the existing share
+            string shareName = "fss";
+            ShareClient share = new ShareClient(connString, shareName);
 
-            //Create a unique name for the container
-            //string containerName = "media";
-
-            // Create the container and return a container client object
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-
-            //List<BlobItem> blobItems = new List<BlobItem>();
-            List<YoutubeDownloadedFileInfo> youtubeDownloadedFileInfos = new List<YoutubeDownloadedFileInfo>();
-
-
+            ShareDirectoryClient dirClient = share.GetDirectoryClient(containerName);
+            ShareDirectoryGetFilesAndDirectoriesOptions d = new ShareDirectoryGetFilesAndDirectoriesOptions();
+            d.Prefix = prefix;
+            
+            var files = dirClient.GetFilesAndDirectories(d);
 
             //query = $"{query} AND @container = '{containerName}'";
             //blobServiceClient.FindBlobsByTagsAsync(query);
-            await foreach (var item in containerClient.GetBlobsAsync(BlobTraits.None, BlobStates.None, prefix))
+            List<YoutubeDownloadedFileInfo> youtubeDownloadedFileInfos = new List<YoutubeDownloadedFileInfo>();
+            await foreach (var item in dirClient.GetFilesAndDirectoriesAsync(d))
             {
                 // Get a reference to a blob
-                BlobClient blobClient = containerClient.GetBlobClient(item.Name);
-                var metadata = await ReadBlobMetadataAsync(blobClient, telemetryClient);
+                ShareFileClient file = dirClient.GetFileClient(item.Name);
+
+                var metadata = file.GetProperties().Value.Metadata;
+
+                //var metadata = await ReadBlobMetadataAsync(file., telemetryClient);
 
                 YoutubeDownloadedFileInfo youtubeDownloadedFileInfo = new YoutubeDownloadedFileInfo();
 
