@@ -74,7 +74,13 @@ namespace CutytKendo.Controllers
             httpClient.Timeout = TimeSpan.FromHours(2);
 
             AppConstants.YtWorkingDir = Path.Combine(hostEnvironment.WebRootPath, "downloads");
+
+            if (Environment.MachineName.Equals("YTODOROV-NB", StringComparison.InvariantCultureIgnoreCase))
+            {
+                baseUrl = "http://localhost:5036";
+            }
         }
+
 
         [OutputCache(Profile = "default")]
         public IActionResult Index()

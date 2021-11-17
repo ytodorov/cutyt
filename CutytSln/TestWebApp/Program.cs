@@ -133,7 +133,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
         end = TimeSpan.FromSeconds(job.End).ToString("c");
 
 
-        var args = $"--external-downloader ffmpeg --external-downloader-args \"-ss {start} -to {end}\" -f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --no-part --output \"{output}\"";
+        var args = $"--external-downloader ffmpeg --external-downloader-args \"-ss {start} -to {end}\" -f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" --merge-output-format mp4 -k --no-part --output \"{output}\"";
 
         var resFromShell = await ProcessAsyncHelperNoLog.ExecuteShellCommand(
                 $@"{currDir}\youtube-dl.exe",
@@ -153,7 +153,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
     {
         var resFromShell2 = await ProcessAsyncHelperNoLog.ExecuteShellCommand(
                 $@"{currDir}\youtube-dl.exe",
-                $"-f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" -k --no-part --output {output}",
+                $"-f \"{job.SelectedOption}\" {audioFormatOption} \"https://www.youtube.com/watch?v={job.V}\" --merge-output-format mp4 -k --no-part --output {output}",
                 chatHub,
                 signalrId);
 
