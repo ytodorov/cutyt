@@ -1,8 +1,5 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+﻿@model string;
+<form class="sample-form" method="GET" action="/watch" target="_top">
+  <input type="search" placeholder="Search..." name="v" value="@(Model)">
+  <input type="submit" value="OK">
+</form>

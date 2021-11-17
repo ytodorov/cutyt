@@ -235,22 +235,6 @@
                 </div>*@
         </div>
         <div class="container">          
-            <p class="text-center">                
-                @if (!this.Context.IsMobileBrowser())
-                {
-                    @*<a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=40528&file_id=114" target="_blank"><img src="https://media.go2speed.org/brand/files/nordvpn/15/20160415073802-NordV2728x90.gif" width="728" height="90" border="0" /></a><img src="https://go.nordvpn.net/aff_i?offer_id=15&file_id=114&aff_id=40528" width="0" height="0" style="position:absolute;visibility:hidden;" border="0" />*@
-                    <a href="https://go.nordvpn.net/SH3mD?file_id=114" target="_blank"><img src="https://media.go2speed.org/brand/files/nordvpn/15/20160415073802-NordV2728x90.gif" width="728" height="90" border="0" /></a>
-
-                    <img src="https://go.nordvpn.net/aff_i?offer_id=15&file_id=114&aff_id=40528&file_id=114&tiny_url=1" width="0" height="0" style="position:absolute;visibility:hidden;" border="0" />
-
-                }
-                else
-                {
-                    <a href="https://go.nordvpn.net/SH3mD?file_id=100" target="_blank"><img src="https://media.go2speed.org/brand/files/nordvpn/15/20160415073048-300x250v4.gif" width="300" height="250" border="0" /></a>
-
-                    <img src="https://go.nordvpn.net/aff_i?offer_id=15&file_id=100&aff_id=40528&file_id=114&tiny_url=1" width="0" height="0" style="position:absolute;visibility:hidden;" border="0" />
-                }
-            </p>
             @RenderBody()
         </div>
     </main>
@@ -335,7 +319,7 @@
 
     @RenderSection("scripts", required: false)
 
-    <script>
+    @*<script>
          $(document).ready(function () {
 
                  $.ajax({
@@ -357,7 +341,7 @@
 
             })
          });
-    </script>
+    </script>*@
 </body>
 
 </html>
