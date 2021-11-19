@@ -1,72 +1,82 @@
 ﻿<!doctype html>
-<html ⚡="">
+<html ⚡>
 <head>
     <meta charset="utf-8">
-    <title>The Recipe Blog</title>
-    <link rel="canonical" href="https://www.ampstart.com/templates/blog.amp">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
-    <meta name="amp-google-client-id-api" content="googleanalytics">
+    <meta name="description" content="This is the Google AMP Boilerplate.">
+    <link rel="preload" as="script" href="https://cdn.ampproject.org/v0.js">
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <!-- Import other Google AMP Extensions here -->
+    <link rel="preload" as="script" href="https://cdn.ampproject.org/v0/amp-form-0.1.js">
+    <script custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js" async=""></script>
 
-    <script async="" src="https://cdn.ampproject.org/v0.js"></script>
-
-    <partial name="_AmpCustomCssPartial.cshtml" />
+    <partial name="_AmpCustomCssFrameworkPartial.cshtml" />
     <partial name="_AmpBoilerplateCssPartial.cshtml" />
 
-    @*<script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>*@
-    @*<script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"></script>*@
-    @*<script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>*@
-    <script custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js" async=""></script>
-    <script custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js" async=""></script>
-  
+    <link rel="canonical" href="...">
 
+    <title>My Google AMP Page</title>
 </head>
 <body>
+    
+    <header class="mega-menu full-width">
+			<div class="container-fluid">
+            <div class="row">
+                <div class="header">
+                    <div class="container">
+                        <nav class="main-menu" id="main-menu">
+                            <!-- Mobile Menu -->
+                            <label for="mobile" id="mobile-menu">
+                            @*    <a href="#" title="...">
+                                    <amp-img alt="..."
+                                             title="..."
+                                             src="android-chrome-192x192.webp"
+                                             width="21"
+                                             height="24"
+                                             class="img-logo">
+                                    </amp-img>
+                                    <span class="logo">CutYT</span>
+                                </a>*@
 
-    <!-- Start Navbar -->
-    <header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">
-        <div role="button" aria-label="open sidebar" on="tap:header-sidebar.toggle" tabindex="0" class="ampstart-navbar-trigger  pr2  ">
-            ☰
+                                <span class="main-menu-dropdown-icon">
+                                    <i class="hamburger"></i>
+                                </span>
+                            </label>
+
+                            <input type="checkbox" id="mobile">
+
+                            <!-- Main menu -->
+                            <ul class="main-menu">
+                                <!-- Left links -->
+                               @* <li class="main-menu-logo">
+                                    <a href="#" title="...">
+                                        <amp-img alt="..."
+                                                 title="..."
+                                                 src="android-chrome-192x192.webp"
+                                                 width="28"
+                                                 height="32"
+                                                 class="img-logo">
+                                        </amp-img>
+                                        <span class="logo">CutYT</span>
+                                    </a>
+                                </li>*@
+
+                                <li>
+                                    <a href="#" title="...">My Downloads</a>
+                                </li>
+                               <li>
+                                    <a href="#" title="...">All Downloads</a>
+                                </li>
+
+                            
+                            </ul>
+                            <!-- /main-menu -->
+                        </nav>
+                    </div>
+                </div>
+            </div>
         </div>
-        <amp-img src="android-chrome-192x192.webp" width="50" height="50" layout="fixed" class="my0 mx-auto " alt="The Blog"></amp-img>
     </header>
-
-    <!-- Start Sidebar -->
-    <amp-sidebar id="header-sidebar" class="ampstart-sidebar px3  " layout="nodisplay">
-        <div class="flex justify-start items-center ampstart-sidebar-header">
-            <div role="button" aria-label="close sidebar" on="tap:header-sidebar.toggle" tabindex="0" class="ampstart-navbar-trigger items-start">✕</div>
-        </div>
-        <nav class="ampstart-sidebar-nav ampstart-nav">
-            <ul class="list-reset m0 p0 ampstart-label">
-             
-                <li class="ampstart-nav-item "><a class="ampstart-nav-link" href="#">Home</a></li>            
-                <li class="ampstart-nav-item "><a class="ampstart-nav-link" href="#">My Downloads</a></li>
-                <li class="ampstart-nav-item "><a class="ampstart-nav-link" href="#">All Downloads</a></li>
-            </ul>
-        </nav>
-
-       
-    </amp-sidebar>
-    <!-- End Sidebar -->
-    <!-- End Navbar -->
-    <main id="content" role="main" class="">
-      @RenderBody()
-    </main>
-
-    <!-- Start Footer -->
-    <footer class="ampstart-footer flex flex-column items-center px3 ">
-
-
-        <nav class="ampstart-footer-nav">
-            <ul class="list-reset flex flex-wrap mb3">
-                <li class="px1"><a class="text-decoration-none ampstart-label" href="#">About</a></li>
-                <li class="px1"><a class="text-decoration-none ampstart-label" href="#">Contact</a></li>
-                <li class="px1"><a class="text-decoration-none ampstart-label" href="#">Terms</a></li>
-            </ul>
-        </nav>
-        <small>
-            © Your Company, 2016
-        </small>
-    </footer>
-    <!-- End Footer -->
+    @RenderBody()
 </body>
 </html>

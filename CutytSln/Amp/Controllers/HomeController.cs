@@ -13,8 +13,10 @@ namespace Amp.Controllers
             _logger = logger;
         }
 
+        [OutputCache(Duration = 1200)]
         public IActionResult Index()
         {
+            var url = this.HttpContext.Request.Path.ToString();
             return View();
         }
 
@@ -26,6 +28,7 @@ namespace Amp.Controllers
         [Route("/watch")]
         public IActionResult Watch(string v)
         {
+            var url = this.HttpContext.Request.Path.ToString();
             ViewResult view = View("Index", $"https://www.youtube.com/watch?v={v}");
             return view;
         }

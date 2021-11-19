@@ -1,7 +1,36 @@
+using WebEssentials.AspNetCore.OutputCaching;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddOutputCaching(options =>
+{
+    // Disabling cache by setting duration to 1 - adds with IsMobile usage // TO DO
+
+    var cacheDurationDefault = TimeSpan.FromHours(2).TotalSeconds;
+    var cacheDurationShort = TimeSpan.FromMinutes(10).TotalSeconds;
+
+    if (Environment.MachineName.Equals("YTODOROV-NB", StringComparison.InvariantCultureIgnoreCase))
+    {
+        cacheDurationDefault = 1;
+        cacheDurationShort = 1;
+    }
+
+    options.Profiles["default"] = new OutputCacheProfile
+    {
+        Duration = cacheDurationDefault,
+        VaryByParam = "c",
+        VaryByHeader = "user-agent"
+    };
+
+    options.Profiles["short"] = new OutputCacheProfile
+    {
+        Duration = cacheDurationShort,
+        UseAbsoluteExpiration = true,
+    };
+});
 
 var app = builder.Build();
 
@@ -19,6 +48,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseOutputCaching();
 
 app.MapControllerRoute(
     name: "default",
