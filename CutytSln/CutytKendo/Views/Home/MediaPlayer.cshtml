@@ -18,7 +18,7 @@
 	const urlSearchParams = new URLSearchParams(window.location.search);
 	const params = Object.fromEntries(urlSearchParams.entries());
 	var url = params['url'];
-
+	url = url + "?sv=2020-08-04&st=2020-11-23T14%3A31%3A00Z&se=2030-11-24T14%3A31%3A00Z&sr=c&sp=rl&sig=eg3SorCvBUDlTZKTtOBaisfU95qmERnZhIfmOk1Og0c%3D";
 	var mediaPlayer = $("#mediaPlayer").data("kendoMediaPlayer");
 
 					mediaPlayer.media({
