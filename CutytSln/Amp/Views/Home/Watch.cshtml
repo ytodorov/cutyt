@@ -1,0 +1,21 @@
+﻿@model string;
+@*<form class="sample-form" method="GET" action="/watch" target="_top">
+    <input type="search" placeholder="Search..." name="v" value="@(Model)">
+    <input type="submit" value="OK">
+    </form>*@
+
+<section class="target">
+    <a class="target-anchor" id="indexForms" title="Index forms target"></a>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">               
+                @Model
+                <amp-youtube width="480" height="270" layout="responsive" data-videoid="lBTCB7yLs8Y" data-param-start="20" data-param-autoplay=1 data-param-controls=0>
+                </amp-youtube>
+            </div>           
+        </div>
+    </div>
+
+
+
+</section>

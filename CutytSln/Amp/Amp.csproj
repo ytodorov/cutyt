@@ -10,4 +10,10 @@
     <PackageReference Include="WebEssentials.AspNetCore.OutputCaching" Version="1.0.38" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="v0.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

@@ -26,10 +26,20 @@ namespace Amp.Controllers
         }
 
         [Route("/watch")]
+        [OutputCache(Duration = 1200, VaryByParam = "v")]
         public IActionResult Watch(string v)
         {
             var url = this.HttpContext.Request.Path.ToString();
-            ViewResult view = View("Index", $"https://www.youtube.com/watch?v={v}");
+            ViewResult view = View("Watch", $"https://www.youtube.com/watch?v={v}");
+            return view;
+        }
+
+        [Route("/mediaplayer")]
+        [OutputCache(Duration = 1200, VaryByParam = "v")]
+        public IActionResult MediaPlayer(string v)
+        {
+            var url = this.HttpContext.Request.Path.ToString();
+            ViewResult view = View("MediaPlayer", $"https://cutytne.blob.core.windows.net/pageblobs/1.mp4?sv=2020-08-04&st=2021-11-19T17%3A37%3A17Z&se=2021-11-20T17%3A37%3A17Z&sr=b&sp=r&sig=3gZOPkkGMToEMIYM9rBtqWKNSjNh%2FY%2BFce3%2FXeOK3JQ%3D");
             return view;
         }
 
