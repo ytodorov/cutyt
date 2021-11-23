@@ -197,7 +197,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
     {
         Id = job.V,
         Name = job.Title,
-        Url = $"https://cutneprem.blob.core.windows.net/media/{job.Ip}_{fileOnDiskNameWithExtension}?sv=2020-08-04&st=2020-11-08T17%3A39%3A00Z&se=2032-11-09T17%3A39%3A00Z&sr=c&sp=rl&sig=qVfsYWs6cBvaO7bdmr6bSqNaUS84eTVbDZ2ecUUVwC8%3D",
+        Url = $"https://cutne2.blob.core.windows.net/media/{job.Ip}_{fileOnDiskNameWithExtension}",
         FileName = job.Title,
         DisplayName = job.Title,
         V = job.V,

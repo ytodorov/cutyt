@@ -16,10 +16,10 @@ namespace Cutyt.Core.Storage
 {
     public class BlobStorageHelper
     {
-        private static string connString = "DefaultEndpointsProtocol=https;AccountName=cutneprem;AccountKey=enCaqfqPBihSD3tGhDG1eX4T0K5lXSi+unQHAR0vcJMQMd2a295OuVNekurcIOfC75BlfbB6pMzvL+0Dza4MZg==;EndpointSuffix=core.windows.net";
+        private static string connString = "DefaultEndpointsProtocol=https;AccountName=cutne2;AccountKey=HVk+HXuMu+sL1v1KQnY7w4OxC0YrsRraS/9e9xJU+1XJFTgRTmZrUozROx+RAuKpKL9Zes2lq/QgW11Ljx2TDQ==;EndpointSuffix=core.windows.net";
         public static async Task UploadBlob(string localFilePath, string fileName, string containerName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
         {
-            BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutneprem;AccountKey=enCaqfqPBihSD3tGhDG1eX4T0K5lXSi+unQHAR0vcJMQMd2a295OuVNekurcIOfC75BlfbB6pMzvL+0Dza4MZg==;EndpointSuffix=core.windows.net");
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connString);
 
             // Create the container and return a container client object
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);

@@ -37,7 +37,7 @@
 
     var url = window.location.search.replace("?url=", "");
 
-      $("video" ).prepend("<source src='" + url +"'/>" );
+      $("video" ).prepend("<source src='" + url + "?sv=2020-08-04&st=2020-11-23T13%3A51%3A00Z&se=2030-11-24T13%3A51%3A00Z&sr=c&sp=rl&sig=XiZP1so%2BItuwYGKn109aOUNZhrWc%2Bud5QrDqluxYWZ4%3D" +"'/>" );
       $("#aDownload").attr("href", url);
       var player = videojs('my-video');
 
