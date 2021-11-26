@@ -8,6 +8,10 @@ namespace Cutyt.Core.Classes
 {
     public class YouTubeAllInfoViewModel
     {
+        public string Url { get; set; }
+
+        public string V { get; set; }
+
         public List<YouTubeFormat> Formats { get; set; }
 
         public long DurationInTensOfSeconds => DurationInSeconds * 10;

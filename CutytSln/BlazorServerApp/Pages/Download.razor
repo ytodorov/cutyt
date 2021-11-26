@@ -1,0 +1,45 @@
+﻿@page "/download"
+
+@using BlazorServerApp.Data
+@using Cutyt.Core.Classes
+@using System.Web
+@using Cutyt.Core.Rebus.Replies
+@using CutytKendoWeb.Models
+@inject WatchService WatchService
+@inject NavigationManager navManager
+
+
+@if (vm == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <span>@vm.Url</span>
+}
+
+@code {
+    YoutubeDownloadedFileInfo? vm = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Uri uri = new Uri(navManager.Uri);
+        System.Collections.Specialized.NameValueCollection parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
+
+        string selectedOption = parsedQSTest["selectedOption"];
+        string start = parsedQSTest["start"];
+        string end = parsedQSTest["end"];
+        string ytUrl = parsedQSTest["ytUrl"];
+
+        PostDataDownloadLinkViewModel postDataDownloadLinkViewModel = new PostDataDownloadLinkViewModel();
+
+        postDataDownloadLinkViewModel.SelectedOption = selectedOption;
+        postDataDownloadLinkViewModel.Start = double.Parse(start);
+        postDataDownloadLinkViewModel.End = double.Parse(end);
+        postDataDownloadLinkViewModel.YtUrl = ytUrl;
+        postDataDownloadLinkViewModel.ShouldTrim = true;
+
+        vm = await WatchService.GetDownloadLink(postDataDownloadLinkViewModel);
+    }
+}

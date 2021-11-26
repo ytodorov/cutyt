@@ -35,11 +35,10 @@ namespace Amp.Controllers
         }
 
         [Route("/mediaplayer")]
-        [OutputCache(Duration = 1200, VaryByParam = "v")]
-        public IActionResult MediaPlayer(string v)
+        [OutputCache(Duration = 1200, VaryByParam = "url")]
+        public IActionResult MediaPlayer([FromQuery]string url)
         {
-            var url = this.HttpContext.Request.Path.ToString();
-            ViewResult view = View("MediaPlayer", $"https://cutytne.blob.core.windows.net/pageblobs/1.mp4?sv=2020-08-04&st=2021-11-19T17%3A37%3A17Z&se=2021-11-20T17%3A37%3A17Z&sr=b&sp=r&sig=3gZOPkkGMToEMIYM9rBtqWKNSjNh%2FY%2BFce3%2FXeOK3JQ%3D");
+            ViewResult view = View("MediaPlayer", url);
             return view;
         }
 

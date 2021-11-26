@@ -224,6 +224,13 @@
                      //console.log("message received:" + message);
                      kendoConsole.log(message);
                 };
+
+                    var messageCallbackMCM = function (message) {
+                if (!message) return;
+                // deal with the message
+                     //console.log("message received:" + message);
+                     console.log(message);
+                };
                 var messageCallbackSignalR = function (signalrId) {
                 if (!signalrId) return;
                 // deal with the message
@@ -234,6 +241,7 @@
                 connection.on('broadcastMessage', messageCallback);
                 connection.on('echo', messageCallback);
                 connection.on('setSignalrId', messageCallbackSignalR);
+                connection.on('mcm', messageCallbackMCM)
             }
 
             var connection = new signalR.HubConnectionBuilder()

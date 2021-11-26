@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Threading.Tasks;
 
 namespace Cutyt.Core.Hubs
@@ -18,6 +19,7 @@ namespace Cutyt.Core.Hubs
         public override async Task OnConnectedAsync()
         {
             await Clients.Caller.SendAsync("setSignalrId", Context.ConnectionId);
+            await Clients.All.SendAsync("mcm", Context.ConnectionId + DateTime.Now.ToString());
             await base.OnConnectedAsync();
         }
     }

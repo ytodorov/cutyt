@@ -1,16 +1,17 @@
 ﻿@model string;
-@*<form class="sample-form" method="GET" action="/watch" target="_top">
-    <input type="search" placeholder="Search..." name="v" value="@(Model)">
-    <input type="submit" value="OK">
-    </form>*@
 
+@{
+	var req = this.Context.Request.QueryString.Value;
+}
 <section class="target">
     <a class="target-anchor" id="indexForms" title="Index forms target"></a>
     <div class="container mt-5">
         <div class="row">
             <div class="col-12">
-                @Model
-                <amp-video width="480" height="270" src="@Model" poster="" layout="responsive" controls>
+               <div class="text-center">
+	<a rel="noreferrer" id="aDownload" href="@(Model + "?sv=2020-08-04&st=2020-11-23T14%3A31%3A00Z&se=2030-11-24T14%3A31%3A00Z&sr=c&sp=rl&sig=eg3SorCvBUDlTZKTtOBaisfU95qmERnZhIfmOk1Og0c%3D")" target="_blank">DownloadFile</a>
+</div>
+                <amp-video width="480" height="270" src="@(Model + "?sv=2020-08-04&st=2020-11-23T14%3A31%3A00Z&se=2030-11-24T14%3A31%3A00Z&sr=c&sp=rl&sig=eg3SorCvBUDlTZKTtOBaisfU95qmERnZhIfmOk1Og0c%3D")" poster="" layout="responsive" controls>
                     <div fallback>
                         <p>Your browser doesn't support HTML5 video.</p>
                     </div>

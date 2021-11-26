@@ -1,0 +1,56 @@
+﻿@page "/watch"
+
+<PageTitle>Weather forecast</PageTitle>
+
+@using BlazorServerApp.Data
+@using Cutyt.Core.Classes
+@using System.Web
+@inject WatchService WatchService
+@inject NavigationManager navManager
+
+
+
+@if (vm == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <form action="/download" novalidate>
+
+        <input type="hidden" name="ytUrl" value="@vm.Url">
+        <div>
+            @foreach (var forecast in vm.Formats)
+            {
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="selectedOption" id="@forecast.Format_Note" value="@forecast.Format_Note">
+                    <label class="form-check-label" for="@forecast.Format_Note">@forecast.Format_Note</label>
+                </div>
+            }
+        </div>
+        <label for="start" class="form-label">Start time</label>
+        <input type="range" class="form-range" min="0" max="@vm.DurationInTensOfSeconds" step="0.1" id="start" name="start">
+
+        <label for="end" class="form-label">End time</label>
+        <input type="range" class="form-range" min="0" max="@vm.DurationInTensOfSeconds" step="0.1" id="end" name="end">
+        <div>
+            <iframe src="https://www.youtube-nocookie.com/embed/@(vm.V);rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <hr class="my-4">
+        <button class="w-100 btn btn-primary btn-lg" type="submit">Download</button>
+    </form>
+}
+
+@code {
+    private YouTubeAllInfoViewModel? vm;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        Uri uri = new Uri(navManager.Uri);
+        System.Collections.Specialized.NameValueCollection parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
+        string v = parsedQSTest["v"];
+
+        vm = await WatchService.GetYouTubeAllInfoViewModel(v);
+    }
+}
