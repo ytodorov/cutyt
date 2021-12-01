@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\ads.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\ads.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Cutyt.Core\Cutyt.Core.csproj" />
   </ItemGroup>
 

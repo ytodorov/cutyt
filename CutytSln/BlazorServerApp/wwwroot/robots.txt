@@ -1,0 +1,6 @@
+﻿Sitemap: https://www.cutyt.com/sitemap.xml
+User-agent: *
+Disallow: /error400
+Disallow: /error500
+Disallow: /geturldetails
+Disallow: /home/getdownloadlink

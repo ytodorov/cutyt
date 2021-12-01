@@ -181,6 +181,12 @@ namespace Cutyt.Core.Storage
         {
             try
             {
+                var keysWithNull = metadata.Where(s => s.Value == null).Select(s => s.Key);
+
+                foreach (var key in keysWithNull)
+                {
+                    metadata.Remove(key);
+                }
                 // Set the blob's metadata.
                 await blob.SetMetadataAsync(metadata);
                 // Azure.RequestFailedException: 'Blob tags are only supported on General Purpose v2 storage accounts.

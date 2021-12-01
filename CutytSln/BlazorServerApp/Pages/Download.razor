@@ -5,6 +5,7 @@
 @using System.Web
 @using Cutyt.Core.Rebus.Replies
 @using CutytKendoWeb.Models
+
 @inject WatchService WatchService
 @inject NavigationManager navManager
 
@@ -21,24 +22,41 @@ else
 @code {
     YoutubeDownloadedFileInfo? vm = null;
 
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "V")]
+    public string V { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "ytUrl")]
+    public string YtUrl { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "selectedOption")]
+    public string SelectedOption { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "start")]
+    public double Start { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "end")]
+    public double End { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery(Name = "downloadSwitchAudioAndVideo")]
+    public double DownloadSwitchAudioAndVideo { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-
-        Uri uri = new Uri(navManager.Uri);
-        System.Collections.Specialized.NameValueCollection parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
-
-        string selectedOption = parsedQSTest["selectedOption"];
-        string start = parsedQSTest["start"];
-        string end = parsedQSTest["end"];
-        string ytUrl = parsedQSTest["ytUrl"];
-
-        PostDataDownloadLinkViewModel postDataDownloadLinkViewModel = new PostDataDownloadLinkViewModel();
-
-        postDataDownloadLinkViewModel.SelectedOption = selectedOption;
-        postDataDownloadLinkViewModel.Start = double.Parse(start);
-        postDataDownloadLinkViewModel.End = double.Parse(end);
-        postDataDownloadLinkViewModel.YtUrl = ytUrl;
-        postDataDownloadLinkViewModel.ShouldTrim = true;
+        PostDataDownloadLinkViewModel postDataDownloadLinkViewModel = new PostDataDownloadLinkViewModel()
+            {
+                SelectedOption = SelectedOption,
+                Start = Start,
+                End = End,
+                YtUrl = YtUrl,
+                ShouldTrim = true,
+                V = V,
+            };
 
         vm = await WatchService.GetDownloadLink(postDataDownloadLinkViewModel);
     }

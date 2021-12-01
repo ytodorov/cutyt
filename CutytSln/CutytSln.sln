@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebApp", "TestWebApp\Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServerApp", "BlazorServerApp\BlazorServerApp.csproj", "{341D8322-C62C-4CBB-A58B-804CC502820D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BootstrapSidebar", "BootstrapSidebar\BootstrapSidebar.csproj", "{896B2C01-C106-480E-B396-BB93B8CB3FFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BootstrapSidebar", "BootstrapSidebar\BootstrapSidebar.csproj", "{896B2C01-C106-480E-B396-BB93B8CB3FFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
