@@ -10,6 +10,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<WatchService>();
+builder.Services.AddScoped<DownloadsService>();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddResponseCompression(options =>
 {

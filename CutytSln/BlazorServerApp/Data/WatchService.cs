@@ -17,7 +17,7 @@ namespace BlazorServerApp.Data
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
 
-        string baseUrl = "http://localhost:5036"; // http://localhost:5036 // https://execprogram.azurewebsites.net
+        string baseUrl = "https://execprogram.azurewebsites.net"; // http://localhost:5036 // https://execprogram.azurewebsites.net
 
         public Task<YouTubeAllInfoViewModel> GetWatchDataAsync(DateTime startDate)
         {

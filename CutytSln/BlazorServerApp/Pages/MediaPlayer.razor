@@ -1,0 +1,37 @@
+﻿@page "/mediaplayer/"
+@using System.Web
+@using Cutyt.Core.Extensions
+@inject NavigationManager NavigationManager
+
+<PageTitle>Weather forecast</PageTitle>
+
+@if (Url != null)
+{
+    <div class="text-center">
+        <a rel="noreferrer" id="aDownload" href="@Url" target="_blank">DownloadFile</a>
+    </div>
+    <div class="embed-responsive embed-responsive-16by9">
+        <video class="embed-responsive-item"  controls>
+            <source src="@Url">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+
+@code {
+
+    private string? Url;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Uri uri = new Uri(NavigationManager.Uri);
+        System.Collections.Specialized.NameValueCollection parsedQSTest = HttpUtility.ParseQueryString(uri.Query);
+        Url = parsedQSTest["url"].Base64StringDecode();
+    }
+
+}
+

@@ -1,0 +1,61 @@
+﻿@page "/alldownloads"
+
+<PageTitle>Weather forecast</PageTitle>
+
+@using BlazorServerApp.Data
+@using Cutyt.Core.Classes
+@using System.Web
+@using Cutyt.Core.Extensions
+@using Cutyt.Core.Rebus.Replies
+@inject DownloadsService DownloadsService
+@inject NavigationManager navManager
+@inject IHttpContextAccessor httpContextAccessor
+
+@if (vm != null)
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Type</th>
+                <th scope="col">View</th>
+                <th scope="col">Downloaded on</th>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Size in MBs</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in vm)
+            {
+
+                <tr>
+                    <th scope="row">@m.DisplayName</th>
+                    <td>@m.FileOnDiskExtension</td>
+                    <td><a target='_blank' title="@m.DisplayName" href='https://www.cutyt.com/mediaplayer?url=@m.Url.Base64StringEncode()'>View</a></td>
+                    <td>@m.DownloadedOn</td>
+                    <td>@m.Start</td>
+                    <td>@m.End</td>
+                    <td>@m.FileOnDiskSizeInMegabytes</td>
+                </tr>
+
+
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+
+
+@code {
+    List<YoutubeDownloadedFileInfo> vm;
+
+    protected override async Task OnInitializedAsync()
+    {
+        vm = await DownloadsService.GetAllDownloadsForToday();
+    }
+}
+
