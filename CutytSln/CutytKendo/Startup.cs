@@ -1,30 +1,19 @@
-﻿using Cutyt.Core.Constants;
-using Cutyt.Core.Extensions;
+﻿using Cutyt.Core.Extensions;
 using Cutyt.Core.Hubs;
 using Cutyt.Core.Infrastructure;
-using Cutyt.Core.Rebus.Jobs;
 using CutytKendoWeb;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
-using Microsoft.AspNetCore.Authentication.Facebook;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
-using Rebus.Config;
-using Rebus.Routing.TypeBased;
-using Rebus.ServiceProvider;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -109,7 +98,7 @@ namespace CutytKendo
             services.AddSignalR()
                     .AddAzureSignalR("Endpoint=https://cutyt.service.signalr.net;AccessKey=CqW6IpODOQ1vwEncPHN67KhUIr08xvLLv1Y4HNoj7ek=;Version=1.0;");
 
-           
+
 
         }
 

@@ -3,9 +3,7 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace CutytKendo.Controllers
 {
@@ -25,6 +23,6 @@ namespace CutytKendo.Controllers
             var dsResult = result.ToDataSourceResult(request);
             return Json(dsResult);
         }
-               
+
     }
 }
