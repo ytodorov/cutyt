@@ -44,27 +44,43 @@ namespace Cutyt.Core.Storage
 
         public static async Task UploadBlob(string localFilePath, string fileName, string containerName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
         {
-            // Create a BlobServiceClient object which will be used to create a container client
-            BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutytne;AccountKey=xv5Oxwy+1awbuVAgryEqfjTJbNC6q9WluSckpWllRmIoJ3MxtwTA6R/hAYOwgtVfynLeUZhpgTULF06ai1P88g==;EndpointSuffix=core.windows.net");
+            string cachedData = null;
 
-            //Create a unique name for the container
-            //string containerName = "media";
+            if (metadata.ContainsKey(nameof(YoutubeDownloadedFileInfo.UniqueKey)))
+            {
+                var uniqueKey = metadata[nameof(YoutubeDownloadedFileInfo.UniqueKey)];
+                //var uniqueKeyEncoded = uniqueKey.Base64StringEncode();
 
-            // Create the container and return a container client object
-            BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                var query = $"\"UniqueKey\" = '{uniqueKey}'";
+                cachedData = await BlobStorageHelper.GetFirstBlobContent("media", query, false);
+            }
 
-            // Get a reference to a blob
-            BlobClient blobClient = containerClient.GetBlobClient(fileName);
+            if (string.IsNullOrEmpty(cachedData))
+            {
+
+
+                // Create a BlobServiceClient object which will be used to create a container client
+                BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutytne;AccountKey=xv5Oxwy+1awbuVAgryEqfjTJbNC6q9WluSckpWllRmIoJ3MxtwTA6R/hAYOwgtVfynLeUZhpgTULF06ai1P88g==;EndpointSuffix=core.windows.net");
+
+                //Create a unique name for the container
+                //string containerName = "media";
+
+                // Create the container and return a container client object
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+
+                // Get a reference to a blob
+                BlobClient blobClient = containerClient.GetBlobClient(fileName);
 
 
 
-            // Upload data from the local file
-            await blobClient.UploadAsync(localFilePath, true);
+                // Upload data from the local file
+                await blobClient.UploadAsync(localFilePath, true);
 
-            await AddBlobMetadataAsync(blobClient, metadata, telemetryClient);
+                await AddBlobMetadataAsync(blobClient, metadata, telemetryClient);
+            }
         }
 
-        public static async Task<string> GetFirstBlobContent(string containerName, string query)
+        public static async Task<string> GetFirstBlobContent(string containerName, string query, bool returnContent = true)
         {
             // Create a BlobServiceClient object which will be used to create a container client
             BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutytne;AccountKey=xv5Oxwy+1awbuVAgryEqfjTJbNC6q9WluSckpWllRmIoJ3MxtwTA6R/hAYOwgtVfynLeUZhpgTULF06ai1P88g==;EndpointSuffix=core.windows.net");
@@ -87,11 +103,18 @@ namespace Cutyt.Core.Storage
                     // Get a reference to a blob
                     BlobClient blobClient = containerClient.GetBlobClient(item.BlobName);
 
-                    var content = await blobClient.DownloadContentAsync();
+                    if (returnContent)
+                    {
+                        var content = await blobClient.DownloadContentAsync();
 
-                    var stringContent = content.Value.Content.ToString();
+                        var stringContent = content.Value.Content.ToString();
 
-                    return stringContent;
+                        return stringContent;
+                    }
+                    else
+                    {
+                        return true.ToString();
+                    }
 
                 }
             }

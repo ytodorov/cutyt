@@ -2,6 +2,7 @@ using Cutyt.Core;
 using Cutyt.Core.Classes;
 using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
+using Cutyt.Core.Storage;
 using CutytKendoWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
@@ -12,26 +13,7 @@ namespace BlazorServerApp.Data
 {
     public class WatchService
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         string baseUrl = "https://execprogram.azurewebsites.net"; // http://localhost:5036 // https://execprogram.azurewebsites.net
-
-        public Task<YouTubeAllInfoViewModel> GetWatchDataAsync(DateTime startDate)
-        {
-            var vm = new YouTubeAllInfoViewModel();
-            vm.Formats = new List<YouTubeFormat>()
-            {
-                new YouTubeFormat() { Format_Note="Mp3" },
-                new YouTubeFormat() { Format_Note="Mp4" },
-                new YouTubeFormat() { Format_Note="240p" },
-                new YouTubeFormat() { Format_Note="360p" },
-            };
-
-            return Task.FromResult(vm);
-        }
 
         public async Task<YouTubeAllInfoViewModel> GetYouTubeAllInfoViewModel(string url)
         {
@@ -119,6 +101,29 @@ namespace BlazorServerApp.Data
         public async Task<YoutubeDownloadedFileInfo> GetDownloadLink(PostDataDownloadLinkViewModel postDataDownloadLinkViewModel)
         {
             using var httpClient = new HttpClient();
+            httpClient.Timeout = TimeSpan.FromHours(1);
+
+            string fullUrl = $"https://www.youtube.com/watch?v={postDataDownloadLinkViewModel.V}";
+
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                PropertyNameCaseInsensitive = true
+            };
+
+            string jsonDescription = await httpClient.GetStringAsync(
+                $"{baseUrl}/run?command=youtube-dl.exe&args=-j \"{fullUrl}\"");
+
+            YouTubeUrlFullDescription youTubeUrlFullDescription = JsonSerializer.Deserialize<YouTubeUrlFullDescription>(jsonDescription, options);
+
+            if (youTubeUrlFullDescription.Duration == postDataDownloadLinkViewModel.End && postDataDownloadLinkViewModel.Start == 0)
+            {
+                postDataDownloadLinkViewModel.ShouldTrim = false;
+            }
+
+            var uniqueKey = postDataDownloadLinkViewModel.UniqueKey;
+
+  
             //selectedOption = selectedOption?.Replace(" ", "+");
             string ytUrl = Helpers.GetFullUrlFromYouTube(postDataDownloadLinkViewModel.YtUrl, httpClient);
             Uri uri = new Uri(ytUrl);

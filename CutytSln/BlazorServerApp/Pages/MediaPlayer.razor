@@ -7,16 +7,22 @@
 
 @if (Url != null)
 {
-    <div class="text-center">
-        <a rel="noreferrer" id="aDownload" href="@Url" target="_blank">DownloadFile</a>
+    <div class="row text-center">
+        <div class="col-lg-12">
+            <div class="text-center">
+                <a rel="noreferrer" id="aDownload" href="@($"{Url}?sv=2020-08-04&st=2020-11-23T14%3A31%3A00Z&se=2030-11-24T14%3A31%3A00Z&sr=c&sp=rl&sig=eg3SorCvBUDlTZKTtOBaisfU95qmERnZhIfmOk1Og0c%3D")" target="_blank">DownloadFile</a>
+            </div>
+            <div class="embed-responsive embed-responsive-16by9">
+                <video class="embed-responsive-item" width="320" height="240" controls>
+                    <source src="@($"{Url}?sv=2020-08-04&st=2020-11-23T14%3A31%3A00Z&se=2030-11-24T14%3A31%3A00Z&sr=c&sp=rl&sig=eg3SorCvBUDlTZKTtOBaisfU95qmERnZhIfmOk1Og0c%3D")">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
     </div>
-    <div class="embed-responsive embed-responsive-16by9">
-        <video class="embed-responsive-item"  controls>
-            <source src="@Url">
-            Your browser does not support the video tag.
-        </video>
-    </div>
+
 }
+
 else
 {
     <p><em>Loading...</em></p>

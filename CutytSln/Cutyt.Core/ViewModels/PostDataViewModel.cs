@@ -19,6 +19,15 @@ public class PostDataDownloadLinkViewModel
     public string Title { get; set; }
 
     public string SignalrId { get; set; }
+
+    public string UniqueKey
+    {
+        get
+        {
+            return $"{V}{SelectedOption}{Start}{End}";
+        }
+    }
+
 }
 
 // [FromBody] string v, [FromBody] string vimeoId, [FromBody] string selectedOption, [FromBody] string ytUrl,

@@ -21,6 +21,30 @@ else
         <input type="hidden" name="ytUrl" value="@vm.Url">
         <input type="hidden" name="V" value="@vm.V">
         <div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="selectedOption" checked id="MP3" value="bestaudio -x --audio-format mp3">
+                <label class="form-check-label" for="MP3">MP3</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="selectedOption" id="AAC" value="bestaudio -x --audio-format aac">
+                <label class="form-check-label" for="AAC">AAC</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="selectedOption" id="Ogg" value="bestaudio -x --audio-format vorbis">
+                <label class="form-check-label" for="Ogg">Ogg</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="selectedOption" id="M4A" value="bestaudio -x --audio-format m4a">
+                <label class="form-check-label" for="M4A">M4A</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="selectedOption" id="Opus" value="bestaudio -x --audio-format opus">
+                <label class="form-check-label" for="Opus">Opus</label>
+            </div>
+             <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="selectedOption" id="WAV" value="bestaudio -x --audio-format wav">
+                <label class="form-check-label" for="WAV">WAV</label>
+            </div>
             @foreach (var forecast in vm.Formats)
             {
                 <div class="form-check form-check-inline">
@@ -33,8 +57,8 @@ else
         <input type="range" class="form-range" min="0" value="0" max="@vm.DurationInSeconds" step="0.1" id="start" name="start">
 
         <label for="end" class="form-label">End time</label>
-        <input type="range" class="form-range" min="0" value="0" max="@vm.DurationInSeconds" step="0.1" id="end" name="end">
-        <div>
+        <input type="range" class="form-range" min="0" value="@vm.DurationInSeconds" max="@vm.DurationInSeconds" step="0.1" id="end" name="end">
+        <div class="text-center">
             <iframe src="https://www.youtube-nocookie.com/embed/@(vm.V);rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
         </div>
         <hr class="my-4">

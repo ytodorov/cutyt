@@ -7,6 +7,8 @@ using Cutyt.Core.Rebus.Jobs;
 using Cutyt.Core.Rebus.Replies;
 using Cutyt.Core.Redis;
 using Cutyt.Core.Storage;
+using CutytKendo.Models;
+using CutytKendoWeb;
 using CutytKendoWeb.Models;
 using IpInfo;
 using Kendo.Mvc.Extensions;
@@ -16,6 +18,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Rebus;
+using Rebus.Activation;
+using Rebus.Bus;
+using Rebus.Config;
+using Rebus.Routing.TypeBased;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -29,6 +39,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Web;
+using static ProcessAsyncHelper;
 
 namespace CutytKendo.Controllers
 {
@@ -466,7 +477,7 @@ namespace CutytKendo.Controllers
                     return Json(response);
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 return Json(new FullResponse() { Ip = ex.Message });
             }

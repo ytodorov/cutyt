@@ -196,7 +196,8 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
         FileOnDiskNameWithExtension = fileOnDiskNameWithExtension,
         DownloadedOn = DateTime.UtcNow,
         FileOnDiskSize = size,
-        Ip = job.Ip
+        Ip = job.Ip,
+        SelectedOption = job.SelectedOption
     };
 
     Dictionary<string, string> metadata = new Dictionary<string, string>();
@@ -218,6 +219,11 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
     metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOn)] = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture).Base64StringEncode();
 
     metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOnTicks)] = DateTime.UtcNow.Ticks.ToString();
+
+    metadata[nameof(YoutubeDownloadedFileInfo.SelectedOption)] = job.SelectedOption.Base64StringEncode();
+
+    metadata[nameof(YoutubeDownloadedFileInfo.UniqueKey)] = reply.UniqueKey.Base64StringEncode();
+
 
     await BlobStorageHelper.UploadBlob(fullFilePath, fileOnDiskNameWithExtension, "media", metadata, telemetryClient);
 

@@ -3,8 +3,10 @@
 @using BlazorServerApp.Data
 @using Cutyt.Core.Classes
 @using System.Web
+@using Cutyt.Core.Extensions
 @using Cutyt.Core.Rebus.Replies
 @using CutytKendoWeb.Models
+@using System.Text.Json
 
 @inject WatchService WatchService
 @inject NavigationManager navManager
@@ -16,7 +18,13 @@
 }
 else
 {
-    <span>@vm.Url</span>
+    <div class="text-center">
+        <a rel="noreferrer" id="aDownload" href="@($"https://localhost:7276/mediaplayer?url={vm.Url.Base64StringEncode()}")" target="_blank">DownloadFile</a>
+    </div>
+    @*<video controls>
+        <source src="@vm.Url">
+        Your browser does not support the video tag.
+        </video>*@
 }
 
 @code {
@@ -48,16 +56,26 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        PostDataDownloadLinkViewModel postDataDownloadLinkViewModel = new PostDataDownloadLinkViewModel()
-            {
-                SelectedOption = SelectedOption,
-                Start = Start,
-                End = End,
-                YtUrl = YtUrl,
-                ShouldTrim = true,
-                V = V,
-            };
+        var sr = ShouldRender();
+        if (firstRender)
+        {
+            PostDataDownloadLinkViewModel postDataDownloadLinkViewModel = new PostDataDownloadLinkViewModel()
+                {
+                    SelectedOption = SelectedOption,
+                    Start = Start,
+                    End = End,
+                    YtUrl = YtUrl,
+                    ShouldTrim = true,
+                    V = V,
+                };
 
-        vm = await WatchService.GetDownloadLink(postDataDownloadLinkViewModel);
+
+          
+
+            vm = await WatchService.GetDownloadLink(postDataDownloadLinkViewModel);
+            firstRender = false;
+        }
     }
+
+    bool firstRender = true;
 }

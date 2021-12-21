@@ -43,6 +43,16 @@ namespace Cutyt.Core.Rebus.Replies
 
         public long FileOnDiskSize { get; set; }
 
+        public string SelectedOption { get; set; }
+
+        public string UniqueKey
+        {
+            get
+            {
+                return $"{V}{SelectedOption}{Start}{End}";
+            }
+        }
+
         public double FileOnDiskSizeInMegabytes
         {
             get
