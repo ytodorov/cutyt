@@ -218,7 +218,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
 
     metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOn)] = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture).Base64StringEncode();
 
-    metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOnTicks)] = DateTime.UtcNow.Ticks.ToString();
+    //metadata[nameof(YoutubeDownloadedFileInfo.DownloadedOnTicks)] = DateTime.UtcNow.Ticks.ToString();
 
     metadata[nameof(YoutubeDownloadedFileInfo.SelectedOption)] = job.SelectedOption.Base64StringEncode();
 

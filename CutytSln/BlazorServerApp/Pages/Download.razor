@@ -10,21 +10,20 @@
 
 @inject WatchService WatchService
 @inject NavigationManager navManager
-
+@inject IHttpContextAccessor httpContextAccessor
+@inject IJSRuntime jsRuntime
 
 @if (vm == null)
 {
-    <p><em>Loading...</em></p>
+     <span class="sr-only">Loading...</span><div class="spinner-border" role="status">
+       
+    </div>
 }
 else
 {
     <div class="text-center">
-        <a rel="noreferrer" id="aDownload" href="@($"https://localhost:7276/mediaplayer?url={vm.Url.Base64StringEncode()}")" target="_blank">DownloadFile</a>
+        <a rel="noreferrer" id="aDownload" href="@($"{navManager.BaseUri}mediaplayer?url={vm.Url.Base64StringEncode()}")" target="_blank">Click to preview and download</a>
     </div>
-    @*<video controls>
-        <source src="@vm.Url">
-        Your browser does not support the video tag.
-        </video>*@
 }
 
 @code {
@@ -56,24 +55,28 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var sr = ShouldRender();
-        if (firstRender)
+        var isInitializedProp = jsRuntime.GetType().GetProperties().FirstOrDefault(f => f.Name == "IsInitialized");
+        bool isJsInitialized = (bool)isInitializedProp.GetValue(jsRuntime);
+        if (isJsInitialized == true)
         {
-            PostDataDownloadLinkViewModel postDataDownloadLinkViewModel = new PostDataDownloadLinkViewModel()
-                {
-                    SelectedOption = SelectedOption,
-                    Start = Start,
-                    End = End,
-                    YtUrl = YtUrl,
-                    ShouldTrim = true,
-                    V = V,
-                };
+            var sr = ShouldRender();
+            if (firstRender)
+            {
+                PostDataDownloadLinkViewModel postDataDownloadLinkViewModel = new PostDataDownloadLinkViewModel()
+                    {
+                        SelectedOption = SelectedOption,
+                        Start = Start,
+                        End = End,
+                        YtUrl = YtUrl,
+                        ShouldTrim = true,
+                        V = V,
+                        Ip = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()
+                    };
 
 
-          
-
-            vm = await WatchService.GetDownloadLink(postDataDownloadLinkViewModel);
-            firstRender = false;
+                vm = await WatchService.GetDownloadLink(postDataDownloadLinkViewModel);
+                firstRender = false;
+            }
         }
     }
 

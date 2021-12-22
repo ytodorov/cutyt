@@ -13,7 +13,7 @@ namespace BlazorServerApp.Data
 {
     public class WatchService
     {
-        string baseUrl = "https://execprogram.azurewebsites.net"; // http://localhost:5036 // https://execprogram.azurewebsites.net
+        string baseUrl = "http://localhost:5036"; // http://localhost:5036 // https://execprogram.azurewebsites.net
 
         public async Task<YouTubeAllInfoViewModel> GetYouTubeAllInfoViewModel(string url)
         {
@@ -163,7 +163,7 @@ namespace BlazorServerApp.Data
                 ShouldTrim = postDataDownloadLinkViewModel.ShouldTrim.GetValueOrDefault(),
                 Start = postDataDownloadLinkViewModel.Start,
                 End = postDataDownloadLinkViewModel.End,
-                //Ip = HttpContext.Connection.RemoteIpAddress.ToString(),
+                Ip = postDataDownloadLinkViewModel.Ip,
                 Title = postDataDownloadLinkViewModel.Title,
                 SignalrId = postDataDownloadLinkViewModel.SignalrId,
             };

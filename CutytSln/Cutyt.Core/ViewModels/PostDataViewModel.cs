@@ -20,6 +20,8 @@ public class PostDataDownloadLinkViewModel
 
     public string SignalrId { get; set; }
 
+    public string Ip { get; set; }
+
     public string UniqueKey
     {
         get

@@ -16,6 +16,7 @@
 }
 else
 {
+    //@End = vm.DurationInSeconds;
     <form action="/download" novalidate>
 
         <input type="hidden" name="ytUrl" value="@vm.Url">
@@ -53,11 +54,11 @@ else
                 </div>
             }
         </div>
-        <label for="start" class="form-label">Start time</label>
-        <input type="range" class="form-range" min="0" value="0" max="@vm.DurationInSeconds" step="0.1" id="start" name="start">
+        <label for="start" class="form-label">Start time @Start s.</label>
+        <input type="range" class="form-range" min="0" max="@vm.DurationInSeconds" step="0.1" id="start" name="start" @bind="Start">
 
-        <label for="end" class="form-label">End time</label>
-        <input type="range" class="form-range" min="0" value="@vm.DurationInSeconds" max="@vm.DurationInSeconds" step="0.1" id="end" name="end">
+        <label for="end" class="form-label">End time @End s.</label>
+        <input type="range" class="form-range" min="0" max="@vm.DurationInSeconds" step="0.1" id="end" name="end" @bind="End">
         <div class="text-center">
             <iframe src="https://www.youtube-nocookie.com/embed/@(vm.V);rel=0&amp;showinfo=0" frameborder="0" allowfullscreen></iframe>
         </div>
@@ -69,6 +70,10 @@ else
 @code {
     private YouTubeAllInfoViewModel? vm;
 
+    public double Start { get; set; }
+
+    public double End { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -77,5 +82,7 @@ else
         string v = parsedQSTest["v"];
 
         vm = await WatchService.GetYouTubeAllInfoViewModel(v);
+
+        End = vm.DurationInSeconds;
     }
 }
