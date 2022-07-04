@@ -16,10 +16,11 @@ namespace Cutyt.Core.Storage
 {
     public class BlobStorageHelper
     {
+        private static string connectionString = "DefaultEndpointsProtocol=https;AccountName=cuteus;AccountKey=OVqPLYzmN9OKKaV8Yiz7MOggrNvbRfEBFp+2DWpmkogyaGR5j2ChUhy8ndSiC+YWm/cMvyQJ2lJ5+AStoT6jag==;EndpointSuffix=core.windows.net";
         public static async Task UploadPageBlob(string localFilePath, string fileName, string containerName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
         {
             // Create a BlobServiceClient object which will be used to create a container client
-            BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutytne;AccountKey=xv5Oxwy+1awbuVAgryEqfjTJbNC6q9WluSckpWllRmIoJ3MxtwTA6R/hAYOwgtVfynLeUZhpgTULF06ai1P88g==;EndpointSuffix=core.windows.net");
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
             //Create a unique name for the container
             //string containerName = "media";
@@ -45,7 +46,7 @@ namespace Cutyt.Core.Storage
         public static async Task UploadBlob(string localFilePath, string fileName, string containerName, IDictionary<string, string> metadata, TelemetryClient telemetryClient)
         {
             // Create a BlobServiceClient object which will be used to create a container client
-            BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutytne;AccountKey=xv5Oxwy+1awbuVAgryEqfjTJbNC6q9WluSckpWllRmIoJ3MxtwTA6R/hAYOwgtVfynLeUZhpgTULF06ai1P88g==;EndpointSuffix=core.windows.net");
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
             //Create a unique name for the container
             //string containerName = "media";
@@ -67,7 +68,7 @@ namespace Cutyt.Core.Storage
         public static async Task<string> GetFirstBlobContent(string containerName, string query)
         {
             // Create a BlobServiceClient object which will be used to create a container client
-            BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutytne;AccountKey=xv5Oxwy+1awbuVAgryEqfjTJbNC6q9WluSckpWllRmIoJ3MxtwTA6R/hAYOwgtVfynLeUZhpgTULF06ai1P88g==;EndpointSuffix=core.windows.net");
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
             //Create a unique name for the container
             //string containerName = "media";
@@ -102,7 +103,7 @@ namespace Cutyt.Core.Storage
         public static async Task<List<YoutubeDownloadedFileInfo>> ListYoutubeDownloadedFileInfoBlobs(string containerName, TelemetryClient telemetryClient, string query)
         {
             // Create a BlobServiceClient object which will be used to create a container client
-            BlobServiceClient blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=cutytne;AccountKey=xv5Oxwy+1awbuVAgryEqfjTJbNC6q9WluSckpWllRmIoJ3MxtwTA6R/hAYOwgtVfynLeUZhpgTULF06ai1P88g==;EndpointSuffix=core.windows.net");
+            BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
 
             //Create a unique name for the container
             //string containerName = "media";

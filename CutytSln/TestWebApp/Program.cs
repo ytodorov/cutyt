@@ -186,7 +186,7 @@ app.MapPost("/getbloburl", (Func<HttpContext, TelemetryClient, IHubContext<ChatH
     {
         Id = job.V,
         Name = job.Title,
-        Url = $"https://cutytne.blob.core.windows.net/media/{fileOnDiskNameWithExtension}",
+        Url = $"https://cuteus.blob.core.windows.net/media/{fileOnDiskNameWithExtension}",
         FileName = job.Title,
         DisplayName = job.Title,
         V = job.V,
