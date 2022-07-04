@@ -55,7 +55,7 @@ namespace CutytKendo.Controllers
 
         IHubContext<ChatHub> chatHub;
 
-        string baseUrl = "https://execprogram.azurewebsites.net"; // http://localhost:5036 // https://execprogram.azurewebsites.net
+        string baseUrl = "https://cutyt-execprogram-east-us.azurewebsites.net"; //"https://execprogram.azurewebsites.net"; // http://localhost:5036 // https://execprogram.azurewebsites.net
 
         public HomeController(
             IHttpClientFactory httpClientFactory,

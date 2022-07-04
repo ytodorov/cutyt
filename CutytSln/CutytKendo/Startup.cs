@@ -107,9 +107,9 @@ namespace CutytKendo
             services.AddHttpClient();
 
             services.AddSignalR()
-                    .AddAzureSignalR("Endpoint=https://cutyt.service.signalr.net;AccessKey=CqW6IpODOQ1vwEncPHN67KhUIr08xvLLv1Y4HNoj7ek=;Version=1.0;");
+                 .AddAzureSignalR("Endpoint=https://signalr-cutyt.service.signalr.net;AccessKey=n2LjXMMzX3UbtKt98VauwKOoG4H/Tkz7QP9Qls9LA4M=;Version=1.0;");
 
-           
+
 
         }
 
