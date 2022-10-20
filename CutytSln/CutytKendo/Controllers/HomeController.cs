@@ -275,7 +275,7 @@ namespace CutytKendo.Controllers
             infos = infos.GroupBy(c => c.Format_Note)
                 .Select(s => s.LastOrDefault())
                 .Where(s => s.Width != null)
-                .Where(s => s.FileSize != null && s.FileSize < 1024 * 1024 * 1024) // 1 GB
+                .Where(s => s.FileSize != null && s.FileSize < 1024 * 1024 * 512) // 1 GB
                 .ToList();
 
             YouTubeAllInfoViewModel allVM = new YouTubeAllInfoViewModel()
