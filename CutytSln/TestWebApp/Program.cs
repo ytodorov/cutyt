@@ -1,9 +1,11 @@
 using Cutyt.Core.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using System.Globalization;
+using TestWebApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHostedService<TimedHostedService>();
 builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.AddControllersWithViews();

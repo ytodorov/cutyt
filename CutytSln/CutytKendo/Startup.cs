@@ -79,8 +79,8 @@ namespace CutytKendo
             {
                 // Disabling cache by setting duration to 1 - adds with IsMobile usage // TO DO
 
-                var cacheDurationDefault = TimeSpan.FromHours(2).TotalSeconds;
-                var cacheDurationShort = TimeSpan.FromMinutes(10).TotalSeconds;
+                var cacheDurationDefault = TimeSpan.FromMinutes(1).TotalSeconds;
+                var cacheDurationShort = TimeSpan.FromMinutes(1).TotalSeconds;
 
                 if (Environment.MachineName.Equals("YTODOROV-NB", StringComparison.InvariantCultureIgnoreCase))
                 {
