@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CutytWeb.Pages
 {
@@ -12,9 +11,13 @@ namespace CutytWeb.Pages
             _logger = logger;
         }
 
-        public void OnGet()
+        public async void OnGet()
         {
+            //var httpClient = new HttpClient();
 
+            //var res = await httpClient.GetStringAsync("https://api0.datasea.org/exec?cli=yt-dlp&arguments=--print%20%22%()j%22%20https://fb.watch/i0YUJz_i2-/");
+
+            //YtDlpJsonViewModel model = JsonConvert.DeserializeObject<YtDlpJsonViewModel>(res);
         }
     }
 }

@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Cutyt.Core\Cutyt.Core.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -4,11 +4,28 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Cut Your Tube</h1>
-    <h2>Trim, Convert and Download audio and video files</h2>
+
+<div class="row text-center">
+    <div class="col-md-12">
+        <h1 class="display-4">Cut Your Tube</h1>
+        <h2>Trim, Convert and Download audio and video files</h2>
+        <div class="form-group">
+            <input id="tbCliArguments" type="text" class="form-control form-control-lg" placeholder="Enter arguments">
+        </div>
+        <div class="text-center p-4">
+            <div class="d-grid gap-2 col-4 mx-auto">
+                <button id="btnCliExecute" type="button" class="btn btn-primary form-control-lg"><strong>Execute</strong></button>
+            </div>
+        </div>
+    </div>
 </div>
 
+<div class="card w-100 m-2">
+    <div class="card-body">
+        <h3 class="h6 card-title">Results</h3>
+        <pre id="tbResults" class="small card-text" style="max-height: 300px">Hit "Execute" button to see the result in this pane</pre>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-12">
