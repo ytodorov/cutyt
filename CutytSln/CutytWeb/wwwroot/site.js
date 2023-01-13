@@ -11,6 +11,7 @@ function execute() {
         }).then(function (text) {
             id = text.id;
             webpage_url = text.webpage_url;
+
             //debugger;
             console.log(text.formats_table);
 
@@ -60,7 +61,9 @@ $("#btnDownload").click(function () {
     val = val.replace("+", "%2B");
     webpage_url = webpage_url.replace("?", "%3F");
 
-    var url = `https://api0.datasea.org/exec?cli=yt-dlp&arguments=-f ${val} "${id}" --print after_move:filepath --merge-output-format "webm/mp4/mkv" --force-overwrites --no-progress -o "${new Date().getUTCMilliseconds()}.%(ext)s`; // 
+    var url = `https://api0.datasea.org/exec?cli=yt-dlp&arguments=-f ${val} "${webpage_url}" --print after_move:filepath --merge-output-format "webm/mp4/mkv" --force-overwrites --no-progress -o "${new Date().getUTCMilliseconds()}.%(ext)s`; //
+
+    //debugger;
     fetch(url)
         .then(function (response) {
             return response.text();
@@ -77,7 +80,7 @@ $("#btnDownload").click(function () {
             text = text.replace("/app/wwwroot", "https://api0.datasea.org");
 
             console.log(text);
-            var html = `<video width="320" height="240" controls autoplay muted>
+            var html = `<video controls autoplay muted>
         <source src="${text}" type="video/${ext}">
         Your browser does not support the video tag.
     </video>`;
