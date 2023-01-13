@@ -1,4 +1,13 @@
-﻿using Cutyt.Core.Infrastructure;
+﻿using Cutyt.Core.Constants;
+using Cutyt.Core.Extensions;
+using Cutyt.Core.Hubs;
+using Cutyt.Core.Infrastructure;
+using Cutyt.Core.Rebus.Jobs;
+using CutytKendoWeb;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
+using Microsoft.AspNetCore.Authentication.Facebook;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,11 +20,16 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
+using Rebus.Config;
+using Rebus.Routing.TypeBased;
+using Rebus.ServiceProvider;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using WebEssentials.AspNetCore.OutputCaching;
 
 namespace CutytKendo
 {
@@ -31,8 +45,7 @@ namespace CutytKendo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            // The following line enables Application Insights telemetry collection.
+            services.AddSingleton<ITelemetryInitializer, RequestBodyInitializer>();
             services.AddApplicationInsightsTelemetry();
 
             services.AddResponseCompression(options =>
@@ -46,58 +59,100 @@ namespace CutytKendo
                 options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "document", "text/html", "image/x-icon" });
             });
 
-            // Add framework services.
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
+                options.OnAppendCookie = cookieContext =>
+                    CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
+                options.OnDeleteCookie = cookieContext =>
+                    CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
+            });
+
+
+
             services
                 .AddControllersWithViews()
-                // Maintain property names during serialization. See:
-                // https://github.com/aspnet/Announcements/issues/194
                 .AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
-            // Add Kendo UI services to the services container
+            services.AddOutputCaching(options =>
+            {
+                // Disabling cache by setting duration to 1 - adds with IsMobile usage // TO DO
+
+                var cacheDurationDefault = TimeSpan.FromMinutes(1).TotalSeconds;
+                var cacheDurationShort = TimeSpan.FromMinutes(1).TotalSeconds;
+
+                if (Environment.MachineName.Equals("YTODOROV-NB", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    cacheDurationDefault = 1;
+                    cacheDurationShort = 1;
+                }
+
+                options.Profiles["default"] = new OutputCacheProfile
+                {
+                    Duration = cacheDurationDefault,
+                    VaryByParam = "c",
+                    VaryByHeader = "user-agent"
+                };
+
+                options.Profiles["short"] = new OutputCacheProfile
+                {
+                    Duration = cacheDurationShort,
+                    UseAbsoluteExpiration = true,
+                };
+            });
+
             services.AddKendo();
 
             services.AddHttpClient();
+
+            services.AddSignalR()
+                 .AddAzureSignalR("Endpoint=https://signalr-cutyt.service.signalr.net;AccessKey=n2LjXMMzX3UbtKt98VauwKOoG4H/Tkz7QP9Qls9LA4M=;Version=1.0;");
+
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, TelemetryClient applicationInsightsClient)
         {
-            //app.UseDeveloperExceptionPage();
+            applicationInsightsClient.TrackEvent("Application Started");
 
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-            //else
-            //{
-            //    app.UseExceptionHandler("/Home/Error");
-            //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //    app.UseHsts();
-            //}
-
-            //app.UseStatusCodePagesWithRedirects("/error?id={0}");
+            // Both must be here.
+            app.UseExceptionHandler("/error"); // 500
+            app.UseStatusCodePagesWithReExecute("/error", "?code={0}"); // 400
 
             app.Use(async (ctx, next) =>
             {
-                await next();
-
-                if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+                if ((int)ctx.Response.StatusCode < 400)
                 {
-                    //Re-execute the request so the user gets the error page
-                    string originalPath = ctx.Request.Path.Value;
-                    ctx.Items["originalPath"] = originalPath;
-                    ctx.Request.Path = "/";
-                    await next();
+                    string body = await ctx.Request.GetRawBodyAsync();
+                    ctx.Items.Add("_custom_http_body", body);
                 }
+                await next();
+            });
+
+            app.Use(async (ctx, next) =>
+            {
+                Stopwatch stopWatch = Stopwatch.StartNew();
+
+                ctx.Response.OnStarting(
+                    async () =>
+                    {
+                        ctx.Response.Headers["X-Response-Time"] = stopWatch.Elapsed.TotalMilliseconds.ToString();
+                        await Task.FromResult(0);
+                    });
+
+                await next();
             });
 
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/url-rewriting?view=aspnetcore-2.2
             var mn = Environment.MachineName;
-            if (!env.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase) || !mn.Equals("DESKTOP-B3U6MF0", StringComparison.InvariantCultureIgnoreCase))
+            if (!env.EnvironmentName.Equals("Development", StringComparison.InvariantCultureIgnoreCase) || !mn.Equals("yTodorov-nb", StringComparison.InvariantCultureIgnoreCase))
             {
                 //Very problematic. !!!could lead to error: This site can't be reached
                 app.UseRewriter(new RewriteOptions()
-                //.AddRedirect("(.*)/$", "$1", (int)HttpStatusCode.MovedPermanently) // Strip trailing slash
+                .AddRedirect("(.*)/$", "$1", (int)HttpStatusCode.MovedPermanently) // Strip trailing slash
                 //.AddRedirect("(.*[^/])$", "$1/", (int)HttpStatusCode.MovedPermanently) // Enforce trailing slash - Problems with static files - not found with ending slash
                 //.AddRedirect("^$", "/", (int)HttpStatusCode.MovedPermanently) // // Enforce trailing slash - Only for root domain
 
@@ -105,7 +160,7 @@ namespace CutytKendo
                 .AddRedirectToHttps((int)HttpStatusCode.MovedPermanently)
                 .AddRedirectToWww((int)HttpStatusCode.MovedPermanently) //Very problematic. !!!could lead to error: This site can't be reached
                 .Add(new RedirectLowerCaseRule())
-                .AddRedirect("https://www.cutyt.com", "https://www.cutyt.com/", (int)HttpStatusCode.MovedPermanently)
+                //.AddRedirect("https://www.cutyt.com", "https://www.cutyt.com/", (int)HttpStatusCode.MovedPermanently)
                 //.AddRedirect("https://www.cutyt.com/1", "https://www.cutyt.com/2", (int)HttpStatusCode.MovedPermanently)
                 );
             }
@@ -115,6 +170,8 @@ namespace CutytKendo
             var provider = new FileExtensionContentTypeProvider();
             // Add new mappings
             provider.Mappings[".mkv"] = "video/x-matroska";
+
+            provider.Mappings[".opus"] = "audio/ogg";
             // Remove MP4 videos.
 
             app.UseStaticFiles(new StaticFileOptions
@@ -125,16 +182,80 @@ namespace CutytKendo
             //app.UseHttpsRedirection();
             //app.UseStaticFiles();
 
+            app.UseCookiePolicy();
+
+
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseOutputCaching();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                endpoints.MapHub<ChatHub>("/chat");
             });
+
         }
+
+        private void CheckSameSite(HttpContext httpContext, CookieOptions options)
+        {
+            if (options.SameSite == SameSiteMode.None)
+            {
+                var userAgent = httpContext.Request.Headers["User-Agent"].ToString();
+                if (DisallowsSameSiteNone(userAgent))
+                {
+                    options.SameSite = SameSiteMode.Unspecified;
+                }
+            }
+        }
+
+        public static bool DisallowsSameSiteNone(string userAgent)
+        {
+            // Check if a null or empty string has been passed in, since this
+            // will cause further interrogation of the useragent to fail.
+            if (String.IsNullOrWhiteSpace(userAgent))
+                return false;
+
+            // Cover all iOS based browsers here. This includes:
+            // - Safari on iOS 12 for iPhone, iPod Touch, iPad
+            // - WkWebview on iOS 12 for iPhone, iPod Touch, iPad
+            // - Chrome on iOS 12 for iPhone, iPod Touch, iPad
+            // All of which are broken by SameSite=None, because they use the iOS networking
+            // stack.
+            if (userAgent.Contains("CPU iPhone OS 12") ||
+                userAgent.Contains("iPad; CPU OS 12"))
+            {
+                return true;
+            }
+
+            // Cover Mac OS X based browsers that use the Mac OS networking stack. 
+            // This includes:
+            // - Safari on Mac OS X.
+            // This does not include:
+            // - Chrome on Mac OS X
+            // Because they do not use the Mac OS networking stack.
+            if (userAgent.Contains("Macintosh; Intel Mac OS X 10_14") &&
+                userAgent.Contains("Version/") && userAgent.Contains("Safari"))
+            {
+                return true;
+            }
+
+            // Cover Chrome 50-69, because some versions are broken by SameSite=None, 
+            // and none in this range require it.
+            // Note: this covers some pre-Chromium Edge versions, 
+            // but pre-Chromium Edge does not require SameSite=None.
+            if (userAgent.Contains("Chrome/5") || userAgent.Contains("Chrome/6"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
     }
 }

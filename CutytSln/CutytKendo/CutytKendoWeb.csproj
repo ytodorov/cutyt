@@ -1,0 +1,79 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+	  <TargetFramework>net7.0</TargetFramework>
+    <UserSecretsId>63019ece-ac0e-4580-b65e-f0a9f3d11c8b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IpInfo" Version="1.1.11" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.18.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.18.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="5.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.10" />
+    <PackageReference Include="Microsoft.Azure.SignalR" Version="1.12.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="Rebus" Version="6.6.1" />
+    <PackageReference Include="Rebus.Async" Version="7.2.0" />
+    <PackageReference Include="Rebus.AzureServiceBus" Version="9.0.5" />
+    <PackageReference Include="Rebus.ServiceProvider" Version="6.4.1" />
+    <PackageReference Include="StackExchange.Redis" Version="2.2.79" />
+    <PackageReference Include="Telerik.UI.for.AspNet.Core" Version="2021.3.914" />
+    <PackageReference Include="WebEssentials.AspNetCore.OutputCaching" Version="1.0.38" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Templates\**" />
+    <Content Remove="Templates\**" />
+    <EmbeddedResource Remove="Templates\**" />
+    <None Remove="Templates\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Views\Home\Contact.cshtml" />
+    <Content Remove="Views\Home\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Downloads\ffmpeg.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Downloads\ffplay.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Downloads\ffprobe.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Downloads\youtube-dl.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\ads.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cutyt.Core\Cutyt.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Downloads\ffmpeg.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Downloads\ffplay.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Downloads\ffprobe.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Downloads\youtube-dl.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

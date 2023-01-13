@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = $"All Downloads | {SiteConstants.Title}";
+    ViewData["Description"] = "Downloads made from all users today";
+    ViewData["CanonicalUrl"] = $"{SiteConstants.CanonicalUrl}/alldownloads";
+    ViewData["DescriptionSeo"] = "All downloads for today from all users. Quick access to all files that have been downloaded today.";
+}
+
+@(Html.Kendo().Grid<YoutubeDownloadedFileInfo>()
+                            .Name("grid")
+                            .Mobile(MobileMode.Auto)                            
+                            .Columns(columns =>
+                            {
+                                columns.Bound(p => p.DisplayName).Title("Name");
+                                columns.Bound(p => p.FileOnDiskExtension).Title("Type").MinScreenWidth(250);
+                                @*columns.Template("<a target='_blank' href=' #= Url #'>Download</a>").Title("Download");*@
+                                columns.Template("<a target='_blank' href='https://www.cutyt.com/mediaplayer?url=#= Url #'>View</a>").Title("View");
+                                columns.Template(template: "#= kendo.toString(kendo.parseDate(DownloadedOn), 'yyyy/MM/dd hh:mm') #").Title("Downloaded on").MinScreenWidth(250);
+                                columns.Bound(p => p.Start).Title("Start").MinScreenWidth(250);
+                                columns.Bound(p => p.End).Title("End").MinScreenWidth(250);
+                                columns.Bound(p => p.FileOnDiskSizeInMegabytes).Title("Size in MBs").MinScreenWidth(250);
+
+
+                            })
+                             .ToolBar(t => t.Search())
+                            .Pageable()
+                            //.Sortable()
+                            //.Scrollable()
+                            //.HtmlAttributes(new { style = "height:550px;" })
+
+                            .DataSource(dataSource => dataSource
+                                .Ajax()
+                                .PageSize(20)
+                                .ServerOperation(false)
+                                .Read(read => read.Url("/getfiles").Type(HttpVerbs.Get))
+                             )
+        )
+
+
+

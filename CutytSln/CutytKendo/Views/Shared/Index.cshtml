@@ -1,16 +1,13 @@
-﻿@model string
+﻿@model string;
+
 <div class="jumbotron bg-info">
     <div class="demo-section k-content mb-2">
         @(Html.Kendo().TextBox()
         .Name("textboxUrl")
         .Placeholder("Paste YouTube URL here")
-        //.Label(label => label
-        //    .Content("Enter YouTube URL here")
-        //    .Floating(true)
-        //)
         .Value(Model)
         .HtmlAttributes(new { style = "width: 100%" })
-    )
+        )
 
         <style>
             .k-floating-label-container {
@@ -20,44 +17,57 @@
             div.humidity {
                 width: 99%;
             }
+
+            img {
+                max-width: 100%;
+                max-height: 100%;
+            }
         </style>
     </div>
+    
+
     <p class="text-center">
         @(Html.Kendo().Button()
         .Name("btnStart")
-        //.HtmlAttributes(new { @class = "k-primary" })
         .Content(@<text>
-                    @(Html.Kendo().Loader()
-                           .Name("btnStartLoader")
-                           .Type(LoaderType.InfiniteSpinner)
-                           .Size(LoaderSize.Small)
-                           .ThemeColor(LoaderThemeColor.Success)
-                           .Visible(false)
-                    )
-                    Start
-        </text>)
+                @(Html.Kendo().Loader()
+            .Name("btnStartLoader")
+            .Type(LoaderType.InfiniteSpinner)
+            .Size(LoaderSize.Small)
+            .ThemeColor(LoaderThemeColor.Success)
+            .Visible(false)
+                )
+                Start
+            </text>)
         .Events(ev => ev.Click("onClick")))
+
+        <div id="below-search-banners" class="col-12 text-center">
+            @*@Html.Raw(Cutyt.Core.Ads.Utils.GetRandomAdd())*@
+
+            @*<a id="below-search" style="color: white; padding: 30px; font-weight: bold; background: #99999947; margin-top: 10px; display: inline-block;" target="_blank" href="https://alison.com/course/growing-your-business-through-youtube?utm_source=alison_user&utm_medium=affiliates&utm_campaign=25958317">YouTube Marketing - Click to learn more!</a>*@
+            <a href="https://alison.com/?utm_source=alison_user&utm_medium=affiliates&utm_campaign=25958317">
+                <img src="~/alision.webp" /> </a>
+        </div>
     </p>
     <div class="text-center" style="display:none" id="pStartButtonInfo">
         @(Html.Kendo().Loader()
-            .Name("loader1")
-            .Type(LoaderType.InfiniteSpinner)
-            .Size(LoaderSize.Small)
-            .ThemeColor(LoaderThemeColor.Success)
+        .Name("loader1")
+        .Type(LoaderType.InfiniteSpinner)
+        .Size(LoaderSize.Small)
+        .ThemeColor(LoaderThemeColor.Success)
         )
         Wait while we display all download options ...
         @(Html.Kendo().Loader()
-            .Name("loader2")
-            .Type(LoaderType.InfiniteSpinner)
-            .Size(LoaderSize.Small)
-            .ThemeColor(LoaderThemeColor.Success)
+        .Name("loader2")
+        .Type(LoaderType.InfiniteSpinner)
+        .Size(LoaderSize.Small)
+        .ThemeColor(LoaderThemeColor.Success)
         )
     </div>
 </div>
 <p class="text-center">
     <div id="divUrlDetails"></div>
 </p>
-
 <div class="row" id="divMediaPlayers" style="display: none">
     <div class="col-md-6">
         <p class="text-center">
@@ -65,17 +75,12 @@
         </p>
         <p class="text-center">
             @(Html.Kendo().MediaPlayer()
-        .Name("MediaPlayerStart")
-        .AutoPlay(true)
-        .Volume(0)
-        //.Media(m => m
-        //    .Title("Count up timer 10 minutes")
-        //    .Source("https://www.youtube.com/watch?v=cUAZHrmlTts")
-        //)
-        .FullScreen(false)
-        .ForwardSeek(true)
-        .HtmlAttributes(new { style = "height:360px" })
-    )
+            .Name("MediaPlayerStart")
+            .AutoPlay(true)
+            .Navigatable(true)
+            .Volume(0)
+            .HtmlAttributes(new { style = "height:360px" })
+            )
         </p>
     </div>
     <div class="col-md-6">
@@ -84,47 +89,33 @@
         </p>
         <p class="text-center">
             @(Html.Kendo().MediaPlayer()
-        .Name("MediaPlayerEnd")
-        .AutoPlay(true)
-        .Volume(0)
-        //.Media(m => m
-        //    .Title("Count up timer 10 minutes")
-        //    .Source("https://www.youtube.com/watch?v=cUAZHrmlTts")
-        //)
-        .FullScreen(false)
-        .ForwardSeek(true)
-
-        .HtmlAttributes(new { style = "height:360px" })
-    )
+            .Name("MediaPlayerEnd")
+            .AutoPlay(true)
+            .Navigatable(true)
+            .Volume(0)
+            .HtmlAttributes(new { style = "height:360px" })
+            )
         </p>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="text-center">
-            <!-- Go to www.addthis.com/dashboard to customize your tools -->
-            <div class="addthis_inline_share_toolbox"></div>
-        </div>
-    </div>
-</div>
 <div class="row">
     <div class="col-md-12">
         <div class="text-center display-4">
             <span class="fa-youtube fa" style="color: #009df3;"></span>
         </div>
-        <h3 class="text-center font-weight-bold">EASY TO USE</h3>
+        <h3 class="text-center font-weight-bold  h5">EASY TO USE</h3>
         <p class="text-center">
-            Just prepend the YouTube URL with <span class="text-success font-weight-bold">ct</span> and you will be redirected to <a href="https://www.cutyt.com/" target="_blank">cutyt.com</a>
+            Just prepend the YouTube URL with <span class="text-success font-weight-bold">ct</span> and you will be redirected to <a rel="noreferrer" href="https://www.cutyt.com/" target="_blank">cutyt.com</a>
         </p>
         <p class="text-center">
-            Example: <a href="https://www.youtube.com/watch?v=TxbE79-1OSI" rel="nofollow" target="_blank">https://www.youtube.com/watch?v=TxbE79-1OSI</a>
+            Example: <a rel="noreferrer" href="https://www.youtube.com/watch?v=TxbE79-1OSI" target="_blank">https://www.youtube.com/watch?v=TxbE79-1OSI</a>
         </p>
         <p class="text-center">
             will become
         </p>
         <p class="text-center">
-            <a href="https://www.ctyoutube.com/watch?v=TxbE79-1OSI" target="_blank" rel="nofollow">https://www.<span class="text-success font-weight-bold">ct</span>youtube.com/watch?v=TxbE79-1OSI</a>
+            <a rel="noreferrer" href="https://www.ctyoutube.com/watch?v=TxbE79-1OSI" target="_blank">https://www.<span class="text-success font-weight-bold">ct</span>youtube.com/watch?v=TxbE79-1OSI</a>
         </p>
     </div>
 </div>
@@ -133,28 +124,28 @@
         <div class="text-center display-4">
             <span class=" fa-bullhorn fa" style="color: #009df3;"></span>
         </div>
-        <h3 class="text-center font-weight-bold">NO ADS</h3>
+        <h3 class="text-center font-weight-bold h5">NO ADS</h3>
         <p>Tired of ads? With our service no advertisements will be shown while you are enjoing you favorite video or audio.</p>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="text-center display-4">
             <span class=" fa-bolt fa" style="color: #009df3;"></span>
         </div>
-        <h3 class="text-center font-weight-bold">NO BUFFER</h3>
+        <h3 class="text-center font-weight-bold h5">NO BUFFER</h3>
         <p>Slow connection can make you video stop while buffering. This is no longer the case when you download your file with Cutyt.</p>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="text-center display-4">
             <span class=" fa-cloud-download  fa" style="color: #009df3;"></span>
         </div>
-        <h3 class="text-center font-weight-bold">SAVE BANDWIDTH</h3>
+        <h3 class="text-center font-weight-bold h5">SAVE BANDWIDTH</h3>
         <p>When you are wathcing high resolution videos like 1080p or 4K you are downloading huge ammoung of data every time. With Cutyt you are downloading only once.</p>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="text-center display-4">
             <span class=" fa-windows fa" style="color: #009df3;"></span>
         </div>
-        <h3 class="text-center font-weight-bold">WORKS OFFLINE</h3>
+        <h3 class="text-center font-weight-bold h5">WORKS OFFLINE</h3>
         <p>Once you download the file no internet connection will be required to watch or listen it again.</p>
     </div>
 </div>
@@ -164,35 +155,119 @@
         <div class="text-center display-4">
             <span class="fa-dollar fa" style="color: #009df3;"></span>
         </div>
-        <h3 class="text-center font-weight-bold">FREE SERVICE</h3>
+        <h3 class="text-center font-weight-bold h5">FREE SERVICE</h3>
         <p>Our service is always free. No registration required. Download youtube videos without having to pay anything.</p>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="text-center display-4">
             <span class="fa-download fa" style="color: #009df3;"></span>
         </div>
-        <h3 class="text-center font-weight-bold">UNLIMITED DOWNLOADS</h3>
+        <h3 class="text-center font-weight-bold h5">UNLIMITED DOWNLOADS</h3>
         <p>Download youtube videos as much as you like! No limitations for the number of downloads. Unrestricted file sizes.</p>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="text-center display-4">
             <span class="fa-user-secret fa" style="color: #009df3;"></span>
         </div>
-        <h3 class="text-center font-weight-bold">SECURE DOWNLOADS</h3>
+        <h3 class="text-center font-weight-bold h5">SECURE DOWNLOADS</h3>
         <p>We use HTTPS for secure connections. We do not collect any personal data. We do not use cookies, but third party services may use them.</p>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3">
         <div class="text-center display-4">
             <span class="fa fa-exchange" style="color: #009df3;"></span>
         </div>
-        <h3 class="text-center font-weight-bold">RUNS EVERYWHERE</h3>
+        <h3 class="text-center font-weight-bold  h5">RUNS EVERYWHERE</h3>
         <p>Our responsive and ultra fast website can be used on every platform that is out there. Windows, Linux, Mac, Android, iOS - we support everything.</p>
     </div>
 </div>
 
+<style>
+    .console {
+        background-color: transparent;
+        color: #333;
+        font: 11px Consolas, Monaco, "Bitstream Vera Sans Mono", "Courier New", Courier, monospace;
+        margin: 0;
+        overflow-x: hidden;
+        text-align: left;
+        height: 200px;
+        border: 1px solid rgba(20,53,80,0.1);
+        background-color: #ffffff;
+        text-indent: 0;
+    }
+
+    .demo-section .box-col .console {
+        min-width: 200px;
+    }
+
+    .console .count {
+        background-color: #26c6da;
+        -moz-border-radius: 15px;
+        -webkit-border-radius: 15px;
+        border-radius: 15px;
+        color: #ffffff;
+        font-size: 10px;
+        margin-left: 5px;
+        padding: 2px 6px 2px 5px;
+    }
+
+    .console div {
+        background-position: 6px -95px;
+        border-bottom: 1px solid #DDD;
+        padding: 5px 10px;
+        height: 2em;
+        line-height: 2em;
+        vertical-align: middle;
+    }
+
+    .console .error {
+        background-position: 6px -135px;
+    }
+</style>
 @section scripts {
-    <script>
+<script>
+        function bindConnectionMessage(connection) {
+            var messageCallback = function (message) {
+                if (!message) return;
+                // deal with the message
+                     //console.log("message received:" + message);
+                     kendoConsole.log(message);
+                };
+                var messageCallbackSignalR = function (signalrId) {
+                if (!signalrId) return;
+                // deal with the message
+
+                sessionStorage.setItem('signalrId', signalrId);
+                };
+                // Create a function that the hub can call to broadcast messages.
+                connection.on('broadcastMessage', messageCallback);
+                connection.on('echo', messageCallback);
+                connection.on('setSignalrId', messageCallbackSignalR);
+            }
+
+            var connection = new signalR.HubConnectionBuilder()
+                .withUrl('/chat')
+                .build();
+
+            bindConnectionMessage(connection);
+            connection.start()
+                .then(function () {
+                    console.log("onConnected");
+                })
+                .catch(function (error) {
+                   console.log("onConnected error " + error.message);
+                });
+
         $(document).ready(function () {
+
+            const urlSearchParams = new URLSearchParams(window.location.search);
+            const params = Object.fromEntries(urlSearchParams.entries());
+            var v = '';
+            if (window.location.pathname == '/watch')
+            {
+                v = params['v'];
+                 $("#textboxUrl").val("https://www.youtube.com/watch?v=" + v);
+            }
+
             var url = $("#textboxUrl").val();
 
             if (url.length > 0) {
@@ -200,6 +275,12 @@
             }
 
             $("body").show();
+
+            $('#textboxUrl').keypress(function (e) {
+              if (e.which == 13) {
+                $('#btnStart').click();
+              }
+            });
         });
 
         $(window).resize(function () {
@@ -207,6 +288,8 @@
             if (slider) {
                 slider.resize();
             }
+
+
         });
 
         function onClick(e) {
@@ -249,10 +332,12 @@
             var base64 = window.btoa(url);
             var base64Escaped = base64.replaceAll("+", "_plus_").replaceAll("=", "_equal_");
             $.ajax({
-                url: '/Home/GetUrlDetails?url=' + base64Escaped,
-                contentType: 'application/html; charset=utf-8',
-                type: 'GET',
-                dataType: 'html'
+                url: '/home/geturldetails',
+                //contentType: 'application/html; charset=utf-8',
+                method: 'POST',
+                //dataType: 'html',
+                data: { url : url }
+
             })
                 .success(function (result) {
                     $('#divUrlDetails').html(result);
@@ -290,5 +375,123 @@
         }
 
 
-    </script>
+        (function($, undefined){
+        window.kendoConsole = {
+            log: function(message, isError, container) {
+                var lastContainer = $(".console div:first", container),
+                    counter = lastContainer.find(".count").detach(),
+                    lastMessage = lastContainer.text(),
+                    count = 1 * (counter.text() || 1);
+
+                lastContainer.append(counter);
+
+                if (!lastContainer.length || message !== lastMessage) {
+                    $("<div" + (isError ? " class='error'" : "") + "/>")
+                        .css({
+                            marginTop: -24,
+                            backgroundColor: isError ? "#ffbbbb" : "#b2ebf2"
+                        })
+                        .html(message)
+                        .prependTo($(".console", container))
+                        .animate({ marginTop: 0 }, 300)
+                        .animate({ backgroundColor: isError ? "#ffdddd" : "#ffffff" }, 800);
+                } else {
+                    count++;
+
+                    if (counter.length) {
+                        counter.html(count);
+                    } else {
+                        lastContainer.html(lastMessage)
+                            .append("<span class='count'>" + count + "</span>");
+                    }
+                }
+            },
+
+            error: function(message) {
+                this.log(message, true);
+            },
+
+            clear: function () {
+                var console = $(".console").eq(0);
+
+                console.html("");
+            }
+        };
+    })(jQuery);
+
+    /*
+     * jQuery Color Animations
+     * Copyright 2007 John Resig
+     * Released under the MIT and GPL licenses.
+     */
+
+    (function(jQuery) {
+
+        // We override the animation for all of these color styles
+        jQuery.each(["backgroundColor", "borderBottomColor", "borderLeftColor", "borderRightColor", "borderTopColor", "color", "outlineColor"], function(i, attr) {
+            jQuery.fx.step[attr] = function(fx) {
+                if (!fx.state || typeof fx.end == typeof "") {
+                    fx.start = getColor(fx.elem, attr);
+                    fx.end = getRGB(fx.end);
+                }
+
+                fx.elem.style[attr] = ["rgb(", [
+                    Math.max(Math.min(parseInt((fx.pos * (fx.end[0] - fx.start[0])) + fx.start[0], 10), 255), 0),
+                    Math.max(Math.min(parseInt((fx.pos * (fx.end[1] - fx.start[1])) + fx.start[1], 10), 255), 0),
+                    Math.max(Math.min(parseInt((fx.pos * (fx.end[2] - fx.start[2])) + fx.start[2], 10), 255), 0)
+                ].join(","), ")"].join("");
+            };
+        });
+
+        // Color Conversion functions from highlightFade
+        // By Blair Mitchelmore
+        // http://jquery.offput.ca/highlightFade/
+
+        // Parse strings looking for color tuples [255,255,255]
+        function getRGB(color) {
+            var result;
+
+            // Check if we're already dealing with an array of colors
+            if (color && color.constructor == Array && color.length == 3) {
+                return color;
+            }
+
+            // Look for rgb(num,num,num)
+            result = /rgb\(\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*,\s*([0-9]{1,3})\s*\)/.exec(color);
+            if (result) {
+                return [parseInt(result[1], 10), parseInt(result[2], 10), parseInt(result[3], 10)];
+            }
+
+            // Look for #a0b1c2
+            result = /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/.exec(color);
+            if (result) {
+                return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)];
+            }
+
+            // Otherwise, we're most likely dealing with a named color
+            return jQuery.trim(color).toLowerCase();
+        }
+
+        function getColor(elem, attr) {
+            var color;
+
+            do {
+                color = jQuery.css(elem, attr);
+
+                // Keep going until we find an element that has color, or we hit the body
+                if (color && color != "transparent" || jQuery.nodeName(elem, "body")) {
+                    break;
+                }
+
+                attr = "backgroundColor";
+
+                elem = elem.parentNode;
+            } while (elem);
+
+            return getRGB(color);
+        }
+
+    })(jQuery);
+
+</script>
 }

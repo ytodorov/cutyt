@@ -1,6 +1,23 @@
-﻿@model LinkViewModel
+﻿@model YoutubeDownloadedFileInfo
 
-<div class="text-success text-center bg-light">
-    <h4>Ready! Click on the link to see the result!</h4>
-    <a href="@Model.Url" target="_blank">@($"Your file - {Model.DisplayName}")</a>
+<div class="text-center">
+	<h4 class="text-center">Your file is ready for download</h4>
+	<a rel="noreferrer" href="@($"https://www.cutyt.com/mediaplayer?url={Model.Url}")" target="_blank">@($"View -> {Model.DisplayName} <- View")</a>
 </div>
+<br />
+@*
+<div class="text-center"
+   @(Html.Kendo().MediaPlayer()
+        .Name("mplayer")
+        .AutoPlay(false)
+        .Volume(0)
+        .FullScreen(false)
+        .Navigatable(true)
+        .ForwardSeek(true)
+        .Media(m => 
+        {
+            m.Source(Model.Url).Title(Model.DisplayName);
+        })
+        .HtmlAttributes(new { style = "height:360px" })
+    )
+</div>*@

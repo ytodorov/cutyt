@@ -18,7 +18,7 @@ namespace Cutyt.Core
 
                 // https://youtu.be/H20Nr4CXa4k
 
-                Uri uri = new Uri("https://youtu.be/H20Nr4CXa4k?s=2&se=34sdf");
+                Uri uri = new Uri(url);
 
                 var v = uri.Segments.FirstOrDefault(f => f.Length > 1);
 

@@ -1,22 +1,31 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+    @{
+    var title = ViewData["Title"] is null ? SiteConstants.Title : ViewData["Title"];
+    var description = ViewData["Description"] is null ? SiteConstants.Description : ViewData["Description"];
+    var canonicalUrl = ViewData["CanonicalUrl"] is null ? SiteConstants.CanonicalUrl : ViewData["CanonicalUrl"];
+    var descriptionSeo = ViewData["DescriptionSeo"] is null ? SiteConstants.DescriptionSeo : ViewData["DescriptionSeo"];
+
+}
 <head>
+    @*<base href="@SiteConstants.CanonicalUrl">*@
     <meta charset="utf-8" />
-    <meta title="@SiteConstants.Title" />
+    <meta title="@(title)" />
     <meta property="og:image" content="@SiteConstants.ImageUrl" />
     <meta property="og:title" content="@SiteConstants.Title" />
-    <meta property="og:description" content="@SiteConstants.Description" />
-    <meta property="og:url" content="@SiteConstants.CanonicalUrl" />
+    <meta property="og:description" content="@(descriptionSeo)" />
+    <meta property="og:url" content="@(canonicalUrl)" />
     <meta property="og:site_name" content="@SiteConstants.SiteName" />
     <meta property="og:author" content="@SiteConstants.Author" />
     <meta property="og:type" content="website" />
     <meta property="fb:app:id" content="773558706918738" />
-    <meta property="fb:app_id" content="773558706918738" />
 
-    <meta name="description" content="@($"{SiteConstants.TitleLong}. {SiteConstants.Description}.")">
-    <title>@SiteConstants.TitleLong</title>
+    <meta name="hilltopads-site-verification" content="c05b03e93e470efdf59df21eae130aa7a0de5f53" />
 
-    <link rel="canonical" href="@SiteConstants.CanonicalUrl" />
+    <meta name="description" content="@(descriptionSeo)">
+    <title>@(title)</title>
+
+    <link rel="canonical" href="@(canonicalUrl)" />
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -24,63 +33,90 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
 
-    <environment names="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
-        @*<link rel="stylesheet" href="~/css/site.css" />*@
-    </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
-    <link href="https://kendo.cdn.telerik.com/2021.2.511/styles/kendo.common-fiori.min.css" rel="stylesheet" type="text/css" />
-    <link href="https://kendo.cdn.telerik.com/2021.2.511/styles/kendo.fiori.min.css" rel="stylesheet" type="text/css" />
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link href="https://cdn.kendostatic.com/2021.3.914/styles/kendo.common-fiori.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.kendostatic.com/2021.3.914/styles/kendo.fiori.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/jquery.min.js"></script>
-    @*<script src="https://kendo.cdn.telerik.com/2021.2.511/js/jszip.min.js"></script>*@
-    @*<script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.all.min.js"></script>*@
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.core.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.loader.min.js"></script>
+    @*<link rel="stylesheet" href="https://cutyt.azureedge.net/cdnfiles/cutyt.min.css">*@
+    @*<script src="~/js/compressed.js"></script>*@
+    <script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@3.1.8/dist/browser/signalr.min.js"></script>
 
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.button.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.floatinglabel.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.textbox.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2021.3.914/js/jquery.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.all.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.aspnetmvc.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.inputgroupbase.min.js"></script>
+   @* <script src="https://cutyt.azureedge.net/cdnfiles/compressed7-10-2021.js"></script>*@
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.radiogroup.min.js"></script>
+    @*<script type="text/javascript" src="https://pppbr.com/slider.php?section=General&pub=893253&ga=g&side=right"></script>*@
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.menu.min.js"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.responsivepanel.min.js"></script>
+    <script src="https://cdn.kendostatic.com/2021.3.914/js/jquery.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.userevents.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.core.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.draganddrop.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.loader.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.slider.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.button.min.js"></script>
 
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.floatinglabel.min.js"></script>
 
-    @*<script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.selectable.min.js"></script>*@
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.data.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.textbox.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.popup.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.inputgroupbase.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.list.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.radiogroup.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.dropdownlist.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.menu.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.userevents.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.toolbar.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.mediaplayer.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.responsivepanel.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.data.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.userevents.min.js"></script>
 
-    <script src="https://kendo.cdn.telerik.com/2021.2.511/js/kendo.aspnetmvc.min.js"></script>
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.scrollview.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.toolbar.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.draganddrop.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.tooltip.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.slider.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.data.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.popup.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.list.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.dropdownlist.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.view.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.pane.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.mediaplayer.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.columnsorter.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.groupable.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.pager.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.filtermenu.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.data.odata.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.grid.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.breadcrumb.min.js"></script>
+
+        <script src="https://cdn.kendostatic.com/2021.3.914/js/kendo.aspnetmvc.min.js"></script>
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PK6JDTVPMV"></script>
@@ -93,67 +129,158 @@
     </script>
     <script data-ad-client="ca-pub-2519209558650417" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
-<body class="k-content" style="display:none">
-    @*<nav class="navbar navbar-dark bg-dark">
-            <div class="container-fluid d-flex justify-content-between p-0">
-                <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">@(SiteConstants.Title)</a>
-                <button id="configure" class="k-rpanel-toggle k-button k-primary btn-toggle">
-                    <span class="k-icon k-i-menu"></span>
-                </button>
-            </div>
-        </nav>
-        <div id="responsive-panel" class="navbar navbar-dark bg-light mb-4">
-            <kendo-responsivepanel name="responsive-panel" auto-close="false" breakpoint="768" orientation="top">
-                @(Html.Kendo().Menu()
-                            .Name("Menu")
-                            .Items(items =>
-                            {
-                                items.Add().Text("Home").Action("Index", "Home", new { area = "" });
-                            })
-                )
-            </kendo-responsivepanel>
-        </div>*@
+<body class="k-content">   
+    <script data-cfasync="false" async type="text/javascript" src="//ceteembathe.com/rkjidk7Ie0hInM/55439"></script>
+    @*<script data-cfasync="false" async type="text/javascript" src="//autopsycarrel.com/f7jf83pJ9B8wy1Y2/55440"></script>*@
+    <script data-cfasync="false" async type="text/javascript" src="//marxismsuddy.com/gs6prEMbgqZ/59786"></script>
+    <nav>
+        @(Html.Kendo().Menu()
+        .Name("Menu")
+        .Items(items =>
+        {
+        items.Add().Text("Home").Url("/");
 
+        items.Add().Text("My Downloads").Url("/mydownloads");
+
+        items.Add().Text("All Downloads").Url("/alldownloads");
+
+        items.Add().Text("Trending").Items(subItems =>
+        {
+        subItems.Add().Text("India").Url("/trending?c=IN");
+        subItems.Add().Text("USA").Url("/trending?c=US");
+        subItems.Add().Text("Indonesia").Url("/trending?c=ID");
+        subItems.Add().Text("Brazil").Url("/trending?c=BR");
+        subItems.Add().Text("Philippines").Url("/trending?c=PH");
+        subItems.Add().Text("Great Britain").Url("/trending?c=GB");
+        subItems.Add().Text("France").Url("/trending?c=FR");
+        subItems.Add().Text("Germany").Url("/trending?c=DE");
+        subItems.Add().Text("Morocco").Url("/trending?c=MA");
+        subItems.Add().Text("Canada").Url("/trending?c=CA");
+        });
+        })
+        )
+    </nav>
     <header>
-        <section>
+     @*   @if (!Context.IsMobileBrowser())
+        {
+            <section>
 
-            <div class="position-relative overflow-hidden p-1 p-md-1 m-md-1 text-center bg-light">
-                <div class="mx-auto my-5">
-                    <h1>@(SiteConstants.Title.ToUpperInvariant())</h1>
-                    <h2>@SiteConstants.Description</h2>
+            <div class="position-relative overflow-hidden text-center">
+                <div class="mx-auto my-3">
+                    <a href="https://nexo.sjv.io/c/3492595/1195994/12544" target="_top" id="1195994"><img src="//a.impactradius-go.com/display-ad/12544-1195994" border="0" alt=""  width="728" height="90"/></a><img height="0" width="0" src="https://imp.pxf.io/i/3492595/1195994/12544" style="position:absolute;visibility:hidden;" border="0" />
                 </div>
             </div>
 
+            </section>
+        }*@
+        <section>
+
+            <div class="position-relative overflow-hidden text-center">
+                <div class="mx-auto my-3">
+                    <h1 class="h2">@(title)</h1>
+                    <h2 class="h4">@(description)</h2>
+                </div>
+            </div>
         </section>
     </header>
 
     <main>
-        <div class="container-fluid">
+        <div class="container">          
             @RenderBody()
         </div>
+  @*      @if (!Context.IsMobileBrowser())
+        {
+            <section>
+
+            <div class="position-relative overflow-hidden text-center">
+                <div class="mx-auto my-3">
+                    <a href="https://nexo.sjv.io/c/3492595/1195994/12544" target="_top" id="1195994"><img src="//a.impactradius-go.com/display-ad/12544-1195994" border="0" alt="" width="728" height="90"/></a><img height="0" width="0" src="https://imp.pxf.io/i/3492595/1195994/12544" style="position:absolute;visibility:hidden;" border="0" />
+                </div>
+            </div>
+
+            </section>
+        }*@
     </main>
 
-    <footer class="footer text-center d-flex align-items-center">
-        <div class="container-fluid">
-            <p class="text-muted">
-                &#169; @DateTime.Now.Year <a href="@SiteConstants.CanonicalUrl" title="@SiteConstants.Title">cutyt.com</a>. All Rights Reserved. Follow us: <a target="_blank" title="https://www.facebook.com/Cutyt-162865322145097" href="https://www.facebook.com/Cutyt-162865322145097">
+    <div class="footer-basic">
+        <footer>
+            <div class="social">
+                <a target="_blank" rel="noreferrer" title="https://www.facebook.com/Cutyt-162865322145097" href="https://www.facebook.com/Cutyt-162865322145097">
                     <span class="mbr-iconfont-c fa-facebook-f fa"></span>
                 </a>
-            </p>
-        </div>
-    </footer>
+            </div>
+            <ul class="list-inline">
+                @*<li class="list-inline-item"><a href="@($"{SiteConstants.CanonicalUrl}/contact")">Contact us</a></li>*@
+                <li class="list-inline-item"><a href="@($"{SiteConstants.CanonicalUrl}/privacy")">Privacy</a></li>
+                <li class="list-inline-item"><a href="@($"{SiteConstants.CanonicalUrl}/terms")">Terms</a></li>
+            </ul>
+            <p class="copyright">cutyt © @DateTime.Now.Year</p>
+        </footer>
+    </div>
 
-    <environment names="Development">
-        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"></script>
-    </environment>
+    <style>
+        .footer-basic {
+            padding: 40px 0;
+            background-color: #ffffff;
+            color: #4b4c4d;
+        }
 
+            .footer-basic ul {
+                padding: 0;
+                list-style: none;
+                text-align: center;
+                font-size: 18px;
+                line-height: 1.6;
+                margin-bottom: 0;
+            }
+
+            .footer-basic li {
+                padding: 0 10px;
+            }
+
+            .footer-basic ul a {
+                color: inherit;
+                text-decoration: none;
+                opacity: 0.8;
+            }
+
+                .footer-basic ul a:hover {
+                    opacity: 1;
+                }
+
+            .footer-basic .social {
+                text-align: center;
+                padding-bottom: 25px;
+            }
+
+                .footer-basic .social > a {
+                    font-size: 24px;
+                    width: 40px;
+                    height: 40px;
+                    line-height: 40px;
+                    display: inline-block;
+                    text-align: center;
+                    border-radius: 50%;
+                    border: 1px solid #ccc;
+                    margin: 0 8px;
+                    color: inherit;
+                    opacity: 0.75;
+                }
+
+                    .footer-basic .social > a:hover {
+                        opacity: 0.9;
+                    }
+
+            .footer-basic .copyright {
+                margin-top: 15px;
+                text-align: center;
+                font-size: 13px;
+                color: #aaa;
+                margin-bottom: 0;
+            }
+    </style>
     @RenderSection("scripts", required: false)
-    <!-- Go to www.addthis.com/dashboard to customize your tools -->
-    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-6043f6619df39ba3"></script>
+    @*<script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://inklinkor.com/tag.min.js',5051690,document.body||document.documentElement)</script>*@
 </body>
+
 </html>

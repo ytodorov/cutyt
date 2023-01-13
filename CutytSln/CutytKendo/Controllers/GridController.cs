@@ -25,5 +25,6 @@ namespace CutytKendo.Controllers
             var dsResult = result.ToDataSourceResult(request);
             return Json(dsResult);
         }
+               
     }
 }
