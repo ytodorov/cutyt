@@ -14,19 +14,35 @@ namespace CutytWeb
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Error");
+                //app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
+
+
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "/Error404";
+                    await next();
+                }
+            });
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            //app.UseStatusCodePagesWithReExecute("/Error404");
+
             app.UseAuthorization();
 
             app.MapRazorPages();
+
+         
 
             app.Run();
         }

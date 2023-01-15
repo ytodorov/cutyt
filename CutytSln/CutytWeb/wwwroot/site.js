@@ -61,7 +61,7 @@ $("#btnDownload").click(function () {
     val = val.replace("+", "%2B");
     webpage_url = webpage_url.replace("?", "%3F");
 
-    var url = `https://api0.datasea.org/exec?cli=yt-dlp&arguments=-f ${val} "${webpage_url}" --print after_move:filepath --merge-output-format "webm/mp4/mkv" --force-overwrites --no-progress -o "${new Date().getUTCMilliseconds()}.%(ext)s`; //
+    var url = `https://api0.datasea.org/exec?cli=yt-dlp&arguments=-f ${val} "${webpage_url}" --print after_move:filepath --merge-output-format "webm/mp4" --force-overwrites --no-progress -o "${new Date().getUTCMilliseconds()}.%(ext)s`; //
 
     //debugger;
     fetch(url)
@@ -80,10 +80,31 @@ $("#btnDownload").click(function () {
             text = text.replace("/app/wwwroot", "https://api0.datasea.org");
 
             console.log(text);
-            var html = `<video controls autoplay muted>
+            var html = `<video width="640" height="480" controls muted preload="none">
         <source src="${text}" type="video/${ext}">
         Your browser does not support the video tag.
     </video>`;
+
+            html = `<video
+    id="my-video"
+    class="video-js"
+    controls
+    preload="auto"
+    width="640"
+    height="264"
+    
+    data-setup="{}"
+  >
+    <source src="${text}" type="video/${ext}" />
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank"
+        >supports HTML5 video</a
+      >
+    </p>
+  </video>`;
+
 
             $("#divVideo").html(html);
         });
