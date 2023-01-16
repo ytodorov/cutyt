@@ -52,13 +52,11 @@ function execute() {
                     scriptEl.textContent = script;
                     document.body.appendChild(scriptEl);
 
-                    debugger;
                     insertVideoPlayerInGrid("#divVideoStart", videoUrl);
                     insertVideoPlayerInGrid("#divVideoEnd", videoUrl);
  
                 });
         });
-
 
 }
 
@@ -80,8 +78,6 @@ $("#btnDownload").click(function () {
     val = val.replace("+", "%2B");
     webpage_url = webpage_url.replace("?", "%3F");
 
-    //debugger;
-
     var url = `https://api0.datasea.org/exec?cli=yt-dlp&arguments=-f ${val} "${webpage_url}" --external-downloader ffmpeg --external-downloader-args "-ss 00:01:20.00 -to 00:01:40.00" --print after_move:filepath --merge-output-format "webm/mp4" --force-overwrites --no-progress -o "${new Date().getMilliseconds()}.%(ext)s`; //
 
     fetch(url)
@@ -89,10 +85,7 @@ $("#btnDownload").click(function () {
             return response.text();
         }).then(function (text) {
 
-
-
             text = text.trim();
-            //debugger;
 
             var parts = text.split(".");
             var name = parts[0];
@@ -103,24 +96,8 @@ $("#btnDownload").click(function () {
 
             text = text.replace("/app/wwwroot", "https://api0.datasea.org");
 
-            $("#divResult").removeClass("d-none");
-
-            var html = `<video id="my-video"
-           class="video-js mx-auto d-block"
-           controls
-           preload="metadata"
-           data-setup="{}">
-        <source src="${text}" type="video/${ext}" />
-        <p class="vjs-no-js">
-            To view this video please enable JavaScript, and consider upgrading to a
-            web browser that
-            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
-        </p>
-    </video>`;
-
-            $("#divResult").html(html);
-
-
+            insertVideoPlayerInGrid("#divResult", text, `video/${ext}`)
+   
             console.log(text);
 
         });
@@ -138,13 +115,9 @@ function insertVideoPlayerInGrid(cssSelector, videoUrl, type) {
 
     var html = `<video
     id="my-video${cssSelector}"
-    class="video-js"
+    class="video-js mx-auto d-block vjs-fill"
     controls
     preload="metadata"
-    width="640"
-    height="264"
-    
-    
   >
     <source src="${videoUrl}" ${typeAttr} />
     <p class="vjs-no-js">
