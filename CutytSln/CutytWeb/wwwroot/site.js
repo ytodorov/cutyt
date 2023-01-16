@@ -52,36 +52,10 @@ function execute() {
                     scriptEl.textContent = script;
                     document.body.appendChild(scriptEl);
 
-                    $("#divVideo").removeClass("d-none");
-                    //$("#sourceOfVideo").attr("src", videoUrl);
-
-                    var html = `<video width="640" height="480" controls muted preload="none">
-        <source src="${videoUrl}">
-        Your browser does not support the video tag.
-    </video>`;
-
-                    html = `<video
-    id="my-video"
-    class="video-js"
-    controls
-    preload="metadata"
-    width="640"
-    height="264"
-    
-    
-  >
-    <source src="${videoUrl}" />
-    <p class="vjs-no-js">
-      To view this video please enable JavaScript, and consider upgrading to a
-      web browser that
-      <a href="https://videojs.com/html5-video-support/" target="_blank"
-        >supports HTML5 video</a
-      >
-    </p>
-  </video>`;
-
-
-                    $("#divVideo").html(html);
+                    debugger;
+                    insertVideoPlayerInGrid("#divVideoStart", videoUrl);
+                    insertVideoPlayerInGrid("#divVideoEnd", videoUrl);
+ 
                 });
         });
 
@@ -124,7 +98,7 @@ $("#btnDownload").click(function () {
             var name = parts[0];
             var ext = parts[1];
             
-            $("#divVideo").removeClass("d-none");
+            $("#divVideoStart").removeClass("d-none");
             $("#sourceOfVideo").attr("src", text);
 
             text = text.replace("/app/wwwroot", "https://api0.datasea.org");
@@ -152,3 +126,36 @@ $("#btnDownload").click(function () {
         });
 
 });
+
+function insertVideoPlayerInGrid(cssSelector, videoUrl, type) {
+    var elem = $(cssSelector);
+    elem.removeClass("d-none");
+
+    var typeAttr = ``;
+    if (type) {
+        typeAttr = `type="${type}"`
+    }
+
+    var html = `<video
+    id="my-video${cssSelector}"
+    class="video-js"
+    controls
+    preload="metadata"
+    width="640"
+    height="264"
+    
+    
+  >
+    <source src="${videoUrl}" ${typeAttr} />
+    <p class="vjs-no-js">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank"
+        >supports HTML5 video</a
+      >
+    </p>
+  </video>`;
+
+
+    elem.html(html);
+}
