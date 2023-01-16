@@ -4,7 +4,7 @@ function execute() {
     $('#tbResults').text('');
     var args = $('#tbCliArguments').val();
     var srid = localStorage.getItem('srid');
-    fetch("https://api0.datasea.org/exec?cli=yt-dlp&arguments=--print%20%22%()j%22%20" + args)
+    fetch("https://api0.datasea.org/getyt-dlpjson?url=" + args)
         .then(function (response) {
             return response.json();
         }).then(function (text) {
