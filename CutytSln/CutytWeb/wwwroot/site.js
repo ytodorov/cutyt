@@ -39,7 +39,7 @@ function execute() {
   <input class="form-check-input" type="radio" name="inlineRadioOptionsForDownload" id="inlineRadio${this.format_id}" value="${this.format_id}+bestaudio">
   <label class="form-check-label" for="inlineRadio${this.format_id}" title="${this.format_note}">${this.resolution}</label>
 </div>`;
-                        if (/*!videoUrl && */(this.video_ext == 'mp4' || this.video_ext == 'webm')) {
+                        if (!videoUrl && (this.video_ext == 'mp4' || this.video_ext == 'webm')) {
                             //if (this.filesize > lastFileSize) {
                                 videoUrl = this.url;
                                 lastFileSize = this.filesize;
