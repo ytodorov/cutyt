@@ -1,6 +1,7 @@
 ﻿var json = '';
 var webpage_url = '';
 function execute() {
+    $("button").attr("disabled", "disabled");
     $('#tbResults').text('');
     var args = $('#tbCliArguments').val();
     var srid = localStorage.getItem('srid');
@@ -25,7 +26,7 @@ function execute() {
             var isVideSizeSelected = false;
             // bestaudio -x --audio-format mp3
             htmlToAppend += `<div class="form-check form-check-inline">
-  <input class="form-check-input" type="radio" name="inlineRadioOptionsForDownload" id="inlineRadioMP3" value="bestaudio -x --audio-format mp3">
+  <input class="form-check-input" type="radio" name="inlineRadioOptionsForDownload" checked id="inlineRadioMP3" value="bestaudio -x --audio-format mp3">
   <label class="form-check-label" for="inlineRadioMP3" title="MP3">MP3</label>
 </div>`;
             jQuery.each(text.formats, function () {
@@ -60,8 +61,6 @@ function execute() {
 
             $("#divDownload").removeClass("d-none");
 
-
-
             fetch('https://vjs.zencdn.net/7.20.3/video.min.js')
                 .then(response => response.text())
                 .then(script => {
@@ -71,7 +70,8 @@ function execute() {
 
                     insertVideoPlayerInGrid("#divVideoStart", videoUrl);
                     insertVideoPlayerInGrid("#divVideoEnd", videoUrl);
- 
+
+                    $("button").removeAttr("disabled", "disabled");
                 });
         });
 
