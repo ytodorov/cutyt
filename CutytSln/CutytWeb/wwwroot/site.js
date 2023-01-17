@@ -1,4 +1,4 @@
-﻿
+﻿var json = '';
 var webpage_url = '';
 function execute() {
     $('#tbResults').text('');
@@ -8,6 +8,8 @@ function execute() {
         .then(function (response) {
             return response.json();
         }).then(function (text) {
+            console.log(text);
+            json = text;
             id = text.id;
             webpage_url = text.webpage_url;
 
@@ -19,6 +21,12 @@ function execute() {
 
             var htmlToAppend = '';
             var lastResolution = '';
+            var lastFileSize = 0;
+            // bestaudio -x --audio-format mp3
+            htmlToAppend += `<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="inlineRadioOptionsForDownload" id="inlineRadioMP3" value="bestaudio -x --audio-format mp3">
+  <label class="form-check-label" for="inlineRadioMP3" title="MP3">MP3</label>
+</div>`;
             jQuery.each(text.formats, function () {
                 if (this.resolution != 'audio only' && this.protocol != "mhtml") {
 
@@ -31,8 +39,11 @@ function execute() {
   <input class="form-check-input" type="radio" name="inlineRadioOptionsForDownload" id="inlineRadio${this.format_id}" value="${this.format_id}+bestaudio">
   <label class="form-check-label" for="inlineRadio${this.format_id}" title="${this.format_note}">${this.resolution}</label>
 </div>`;
-                        if (!videoUrl && (this.video_ext == 'mp4' || this.video_ext == 'webm')) {
-                            videoUrl = this.url;
+                        if (/*!videoUrl && */(this.video_ext == 'mp4' || this.video_ext == 'webm')) {
+                            //if (this.filesize > lastFileSize) {
+                                videoUrl = this.url;
+                                lastFileSize = this.filesize;
+                            //}
                         }
                     }
                     lastResolution = this.resolution;
@@ -77,8 +88,10 @@ $("#btnDownload").click(function () {
     console.log(val);
     val = val.replace("+", "%2B");
     webpage_url = webpage_url.replace("?", "%3F");
-
-    var url = `https://api0.datasea.org/exec?cli=yt-dlp&arguments=-f ${val} "${webpage_url}" --external-downloader ffmpeg --external-downloader-args "-ss 00:01:20.00 -to 00:01:40.00" --print after_move:filepath --merge-output-format "webm/mp4" --force-overwrites --no-progress -o "${new Date().getMilliseconds()}.%(ext)s`; //
+   
+    var ip = $("#ipAddress").val();
+    var outputFileName = `${ip}_${Math.floor(Math.random() * 100)}.%(ext)s`;
+    var url = `https://api0.datasea.org/exec?cli=yt-dlp&arguments=-f ${val} "${webpage_url}" --external-downloader ffmpeg --external-downloader-args "-ss 00:00:10.00 -to 00:00:20.00" --print after_move:filepath --merge-output-format "webm/mp4" --force-overwrites --no-progress -o ${outputFileName} --restrict-filenames`; //
 
     fetch(url)
         .then(function (response) {
@@ -97,6 +110,7 @@ $("#btnDownload").click(function () {
             text = text.replace("/app/wwwroot", "https://api0.datasea.org");
 
             insertVideoPlayerInGrid("#divResult", text, `video/${ext}`)
+            $("#divResult").append(`<a href="${text}" target="_blank" download="myfile.${ext}">Download File - ${json.title}</a>`);
    
             console.log(text);
 
@@ -118,6 +132,7 @@ function insertVideoPlayerInGrid(cssSelector, videoUrl, type) {
     class="video-js mx-auto d-block vjs-fill"
     controls
     preload="metadata"
+    poster="${json.thumbnail}"
   >
     <source src="${videoUrl}" ${typeAttr} />
     <p class="vjs-no-js">
