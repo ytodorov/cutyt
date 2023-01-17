@@ -22,6 +22,7 @@ function execute() {
             var htmlToAppend = '';
             var lastResolution = '';
             var lastFileSize = 0;
+            var isVideSizeSelected = false;
             // bestaudio -x --audio-format mp3
             htmlToAppend += `<div class="form-check form-check-inline">
   <input class="form-check-input" type="radio" name="inlineRadioOptionsForDownload" id="inlineRadioMP3" value="bestaudio -x --audio-format mp3">
@@ -39,10 +40,15 @@ function execute() {
   <input class="form-check-input" type="radio" name="inlineRadioOptionsForDownload" id="inlineRadio${this.format_id}" value="${this.format_id}+bestaudio">
   <label class="form-check-label" for="inlineRadio${this.format_id}" title="${this.format_note}">${this.resolution}</label>
 </div>`;
-                        if (!videoUrl && (this.video_ext == 'mp4' || this.video_ext == 'webm')) {
+                        if (!isVideSizeSelected && (this.video_ext == 'mp4' || this.video_ext == 'webm')) {
                             //if (this.filesize > lastFileSize) {
                                 videoUrl = this.url;
-                                lastFileSize = this.filesize;
+                            lastFileSize = this.filesize;
+
+                            debugger;
+                            if (this.resolution.indexOf(720) != -1) {
+                                isVideSizeSelected = true;
+                            }
                             //}
                         }
                     }
@@ -90,7 +96,7 @@ $("#btnDownload").click(function () {
     webpage_url = webpage_url.replace("?", "%3F");
    
     var ip = $("#ipAddress").val();
-    var outputFileName = `${ip}_${Math.floor(Math.random() * 100)}.%(ext)s`;
+    var outputFileName = `/app/wwwroot/output/yt-dlp/${ip}/${Math.floor(Math.random() * 100)}.%(ext)s`;
     var url = `https://api0.datasea.org/exec?cli=yt-dlp&arguments=-f ${val} "${webpage_url}" --external-downloader ffmpeg --external-downloader-args "-ss 00:00:10.00 -to 00:00:20.00" --print after_move:filepath --merge-output-format "webm/mp4" --force-overwrites --no-progress -o ${outputFileName} --restrict-filenames`; //
 
     fetch(url)
