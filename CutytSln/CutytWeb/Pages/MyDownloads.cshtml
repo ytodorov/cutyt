@@ -3,9 +3,22 @@
 @{
 }
 
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @foreach (var item in Model.Files)
+                {
+                <tr>
+                    <td><a target="_blank" href="https://api0.datasea.org/output/yt-dlp/217.79.32.194/@item">@item</a></td>
+                </tr>
+                }
 
-@foreach (var item in Model.Files)
-{
-    <a href="https://api0.datasea.org/output/yt-dlp/217.79.32.194/@item">@item</a>
-}
-
+        </tbody>
+    </table>
+</div>

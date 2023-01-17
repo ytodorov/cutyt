@@ -74,7 +74,6 @@ function execute() {
                     $("button").removeAttr("disabled", "disabled");
                 });
         });
-
 }
 
 
